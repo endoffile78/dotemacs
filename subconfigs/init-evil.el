@@ -3,6 +3,24 @@
 (require 'evil-tabs)
 (require 'evil-surround)
 
+(defgroup dotemacs-evil nil
+  "Configuration options for evil-mode."
+  :group 'dotemacs
+  :prefix 'dotemacs-evil)
+
+(defcustom dotemacs-evil/emacs-state-minor-modes
+  '(git-commit-mode magit-blame-mode)
+  "List of minor modes that when active should switch to Emacs state."
+  :type '(repeat (symbol))
+  :group 'dotemacs-evil)
+
+(cl-loop for mode in dotemacs-evil/emacs-state-minor-modes
+         do (let ((hook (concat (symbol-name mode) "-hook")))
+              (add-hook (intern hook) `(lambda ()
+										 (if ,mode
+                                             (evil-emacs-state)
+                                           (evil-normal-state))))))
+
 (global-evil-tabs-mode t)
 
 (setq evil-normal-state-cursor '("white" box)
