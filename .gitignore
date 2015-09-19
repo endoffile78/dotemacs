@@ -1,0 +1,15 @@
+elpa
+eshell
+backups
+emms
+recentf
+irony
+smex-items
+*.elc
+auto-save-list
+projectile-bookmarks.eld
+projectile.cache
+tramp
+*~
+.python-environments
+*.swp

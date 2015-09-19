@@ -1,0 +1,7 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: todo
+# key: todo
+# binding: direct-keybinding
+# --
+
+//TODO: $1
