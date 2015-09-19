@@ -30,7 +30,6 @@
 (require 'init-projectile)
 (require 'init-helm)
 (require 'init-yasnippet)
-(require 'init-indentation)
 (require 'init-irony)
 (require 'init-web)
 (require 'init-smartparens)
@@ -38,7 +37,7 @@
 (require 'init-gtags)
 (require 'init-python)
 (require 'init-indentation)
-(require 'init-magit)
+(require 'init-git)
 
 (add-hook 'after-init-hook
 		   (lambda ()

@@ -10,8 +10,8 @@
 
 (evil-leader/set-leader ",")
 (global-evil-leader-mode)
-(evil-leader/set-key "g" 'mpd-get-current-song
-					 "c" 'mpd-clear-playlist
+(evil-leader/set-key "mg" 'mpd-get-current-song
+					 "mc" 'mpd-clear-playlist
 					 "k" 'kill-buffer
 					 "l" 'load-file
 					 "b" 'helm-buffers-list
@@ -22,7 +22,11 @@
 					 "pf" 'helm-projectile
 					 "mn" 'mpd-next
 					 "mp" 'mpd-prev
-					 "mp" 'mpd-pause)
+					 "mp" 'mpd-pause
+					 "gc" 'ggtags-create-tags
+					 "gu" 'ggtags-update-tags
+					 "gf" 'ggtags-find-file
+					 "gs" 'ggtags-find-other-symbol)
 
 (defun my-evil-modeline-change (default-color)
 	"Changes the modeline color when the evil mode changes"
