@@ -39,12 +39,16 @@
 					 "fc" 'flycheck-buffer
 					 "pf" 'helm-projectile
 					 "mn" 'mpd-next
-					 "mp" 'mpd-prev
+					 "mb" 'mpd-prev
 					 "mp" 'mpd-pause
 					 "gc" 'ggtags-create-tags
 					 "gu" 'ggtags-update-tags
 					 "gf" 'ggtags-find-file
-					 "gs" 'ggtags-find-other-symbol)
+					 "gs" 'ggtags-find-other-symbol
+					 "ms" 'magit-status
+					 "md" 'magit-diff
+					 "mb" 'magit-blame-popup
+					 "ml" 'magit-log-popop)
 
 (defun my-evil-modeline-change (default-color)
 	"Changes the modeline color when the evil mode changes"
@@ -52,7 +56,7 @@
 				  ((evil-insert-state-p) '("#FFFFFF" . "#000000"))
 				  ((evil-visual-state-p) '("#330022" . "#FFFFFF"))
 				  ((evil-normal-state-p) '("#000000" . "#FFFFFF"))
-				  ((evil-emacs-state-p) ' ("#440000" . "#ffffff")))))
+				  ((evil-emacs-state-p) '("#440000" . "#ffffff")))))
 	(set-face-background 'mode-line (car color))
 	(set-face-foreground 'mode-line (cdr color))))
 

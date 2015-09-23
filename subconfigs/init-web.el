@@ -12,9 +12,7 @@
 		web-mode-style-padding 2
 		web-mode-script-padding 2
 		web-mode-enable-current-element-highlight t)
-  (highlight-symbol-mode nil)
-  (rainbow-mode) 
-)
+  (rainbow-mode))
 
 (set-face-attribute 'web-mode-html-tag-face nil :foreground "#fad07a")
 (set-face-attribute 'web-mode-doctype-face nil :foreground "#8fbfdc")
