@@ -10,7 +10,7 @@
 
 (eval-after-load 'company
 	 '(add-to-list
-		   'company-backends '(company-irony-c-headers company-irony company-jedi company-yasnippet company-jquery company-css)))
+		   'company-backends '(company-irony-c-headers company-irony company-jedi company-yasnippet company-css)))
 
 (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
 
