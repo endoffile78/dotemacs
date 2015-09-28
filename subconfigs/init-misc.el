@@ -1,8 +1,5 @@
 (require 'ujelly-theme)
 
-;(require 'solarized-theme)
-;(load-theme 'solarized-dark t)
-
 (require 'libmpdee)
 
 (require 'server)
@@ -45,9 +42,14 @@
 	  delete-old-versions t
 	  vc-follow-symlinks t
 	  indent-tabs-mode t)
-	  ;initial-major-mode 'text-mode)
 
 (setq-default truncate-lines 1
 			  backward-delete-function nil)
+
+(require 'diminish)
+(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
+(eval-after-load "highlight-symbol" '(diminish 'highlight-symbol-mode))
+(eval-after-load "git-gutter+" '(diminish 'git-gutter+-mode))
+(eval-after-load "smartparens" '(diminish 'smartparens-mode))
 
 (provide 'init-misc)
