@@ -2,6 +2,7 @@
 (require 'php-mode)
 (require 'php-extras)
 (require 'web-mode)
+(require 'emmet-mode)
 
 (defun my-web-mode-hook ()
   (setq web-mode-markup-indent-offset 2
@@ -12,7 +13,8 @@
 		web-mode-style-padding 2
 		web-mode-script-padding 2
 		web-mode-enable-current-element-highlight t)
-  (rainbow-mode))
+  (rainbow-mode)
+  (emmet-mode))
 
 (set-face-attribute 'web-mode-html-tag-face nil :foreground "#fad07a")
 (set-face-attribute 'web-mode-doctype-face nil :foreground "#8fbfdc")

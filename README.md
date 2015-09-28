@@ -10,6 +10,7 @@ Theme: ujelly
  * company-irony-c-headers
  * company-jedi
  * elscreen
+ * emmet-mode
  * evil
  * evil-leader
  * evil-surround
