@@ -51,5 +51,6 @@
 (eval-after-load "highlight-symbol" '(diminish 'highlight-symbol-mode))
 (eval-after-load "git-gutter+" '(diminish 'git-gutter+-mode))
 (eval-after-load "smartparens" '(diminish 'smartparens-mode))
+(eval-after-load "helm" '(diminish 'helm-mode))
 
 (provide 'init-misc)
