@@ -16,9 +16,6 @@
 (require 'vimrc-mode)
 (add-to-list 'auto-mode-alist '(".vim\\(rc\\)?$" . vimrc-mode))
 
-(require 'rainbow-mode)
-(add-hook 'css-mode-hook 'rainbow-mode)
-
 (require 'nlinum)
 (global-nlinum-mode 1)
 
@@ -52,5 +49,8 @@
 (eval-after-load "git-gutter+" '(diminish 'git-gutter+-mode))
 (eval-after-load "smartparens" '(diminish 'smartparens-mode))
 (eval-after-load "helm" '(diminish 'helm-mode))
+(eval-after-load "emmet-mode" '(diminish 'emmet-mode))
+(eval-after-load "rainbow-mode" '(diminish 'rainbow-mode))
+(eval-after-load "abbrev" '(diminish 'abbrev-mode))
 
 (provide 'init-misc)

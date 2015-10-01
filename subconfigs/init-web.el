@@ -3,6 +3,9 @@
 (require 'php-extras)
 (require 'web-mode)
 (require 'emmet-mode)
+(require 'rainbow-mode)
+
+(add-hook 'css-mode-hook 'rainbow-mode)
 
 (defun my-web-mode-hook ()
   (setq web-mode-markup-indent-offset 2
@@ -12,7 +15,8 @@
 		web-mode-enable-auto-closing t
 		web-mode-style-padding 2
 		web-mode-script-padding 2
-		web-mode-enable-current-element-highlight t)
+		web-mode-enable-current-element-highlight t
+		web-mode-enable-block-face t)
   (rainbow-mode)
   (emmet-mode))
 
@@ -20,6 +24,7 @@
 (set-face-attribute 'web-mode-doctype-face nil :foreground "#8fbfdc")
 (set-face-attribute 'web-mode-html-tag-bracket-face nil :foreground "#ffffff")
 (set-face-attribute 'web-mode-current-element-highlight-face nil :background "#808080")
+(set-face-attribute 'web-mode-block-delimiter-face nil :foreground "#8fbfdc")
 
 (add-hook 'html-mode-hook
 	(lambda ()
