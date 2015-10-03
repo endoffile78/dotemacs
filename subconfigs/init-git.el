@@ -1,12 +1,15 @@
-(require 'magit)
-(require 'git-gutter-fringe+)
+(use-package git-gutter-fringe+
+  :diminish git-gutter+-mode
+  :config
+  (set-face-foreground 'git-gutter-fr+-modified "yellow")
+  (set-face-foreground 'git-gutter-fr+-added    "green")
+  (set-face-foreground 'git-gutter-fr+-deleted  "red")
+  (global-git-gutter+-mode))
 
-(set-face-foreground 'git-gutter-fr+-modified "yellow")
-(set-face-foreground 'git-gutter-fr+-added    "green")
-(set-face-foreground 'git-gutter-fr+-deleted  "red")
-
-(global-git-gutter+-mode)
-
-(setq magit-last-seen-setup-instructions "1.4.0")
+(use-package magit
+  :ensure
+  :defer t
+  :config
+  (setq magit-last-seen-setup-instructions "1.4.0"))
 
 (provide 'init-git)

@@ -1,5 +1,5 @@
-(require 'projectile)
-
-(projectile-global-mode)
+(use-package projectile
+  :config
+  (projectile-global-mode))
 
 (provide 'init-projectile)

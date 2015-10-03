@@ -1,23 +1,30 @@
-(require 'ujelly-theme)
+(use-package ujelly-theme)
 
-(require 'libmpdee)
+(use-package libmpdee)
 
-(require 'server)
-(unless (server-running-p)
-	(server-start))
+(use-package server
+  :config
+  (unless (server-running-p)
+	(server-start)))
 
-(require 'highlight-symbol)
-(setq highlight-symbol-idle-delay 0.5)
-(add-hook 'prog-mode-hook 'highlight-symbol-mode)
+(use-package highlight-symbol
+  :diminish highlight-symbol-mode
+  :config
+  (setq highlight-symbol-idle-delay 0.5)
+  (add-hook 'prog-mode-hook 'highlight-symbol-mode))
 
-(require 'nyan-mode)
-(nyan-mode 1)
+(use-package nyan-mode
+  :config
+  (nyan-mode 1))
 
-(require 'vimrc-mode)
-(add-to-list 'auto-mode-alist '(".vim\\(rc\\)?$" . vimrc-mode))
+(use-package vimrc-mode
+  :commands vimrc-mode
+  :config
+  (add-to-list 'auto-mode-alist '(".vim\\(rc\\)?$" . vimrc-mode)))
 
-(require 'nlinum)
-(global-nlinum-mode 1)
+(use-package nlinum
+  :config
+  (global-nlinum-mode 1))
 
 (show-paren-mode 1)
 (tool-bar-mode -1)
@@ -43,14 +50,6 @@
 (setq-default truncate-lines 1
 			  backward-delete-function nil)
 
-(require 'diminish)
 (eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
-(eval-after-load "highlight-symbol" '(diminish 'highlight-symbol-mode))
-(eval-after-load "git-gutter+" '(diminish 'git-gutter+-mode))
-(eval-after-load "smartparens" '(diminish 'smartparens-mode))
-(eval-after-load "helm" '(diminish 'helm-mode))
-(eval-after-load "emmet-mode" '(diminish 'emmet-mode))
-(eval-after-load "rainbow-mode" '(diminish 'rainbow-mode))
-(eval-after-load "abbrev" '(diminish 'abbrev-mode))
 
 (provide 'init-misc)

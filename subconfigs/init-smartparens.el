@@ -1,14 +1,3 @@
-(require 'smartparens-config)
-
-(sp-local-pair '(c++-mode c-mode)"/*" "*/" :post-handlers '((" | " "SPC")
-															("* ||\n[i]" "RET")))
-
-(sp-with-modes '(php-mode)
-  (sp-local-pair "/**" "*/" :post-handlers '(("| " "SPC")
-                                             (my-php-handle-docstring "RET")))
-  (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
-  (sp-local-pair "(" nil :prefix "\\(\\sw\\|\\s_\\)*"))
-
 (defun my-php-get-function-args (&optional name)
 	"Return all arguments of php function.
 	Point should be at the line containing `function'."
@@ -48,6 +37,18 @@
     (let ((o (sp--get-active-overlay)))
       (indent-region (overlay-start o) (overlay-end o)))))
 
-(smartparens-global-mode t)
+
+(use-package smartparens-config
+  :diminish smartparens-mode
+  :config
+  (sp-local-pair '(c++-mode c-mode)"/*" "*/" :post-handlers '((" | " "SPC")
+															("* ||\n[i]" "RET")))
+  (sp-with-modes '(php-mode)
+	(sp-local-pair "/**" "*/" :post-handlers '(("| " "SPC")
+                                             (my-php-handle-docstring "RET")))
+	(sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
+	(sp-local-pair "(" nil :prefix "\\(\\sw\\|\\s_\\)*"))
+
+  (smartparens-global-mode t))
 
 (provide 'init-smartparens)

@@ -29,12 +29,11 @@ Theme: ujelly
  * magit
  * markdown-mode
  * nlinum
- * php-extras
- * php-mode
  * projectile
  * rainbow-mode
  * smartparens
  * ujelly-theme
+ * use-package
  * vimrc-mode
  * web-mode
  * yasnippet

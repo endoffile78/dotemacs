@@ -1,8 +1,3 @@
-(require 'evil)
-(require 'evil-leader)
-(require 'evil-tabs)
-(require 'evil-surround)
-
 (defgroup dotemacs-evil nil
   "Configuration options for evil-mode."
   :group 'dotemacs
@@ -21,35 +16,6 @@
                                              (evil-emacs-state)
                                            (evil-normal-state))))))
 
-(global-evil-tabs-mode t)
-
-(setq evil-normal-state-cursor '("white" box)
-	  evil-insert-state-cursor '("red" bar))
-
-(evil-leader/set-leader ",")
-(global-evil-leader-mode)
-(evil-leader/set-key "mg" 'mpd-get-current-song
-					 "mc" 'mpd-clear-playlist
-					 "k" 'kill-buffer
-					 "l" 'load-file
-					 "b" 'helm-buffers-list
-					 "fn" 'flycheck-next-error
-					 "fp" 'flycheck-previous-error
-					 "fe" 'flycheck-list-errors
-					 "fc" 'flycheck-buffer
-					 "pf" 'helm-projectile
-					 "mn" 'mpd-next
-					 "mb" 'mpd-prev
-					 "mp" 'mpd-pause
-					 "gc" 'ggtags-create-tags
-					 "gu" 'ggtags-update-tags
-					 "gf" 'ggtags-find-file
-					 "gs" 'ggtags-find-other-symbol
-					 "ms" 'magit-status
-					 "md" 'magit-diff
-					 "mb" 'magit-blame-popup
-					 "ml" 'magit-log-popop)
-
 (defun my-evil-modeline-change (default-color)
 	"Changes the modeline color when the evil mode changes"
 	(let ((color (cond
@@ -64,43 +30,81 @@
                                    (face-foreground 'mode-line))))
 	(add-hook 'post-command-hook (lambda () (my-evil-modeline-change default-color))))
 
-(defun vimlike-quit ()
+(use-package evil
+  :ensure
+  :preface
+  (defun vimlike-quit ()
 	"Vimlike ':q' behavior: close current window if there are split windows;
 	otherwise, close current tab (elscreen)."
 	(interactive)
 	(let ((one-elscreen (elscreen-one-screen-p))
-			(one-window (one-window-p)))
-		(cond
-			; if current tab has split windows in it, close the current live window
-			((not one-window)
-			 (kill-this-buffer)
-			 (delete-window) ; delete the current window
-			 (balance-windows) ; balance remaining windows
-			nil)
-			; if there are multiple elscreens (tabs), close the current elscreen
-			((not one-elscreen)
-			 (kill-this-buffer)
-			 (elscreen-kill)
-			nil)
-			; if there is only one elscreen, just try to quit (calling elscreen-kill
-			; will not work, because elscreen-kill fails if there is only one
-			; elscreen)
-			(one-elscreen
-			 (evil-quit)
-			nil)
-		)))
+		  (one-window (one-window-p)))
+	  (cond
+		; if current tab has split windows in it, close the current live window
+	   ((not one-window)
+		(kill-this-buffer)
+		(delete-window) ; delete the current window
+		(balance-windows) ; balance remaining windows
+		nil)
+		; if there are multiple elscreens (tabs), close the current elscreen
+	   ((not one-elscreen)
+		(kill-this-buffer)
+		(elscreen-kill)
+		nil)
+	   ; if there is only one elscreen, just try to quit (calling elscreen-kill
+	   ; will not work, because elscreen-kill fails if there is only one
+	   ; elscreen)
+	   (one-elscreen
+		(evil-quit)
+		nil)
+	   )))
 
-(defun vimlike-write-quit ()
+  (defun vimlike-write-quit ()
 	"Vimlike ':wq' behavior: write then close..."
 	(interactive)
 	(save-buffer)
 	(vimlike-quit))
+  :config
+  (setq evil-normal-state-cursor '("white" box)
+		evil-insert-state-cursor '("red" bar))
+  (evil-ex-define-cmd "q" 'vimlike-quit)
+  (evil-ex-define-cmd "wq" 'vimlike-write-quit)
+  (evil-mode 1))
 
-(evil-ex-define-cmd "q" 'vimlike-quit)
-(evil-ex-define-cmd "wq" 'vimlike-write-quit)
+(use-package evil-tabs
+  :config
+  (global-evil-tabs-mode t))
 
-(global-evil-surround-mode 1)
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1))
 
-(evil-mode 1)
+(use-package evil-leader
+  :ensure
+  :config
+  (evil-leader/set-leader ",")
+  (global-evil-leader-mode)
+  (evil-leader/set-key
+	"mg" 'mpd-get-current-song
+	"mc" 'mpd-clear-playlist
+	"k" 'kill-buffer
+	"l" 'load-file
+	"b" 'helm-buffers-list
+	"fn" 'flycheck-next-error
+	"fp" 'flycheck-previous-error
+	"fe" 'flycheck-list-errors
+	"fc" 'flycheck-buffer
+	"pf" 'helm-projectile
+	"mn" 'mpd-next
+	"mb" 'mpd-prev
+	"mp" 'mpd-pause
+	"gc" 'ggtags-create-tags
+	"gu" 'ggtags-update-tags
+	"gf" 'ggtags-find-file
+	"gs" 'ggtags-find-other-symbol
+	"ms" 'magit-status
+	"md" 'magit-diff
+	"mb" 'magit-blame-popup
+	"ml" 'magit-log-popop))
 
 (provide 'init-evil)
