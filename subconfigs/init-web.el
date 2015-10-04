@@ -13,6 +13,7 @@
 (add-hook 'php-mode-hook 'my-php-mode-hook)
 
 (use-package web-mode
+  :ensure
   :preface
   (defun my-web-mode-hook ()
 	(setq web-mode-markup-indent-offset 2
@@ -45,6 +46,7 @@
   (add-hook 'css-mode-hook 'rainbow-mode))
 
 (use-package js2-mode
+  :ensure
   :mode ("\\.js$" . js2-mode))
 
 (use-package emmet-mode

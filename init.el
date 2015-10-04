@@ -9,17 +9,17 @@
 (add-to-list 'load-path (concat user-emacs-directory "/subconfigs"))
 
 (defun sanityinc/time-subtract-millis (b a)
-	(* 1000.0 (float-time (time-subtract b a))))
+  (* 1000.0 (float-time (time-subtract b a))))
 
 (defun fullscreen (&optional f)
-	(interactive)
-	(x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-			'(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
-	(x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-			'(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0)))
+  (interactive)
+  (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+						 '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
+  (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+						 '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0)))
 
 (when (display-graphic-p)
-	(fullscreen))
+  (fullscreen))
 
 (unless '(packge-installed-p 'use-package)
   (package-refresh-contents)

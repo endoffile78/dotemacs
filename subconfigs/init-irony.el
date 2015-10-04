@@ -5,6 +5,7 @@
 										  'case-label '+)))
 
 (use-package irony
+  :ensure
   :commands irony-mode
   :preface  
   ;; replace the `completion-at-point' and `complete-symbol' bindings in

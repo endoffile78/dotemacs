@@ -18,9 +18,7 @@
   (nyan-mode 1))
 
 (use-package vimrc-mode
-  :commands vimrc-mode
-  :config
-  (add-to-list 'auto-mode-alist '(".vim\\(rc\\)?$" . vimrc-mode)))
+  :mode (".vim\\(rc\\)?$" . vimrc-mode))
 
 (use-package nlinum
   :config
