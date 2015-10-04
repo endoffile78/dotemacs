@@ -27,6 +27,7 @@ Theme: ujelly
  * irony
  * java-file-create
  * java-snippets
+ * jdee
  * jedi-core
  * js2-mode
  * libmpdee
