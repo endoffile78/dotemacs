@@ -105,6 +105,6 @@
 	"ms" 'magit-status
 	"md" 'magit-diff
 	"mb" 'magit-blame-popup
-	"ml" 'magit-log-popop))
+	"ml" 'magit-log-popup))
 
 (provide 'init-evil)
