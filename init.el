@@ -37,6 +37,7 @@
 (use-package init-helm)
 (use-package init-indentation)
 (use-package init-irony)
+(use-package init-java)
 (use-package init-markdown)
 (use-package init-misc)
 (use-package init-projectile)

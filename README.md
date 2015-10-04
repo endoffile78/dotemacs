@@ -25,6 +25,8 @@ Theme: ujelly
  * helm-projectile
  * highlight-symbol
  * irony
+ * java-file-create
+ * java-snippets
  * jedi-core
  * js2-mode
  * libmpdee
