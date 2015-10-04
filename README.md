@@ -1,6 +1,8 @@
 dotemacs
 ========
 
+My emacs config.
+
 #Plugins
 
 Theme: ujelly
@@ -37,3 +39,7 @@ Theme: ujelly
  * vimrc-mode
  * web-mode
  * yasnippet
+
+#Picture
+
+![emacs config](./emacs.png)
