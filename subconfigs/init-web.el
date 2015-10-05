@@ -14,6 +14,8 @@
 
 (use-package web-mode
   :ensure
+  :mode (("\\.html?\\'" . web-mode)
+		 ("\\.php?\\'" . web-mode))
   :preface
   (defun my-web-mode-hook ()
 	(setq web-mode-markup-indent-offset 2
@@ -33,9 +35,6 @@
   (set-face-attribute 'web-mode-html-tag-bracket-face nil :foreground "#ffffff")
   (set-face-attribute 'web-mode-current-element-highlight-face nil :background "#808080")
   (set-face-attribute 'web-mode-block-delimiter-face nil :foreground "#8fbfdc")
-
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
 
   (add-hook 'web-mode-hook  'my-web-mode-hook))
 

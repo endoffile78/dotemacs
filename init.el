@@ -27,6 +27,7 @@
 
 (require 'use-package)
 (require 'diminish)
+(require 'bind-key)
 
 (use-package init-company)
 (use-package init-dired)
@@ -43,6 +44,7 @@
 (use-package init-projectile)
 (use-package init-python)
 (use-package init-smartparens)
+(use-package init-visual)
 (use-package init-web)
 (use-package init-yasnippet)
 
