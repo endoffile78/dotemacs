@@ -3,7 +3,7 @@
 (use-package server
   :config
   (unless (server-running-p)
-	(server-start)))
+    (server-start)))
 
 (use-package vimrc-mode
   :mode (".vim\\(rc\\)?$" . vimrc-mode))
@@ -25,10 +25,10 @@
 	  backup-directory-alist (quote ((".*" . "~/.emacs.d/backups/")))
 	  delete-old-versions t
 	  vc-follow-symlinks t
-	  indent-tabs-mode t)
+	  initial-major-mode 'text-mode)
 
 (setq-default truncate-lines 1
-			  backward-delete-function nil)
+	      backward-delete-function nil)
 
 (eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
 

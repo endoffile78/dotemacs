@@ -95,6 +95,9 @@
 	"fe" 'flycheck-list-errors
 	"fc" 'flycheck-buffer
 	"pf" 'helm-projectile
+	"ps" 'helm-projectile-switch-project
+	"pb" 'helm-projectile-switch-to-buffer
+	"pd" 'helm-projectile-find-dir
 	"mn" 'mpd-next
 	"mb" 'mpd-prev
 	"mp" 'mpd-pause

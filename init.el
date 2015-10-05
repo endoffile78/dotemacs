@@ -1,7 +1,7 @@
 (require 'package)
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-						 ("org" . "http://orgmode.org/elpa/")
+			 ("org" . "http://orgmode.org/elpa/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
@@ -49,8 +49,8 @@
 (use-package init-yasnippet)
 
 (add-hook 'after-init-hook
-		   (lambda ()
-			 (message "init completed in %.2fms"
-					  (sanityinc/time-subtract-millis after-init-time before-init-time))))
+	  (lambda ()
+	    (message "init completed in %.2fms"
+		     (sanityinc/time-subtract-millis after-init-time before-init-time))))
 
 (provide 'init)

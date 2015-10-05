@@ -1,8 +1,8 @@
 (c-add-style "my-c-style" '((c-continued-statement-offset 4)
-							(c-set-offset 'inline-open '+
-										  'block-open '+
-										  'brace-list-open '+
-										  'case-label '+)))
+			    (c-set-offset 'inline-open '+
+					  'block-open '+
+					  'brace-list-open '+
+					  'case-label '+)))
 
 (use-package irony
   :ensure
@@ -15,6 +15,7 @@
 	  'irony-completion-at-point-async)
 	(define-key irony-mode-map [remap complete-symbol]
 	  'irony-completion-at-point-async)
+	(setq indent-tabs-mode t)
 	(c-set-style "my-c-style"))
   :init
   (add-hook 'c++-mode-hook 'irony-mode)
