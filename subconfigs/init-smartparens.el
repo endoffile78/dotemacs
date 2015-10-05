@@ -1,3 +1,5 @@
+;;; init-smartparens.el --- Smartparens configuration
+
 (defun my-php-get-function-args (&optional name)
 	"Return all arguments of php function.
 	Point should be at the line containing `function'."

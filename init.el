@@ -1,12 +1,12 @@
 (require 'package)
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-			 ("org" . "http://orgmode.org/elpa/")
+						 ("org" . "http://orgmode.org/elpa/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
 
-(add-to-list 'load-path (concat user-emacs-directory "/subconfigs"))
+(add-to-list 'load-path (expand-file-name "subconfigs" user-emacs-directory))
 
 (defun sanityinc/time-subtract-millis (b a)
   (* 1000.0 (float-time (time-subtract b a))))
@@ -49,8 +49,8 @@
 (use-package init-yasnippet)
 
 (add-hook 'after-init-hook
-	  (lambda ()
-	    (message "init completed in %.2fms"
-		     (sanityinc/time-subtract-millis after-init-time before-init-time))))
+		  (lambda ()
+			(message "init completed in %.2fms"
+					 (sanityinc/time-subtract-millis after-init-time before-init-time))))
 
 (provide 'init)

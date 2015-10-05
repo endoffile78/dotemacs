@@ -1,3 +1,5 @@
+;;;init-evil.el --- Configuration for evil and other evil related packages
+
 (defgroup dotemacs-evil nil
   "Configuration options for evil-mode."
   :group 'dotemacs
@@ -66,7 +68,8 @@
 	(vimlike-quit))
   :config
   (setq evil-normal-state-cursor '("white" box)
-		evil-insert-state-cursor '("red" bar))
+		evil-insert-state-cursor '("red" bar)
+		evil-operator-state-cursor '("red" hollow))
   (evil-ex-define-cmd "q" 'vimlike-quit)
   (evil-ex-define-cmd "wq" 'vimlike-write-quit)
   (evil-mode 1))

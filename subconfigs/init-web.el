@@ -1,3 +1,5 @@
+;;; init-web.el --- Settings for html, css, js, and php
+
 (add-hook 'html-mode-hook
 		  (lambda ()
 			(set (make-local-variable 'sgml-basic-offset) 2)))

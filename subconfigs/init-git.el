@@ -1,3 +1,5 @@
+;;; init-git.el --- Configuration for packages related to git
+
 (use-package git-gutter-fringe+
   :diminish git-gutter+-mode
   :config

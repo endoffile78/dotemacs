@@ -1,3 +1,5 @@
+;;; init-python.el --- Configuration for elpy and jedi
+
 (use-package elpy
   :commands elpy-enable
   :config

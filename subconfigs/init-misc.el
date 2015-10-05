@@ -1,3 +1,5 @@
+;;; init-misc.el --- Misc. settings
+
 (use-package libmpdee)
 
 (use-package server

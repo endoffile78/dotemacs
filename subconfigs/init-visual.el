@@ -1,3 +1,5 @@
+;;; init-visual.el --- Visual settings
+
 (use-package ujelly-theme)
 
 (use-package nyan-mode

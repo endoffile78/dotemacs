@@ -1,3 +1,5 @@
+;;; init-yasnippet.el --- Yasnippet settings
+
 (use-package yasnippet
   :ensure
   :diminish yas-minor-mode

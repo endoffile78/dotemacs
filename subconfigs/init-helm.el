@@ -1,3 +1,5 @@
+;;; init-helm --- Configuration for helm
+
 (use-package helm
   :ensure
   :diminish helm-mode

@@ -3,7 +3,8 @@ dotemacs
 
 My emacs config.
 
-#Plugins
+Plugins
+-------
 
 Theme: ujelly
 
@@ -43,6 +44,7 @@ Theme: ujelly
  * web-mode
  * yasnippet
 
-#Picture
+Picture
+-------
 
 ![emacs config](./emacs.png)

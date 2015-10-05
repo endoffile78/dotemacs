@@ -1,3 +1,5 @@
+;;; init-dired.el --- Dired settings 
+
 ;; Handle zip compression
 (eval-after-load "dired-aux"
   '(add-to-list 'dired-compress-file-suffixes

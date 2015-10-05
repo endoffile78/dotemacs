@@ -1,3 +1,5 @@
+;;; init-indentation.el --- Indentation settings
+
 (setq-default indent-tabs-mode t
 	      tab-width 4)
 

@@ -1,3 +1,5 @@
+;;; init-flycheck.el --- Configuration for flycheck and flycheck-irony
+
 (use-package flycheck
   :init
   (add-hook 'after-init-hook #'global-flycheck-mode)

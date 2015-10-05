@@ -1,3 +1,5 @@
+;;; init-gtags.el --- Configuration for ggtags
+
 (use-package ggtags
   :diminish ggtags-mode
   :commands ggtags-mode
