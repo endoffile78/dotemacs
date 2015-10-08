@@ -113,4 +113,9 @@
 	"mb" 'magit-blame-popup
 	"ml" 'magit-log-popup))
 
+(use-package vimish-fold
+  :config
+  (vimish-fold-global-mode 1)
+  (use-package evil-vimish-fold))
+
 (provide 'init-evil)

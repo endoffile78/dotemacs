@@ -18,6 +18,7 @@ Theme: ujelly
  * evil-leader
  * evil-surround
  * evil-tabs
+ * evil-vimish-fold
  * flycheck
  * flycheck-irony
  * ggtags
@@ -40,6 +41,7 @@ Theme: ujelly
  * smartparens
  * ujelly-theme
  * use-package
+ * vimish-fold
  * vimrc-mode
  * web-mode
  * yasnippet
