@@ -90,7 +90,7 @@
   (evil-leader/set-key
 	"mg" 'mpd-get-current-song
 	"mc" 'mpd-clear-playlist
-	"k" 'kill-buffer
+	"k" 'kill-this-buffer
 	"l" 'load-file
 	"b" 'helm-buffers-list
 	"fn" 'flycheck-next-error
