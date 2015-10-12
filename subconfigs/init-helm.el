@@ -3,7 +3,7 @@
 (use-package helm
   :ensure
   :diminish helm-mode
-  :bind ("M-x" . helm-M-x)
+  :bind (("M-x" . helm-M-x))
   :init
   (setq helm-command-prefix-key "C-c h"
 		helm-quick-update t
