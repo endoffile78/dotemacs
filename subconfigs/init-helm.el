@@ -11,6 +11,9 @@
 		helm-M-x-fuzzy-match t
 		helm-buffers-fuzzy-matching t)
   :config
+  (use-package helm-flx
+	:config
+	(helm-flx-mode +1))
   (helm-mode 1))
 
 (use-package helm-projectile

@@ -2,7 +2,7 @@
 
 (use-package elpy
   :commands elpy-enable
-  :config
+  :init
   (elpy-enable))
 
 (autoload 'jedi:setup "jedi" nil t)

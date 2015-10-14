@@ -24,6 +24,7 @@ Theme: ujelly
  * ggtags
  * git-gutter-fringe+
  * helm
+ * helm-flx
  * helm-projectile
  * highlight-symbol
  * irony
