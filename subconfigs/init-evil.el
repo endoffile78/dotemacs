@@ -114,7 +114,9 @@
 	"ml" 'magit-log-popup
 	"ed" 'elpy-goto-definition
 	"er" 'elpy-refactor
-	"es" 'elpy-shell-switch-to-shell))
+	"es" 'elpy-shell-switch-to-shell
+	"yn" 'yas-new-snippet
+	"yr" 'yas-reload-all))
 
 (use-package vimish-fold
   :config
