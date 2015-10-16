@@ -116,7 +116,8 @@
 	"er" 'elpy-refactor
 	"es" 'elpy-shell-switch-to-shell
 	"yn" 'yas-new-snippet
-	"yr" 'yas-reload-all))
+	"yr" 'yas-reload-all
+	"c" 'compile))
 
 (use-package vimish-fold
   :config
