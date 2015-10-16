@@ -111,7 +111,10 @@
 	"ms" 'magit-status
 	"md" 'magit-diff
 	"mb" 'magit-blame-popup
-	"ml" 'magit-log-popup))
+	"ml" 'magit-log-popup
+	"ed" 'elpy-goto-definition
+	"er" 'elpy-refactor
+	"es" 'elpy-shell-switch-to-shell))
 
 (use-package vimish-fold
   :config

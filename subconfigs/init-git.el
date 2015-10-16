@@ -9,8 +9,6 @@
   (global-git-gutter+-mode))
 
 (use-package magit
-  :ensure
-  :config
-  (setq magit-last-seen-setup-instructions "1.4.0"))
+  :ensure)
 
 (provide 'init-git)
