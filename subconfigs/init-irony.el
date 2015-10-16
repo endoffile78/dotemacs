@@ -9,6 +9,7 @@
 (use-package irony
   :ensure
   :commands irony-mode
+  :diminish irony-mode
   :preface  
   ;; replace the `completion-at-point' and `complete-symbol' bindings in
   ;; irony-mode's buffers by irony-mode's asynchronous function

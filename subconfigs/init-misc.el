@@ -33,5 +33,6 @@
 	      backward-delete-function nil)
 
 (eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
+(eval-after-load "abbrev" '(diminish 'abbrev-mode))
 
 (provide 'init-misc)

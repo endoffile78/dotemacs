@@ -1,6 +1,6 @@
 # -*- mode: snippet; require-final-newline: nil -*-
-# name: todo
-# key: todo
+# name: fixme
+# key: fixme
 # binding: direct-keybinding
 # --
-//TODO: $0
+//FIXME: $0
