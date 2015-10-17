@@ -67,7 +67,7 @@
 	(save-buffer)
 	(vimlike-quit))
   :config
-  (setq evil-normal-state-cursor '("white" box)
+  (setq evil-normal-state-cursor '("white" box) ;Change the cursor color and shape based on the state
 		evil-insert-state-cursor '("red" bar)
 		evil-operator-state-cursor '("red" hollow))
   (evil-ex-define-cmd "q" 'vimlike-quit)
@@ -110,7 +110,7 @@
 	"gs" 'ggtags-find-other-symbol
 	"ms" 'magit-status
 	"md" 'magit-diff
-	"mb" 'magit-blame-popup
+	"mb" 'magit-blame
 	"ml" 'magit-log-popup
 	"ed" 'elpy-goto-definition
 	"er" 'elpy-refactor
