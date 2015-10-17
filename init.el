@@ -18,10 +18,10 @@
   (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
 						 '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0)))
 
-(when (display-graphic-p)
+(when (display-graphic-p) ;When in the gui make emacs fullscreen
   (fullscreen))
 
-(unless '(packge-installed-p 'use-package)
+(unless '(packge-installed-p 'use-package) ;Make sure use-package is installed
   (package-refresh-contents)
   (package-install 'use-package))
 

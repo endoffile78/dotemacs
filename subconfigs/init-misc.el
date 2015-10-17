@@ -30,7 +30,7 @@
 	  initial-major-mode 'text-mode)
 
 (setq-default truncate-lines 1
-	      backward-delete-function nil)
+			  backward-delete-function nil)
 
 (eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
 (eval-after-load "abbrev" '(diminish 'abbrev-mode))

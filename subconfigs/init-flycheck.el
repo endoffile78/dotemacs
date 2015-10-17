@@ -6,7 +6,6 @@
   (use-package flycheck-irony
 	:init
 	(eval-after-load 'flycheck
-	  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
-	))
+	  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))))
 
 (provide 'init-flycheck)
