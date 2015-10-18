@@ -16,6 +16,7 @@ Theme: ujelly
  * emmet-mode
  * evil
  * evil-leader
+ * evil-org
  * evil-surround
  * evil-tabs
  * evil-vimish-fold
