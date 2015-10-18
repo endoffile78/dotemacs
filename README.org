@@ -1,0 +1,55 @@
+* dotemacs
+
+My emacs config.
+
+** Requirements
+   1. Emacs 24.4+
+   2. Git
+
+** Plugins
+   + company
+   + company-irony
+   + company-irony-c-headers
+   + company-jedi
+   + elscreen
+   + emmet-mode
+   + evil
+   + evil-leader
+   + evil-org
+   + evil-surround
+   + evil-tabs
+   + evil-vimish-fold
+   + flycheck
+   + flycheck-irony
+   + ggtags
+   + git-gutter-fringe+
+   + helm
+   + helm-flx
+   + helm-projectile
+   + highlight-symbol
+   + irony
+   + java-file-create
+   + java-snippets
+   + jdee
+   + jedi-core
+   + js2-mode
+   + libmpdee
+   + magit
+   + markdown-mode
+   + nlinum
+   + projectile
+   + rainbow-mode
+   + smartparens
+   + ujelly-theme
+   + use-package
+   + vimish-fold
+   + vimrc-mode
+   + web-mode
+   + yasnippet
+
+*** Theme
+	+ [[https://github.com/marktran/color-theme-ujelly][ujelly]]
+
+** Picture
+
+[[file:emacs.png][Emacs config]]

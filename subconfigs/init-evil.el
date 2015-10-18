@@ -125,6 +125,6 @@
   (use-package evil-vimish-fold))
 
 (use-package evil-org
-  :diminish)
+  :diminish evil-org-mode)
 
 (provide 'init-evil)
