@@ -48,8 +48,9 @@ My emacs config.
    + yasnippet
 
 *** Theme
-	+ [[https://github.com/marktran/color-theme-ujelly][ujelly]]
+
+[[https://github.com/marktran/color-theme-ujelly][ujelly]]
 
 ** Picture
 
-[[file:emacs.png][Emacs config]]
+[![Emacs config](emacs.png)]
