@@ -53,4 +53,4 @@ My emacs config.
 
 ** Picture
 
-[![Emacs config](emacs.png)]
+# [![Emacs config](emacs.png)]
