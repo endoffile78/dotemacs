@@ -49,7 +49,7 @@ My emacs config.
 
 *** Theme
 
-[[https://github.com/marktran/color-theme-ujelly][ujelly]]
+[[https://github.com/endoffile78/color-theme-ujelly][ujelly]]
 
 ** Picture
 
