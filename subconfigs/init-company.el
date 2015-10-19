@@ -15,7 +15,7 @@
 
   (eval-after-load 'company
 	'(add-to-list
-	  'company-backends '(company-irony-c-headers company-irony company-jedi company-yasnippet company-css company-elisp company-semantic)))
+	  'company-backends '(company-irony-c-headers company-irony company-jedi company-yasnippet company-css company-elisp company-semantic company-files)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 

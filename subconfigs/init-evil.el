@@ -108,6 +108,7 @@
 	"gu" 'ggtags-update-tags
 	"gf" 'ggtags-find-file
 	"gs" 'ggtags-find-other-symbol
+	"gt" 'ggtags-find-tag-dwim
 	"ms" 'magit-status
 	"md" 'magit-diff
 	"mb" 'magit-blame
