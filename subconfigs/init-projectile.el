@@ -4,9 +4,9 @@
   "Checks to see if project is in a git repo or not and then sets the indexing method"
   (let ((vcs (projectile-project-vcs)))
     (cond
-     ((eq vcs 'git) (setq projectile-indexing-method 'alien
+     ((eq vcs 'git) (setq projectile-indexing-method 'alien ;Use .gitignore
 						  projectile-enable-caching nil))
-     (t (setq projectile-indexing-method 'native
+     (t (setq projectile-indexing-method 'native ;Use .projectile
   			  projectile-enable-caching t)))))
 
 (use-package projectile

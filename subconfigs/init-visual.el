@@ -10,7 +10,8 @@
 
 (use-package highlight-symbol
   :diminish highlight-symbol-mode
-  :config
+  :commands highlight-symbol-mode
+  :init
   (setq highlight-symbol-idle-delay 0.5)
   (add-hook 'prog-mode-hook 'highlight-symbol-mode))
 

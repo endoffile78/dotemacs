@@ -2,6 +2,7 @@
 
 (use-package java-file-create)
 
-(use-package jdee)
+(use-package jdee
+  :commands jedi-mode)
 
 (provide 'init-java)
