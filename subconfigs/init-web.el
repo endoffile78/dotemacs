@@ -32,13 +32,6 @@
 	(rainbow-mode)
 	(emmet-mode))
   :config
-  ; Change some of ujelly's colors
-  (set-face-attribute 'web-mode-html-tag-face nil :foreground "#fad07a")
-  (set-face-attribute 'web-mode-doctype-face nil :foreground "#8fbfdc")
-  (set-face-attribute 'web-mode-html-tag-bracket-face nil :foreground "#ffffff")
-  (set-face-attribute 'web-mode-current-element-highlight-face nil :background "#808080")
-  (set-face-attribute 'web-mode-block-delimiter-face nil :foreground "#8fbfdc")
-
   (add-hook 'web-mode-hook  'my-web-mode-hook))
 
 (use-package rainbow-mode

@@ -1,7 +1,7 @@
 ;;; init-visual.el --- Visual settings
 
 (use-package ujelly-theme
-  :ensure)
+  :load-path "themes/ujelly")
 
 (use-package nyan-mode
   :if window-system
