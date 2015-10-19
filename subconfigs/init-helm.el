@@ -2,6 +2,7 @@
 
 (use-package helm
   :ensure
+  :demand t
   :diminish helm-mode
   :bind (("M-x" . helm-M-x))
   :init
