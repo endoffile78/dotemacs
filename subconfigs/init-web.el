@@ -29,6 +29,7 @@
 		  web-mode-script-padding 2
 		  web-mode-enable-current-element-highlight t
 		  web-mode-enable-block-face t)
+	(highlight-symbol-mode 0)
 	(rainbow-mode)
 	(emmet-mode))
   :config
