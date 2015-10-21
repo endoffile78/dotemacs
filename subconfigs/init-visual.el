@@ -15,6 +15,11 @@
   (setq highlight-symbol-idle-delay 0.5)
   (add-hook 'prog-mode-hook 'highlight-symbol-mode))
 
+(use-package rainbow-delimeters
+  :commands rainbow-delimeters-mode
+  :init
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+
 (show-paren-mode 1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
