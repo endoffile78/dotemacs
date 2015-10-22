@@ -19,18 +19,18 @@
                                            (evil-normal-state))))))
 
 (defun my-evil-modeline-change (default-color)
-	"Changes the modeline color when the evil mode changes"
-	(let ((color (cond
-				  ((evil-insert-state-p) '("#FFFFFF" . "#000000"))
-				  ((evil-visual-state-p) '("#330022" . "#FFFFFF"))
-				  ((evil-normal-state-p) '("#000000" . "#FFFFFF"))
-				  ((evil-emacs-state-p) '("#440000" . "#ffffff")))))
+  "Changes the modeline color when the evil mode changes"
+  (let ((color (cond
+				((evil-insert-state-p) '("#FFFFFF" . "#000000"))
+				((evil-visual-state-p) '("#330022" . "#FFFFFF"))
+				((evil-normal-state-p) '("#000000" . "#FFFFFF"))
+				((evil-emacs-state-p) '("#440000" . "#ffffff")))))
 	(set-face-background 'mode-line (car color))
 	(set-face-foreground 'mode-line (cdr color))))
 
 (lexical-let ((default-color (cons (face-background 'mode-line)
                                    (face-foreground 'mode-line))))
-	(add-hook 'post-command-hook (lambda () (my-evil-modeline-change default-color))))
+  (add-hook 'post-command-hook (lambda () (my-evil-modeline-change default-color))))
 
 (use-package evil
   :ensure

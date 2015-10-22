@@ -20,10 +20,11 @@
   :init
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
-(show-paren-mode 1)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-(global-hl-line-mode 1)
+(when window-system
+  (show-paren-mode 1)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+  (global-hl-line-mode 1))
 
 (provide 'init-visual)
