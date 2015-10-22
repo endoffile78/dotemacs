@@ -1,10 +1,10 @@
 ;;; init-irony.el --- Configuration for irony
 
 (c-add-style "my-c-style" '((c-continued-statement-offset 4)
-			    (c-set-offset 'inline-open '+
-					  'block-open '+
-					  'brace-list-open '+
-					  'case-label '+)))
+							(c-set-offset 'inline-open '+
+										  'block-open '+
+										  'brace-list-open '+
+										  'case-label '+)))
 
 (use-package irony
   :ensure

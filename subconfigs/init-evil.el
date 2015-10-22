@@ -42,23 +42,18 @@
 	(let ((one-elscreen (elscreen-one-screen-p))
 		  (one-window (one-window-p)))
 	  (cond
-		; if current tab has split windows in it, close the current live window
-	   ((not one-window)
+	   ((not one-window) ; if current tab has split windows in it, close the current live window
 		(kill-this-buffer)
 		(delete-window) ; delete the current window
 		(balance-windows) ; balance remaining windows
 		nil)
-		; if there are multiple elscreens (tabs), close the current elscreen
-	   ((not one-elscreen)
+	   ((not one-elscreen) ; if there are multiple elscreens (tabs), close the current elscreen
 		(kill-this-buffer)
 		(elscreen-kill)
 		nil)
-	   ; if there is only one elscreen, just try to quit (calling elscreen-kill
-	   ; will not work, because elscreen-kill fails if there is only one
-	   ; elscreen)
-	   (one-elscreen
-		(evil-quit)
-		nil)
+	   (one-elscreen ; if there is only one elscreen, just try to quit (calling elscreen-kill
+		(evil-quit)	 ; will not work, because elscreen-kill fails if there is only one
+		nil)		 ; elscreen)
 	   )))
 
   (defun vimlike-write-quit ()

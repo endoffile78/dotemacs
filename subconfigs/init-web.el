@@ -33,7 +33,7 @@
 	(rainbow-mode)
 	(emmet-mode))
   :config
-  (add-hook 'web-mode-hook  'my-web-mode-hook))
+  (add-hook 'web-mode-hook 'my-web-mode-hook))
 
 (use-package rainbow-mode
   :diminish rainbow-mode
