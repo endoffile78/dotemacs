@@ -14,6 +14,11 @@
   :config
   (global-nlinum-mode 1))
 
+(use-package aggressive-indent
+  :diminish aggressive-indent-mode
+  :config
+  (global-aggressive-indent-mode 1))
+
 (setq ring-bell-function 'ignore 
 	  browse-url-browser-function 'browse-url-generic
 	  browse-url-generic-program "firefox"
