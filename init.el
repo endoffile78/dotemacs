@@ -48,6 +48,7 @@
 (use-package init-visual)
 (use-package init-web)
 (use-package init-yasnippet)
+(use-package init-latex)
 
 (add-hook 'after-init-hook
 		  (lambda ()
