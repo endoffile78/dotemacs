@@ -113,7 +113,8 @@
 	"es" 'elpy-shell-switch-to-shell
 	"yn" 'yas-new-snippet
 	"yr" 'yas-reload-all
-	"c" 'compile))
+	"c" 'compile
+	"t" 'elscreen-create))
 
 (use-package vimish-fold
   :config
