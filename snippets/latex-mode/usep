@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: usepackage
+# key: usep
+# binding: direct-keybinding
+# --
+\usepackage{$0}
