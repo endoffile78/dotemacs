@@ -114,7 +114,8 @@
 	"yn" 'yas-new-snippet
 	"yr" 'yas-reload-all
 	"c" 'compile
-	"t" 'elscreen-create))
+	"t" 'elscreen-create
+	"d" 'gud-gdb))
 
 (use-package vimish-fold
   :config
