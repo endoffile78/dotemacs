@@ -96,6 +96,7 @@
 	"ps" 'helm-projectile-switch-project
 	"pb" 'helm-projectile-switch-to-buffer
 	"pd" 'helm-projectile-find-dir
+	"pi" 'projectile-invalidate-cache
 	"mn" 'mpd-next
 	"mb" 'mpd-prev
 	"mp" 'mpd-pause

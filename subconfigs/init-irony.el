@@ -1,6 +1,8 @@
 ;;; init-irony.el --- Configuration for irony
 
 (c-add-style "my-c-style" '((c-continued-statement-offset 4)
+							(c-tab-always-indent t)
+							(c-toggle-hungry-state t)
 							(c-set-offset 'inline-open '+
 										  'block-open '+
 										  'brace-list-open '+

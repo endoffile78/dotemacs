@@ -7,8 +7,8 @@ My emacs config.
    2. Git
 
 ** Plugins
-   + acutex
    + aggressive-indent
+   + auctex
    + company
    + company-irony
    + company-irony-c-headers
@@ -38,7 +38,6 @@ My emacs config.
    + libmpdee
    + magit
    + markdown-mode
-   + nlinum
    + projectile
    + rainbow-mode
    + smartparens
@@ -54,7 +53,5 @@ My emacs config.
 [[https://github.com/endoffile78/color-theme-ujelly][ujelly]]
 
 ** Picture
-
-# [![Emacs config](emacs.png)]
 
 [[./emacs.png]]

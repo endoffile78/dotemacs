@@ -20,6 +20,7 @@
   :init
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
+(global-linum-mode)
 (global-hl-line-mode 1)
 
 (when window-system

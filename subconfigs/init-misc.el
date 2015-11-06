@@ -10,10 +10,6 @@
 (use-package vimrc-mode
   :mode (".vim\\(rc\\)?$" . vimrc-mode))
 
-(use-package nlinum
-  :config
-  (global-nlinum-mode 1))
-
 (use-package aggressive-indent
   :diminish aggressive-indent-mode
   :config
