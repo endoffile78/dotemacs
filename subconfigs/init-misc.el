@@ -15,7 +15,7 @@
   :config
   (global-aggressive-indent-mode 1))
 
-(setq ring-bell-function 'ignore 
+(setq ring-bell-function 'ignore
 	  browse-url-browser-function 'browse-url-generic
 	  browse-url-generic-program "firefox"
 	  inhibit-startup-message t
@@ -35,5 +35,7 @@
 
 (eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
 (eval-after-load "abbrev" '(diminish 'abbrev-mode))
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (provide 'init-misc)
