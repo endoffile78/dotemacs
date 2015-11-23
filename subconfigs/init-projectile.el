@@ -10,8 +10,13 @@
   			  projectile-enable-caching t)))))
 
 (use-package projectile
+  :ensure
   :config
   (add-hook 'projectile-before-switch-project-hook 'my-projectile-hook)
-  (projectile-global-mode))
+  (projectile-global-mode)
+  (use-package helm-projectile
+	:ensure
+	:config
+	(helm-projectile-on)))
 
 (provide 'init-projectile)

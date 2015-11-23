@@ -10,7 +10,7 @@
   (use-package company-irony)
   (use-package company-irony-c-headers)
   (use-package company-jedi)
-  
+
   (add-hook 'after-init-hook 'global-company-mode)
 
   (eval-after-load 'company

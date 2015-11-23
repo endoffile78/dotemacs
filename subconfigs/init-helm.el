@@ -15,9 +15,6 @@
   (use-package helm-flx
 	:config
 	(helm-flx-mode +1))
-  (use-package helm-projectile
-	:config
-	(helm-projectile-on))
   (helm-mode 1))
 
 (provide 'init-helm)

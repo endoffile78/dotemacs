@@ -29,6 +29,7 @@ My emacs config.
    + helm-flx
    + helm-projectile
    + highlight-symbol
+   + hydra
    + irony
    + java-file-create
    + java-snippets

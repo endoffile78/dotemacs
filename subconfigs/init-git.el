@@ -9,6 +9,13 @@
   (global-git-gutter+-mode))
 
 (use-package magit
-  :ensure)
+  :ensure
+  :config
+  (defhydra hydra-magit (:exit t)
+	("s" magit-status "Status")
+	("b" magit-blame "Blame")
+	("d" magit-diff "Diff")
+	("l" magit-log-popup "Log"))
+  (global-set-key (kbd "C-c m") 'hydra-magit/body))
 
 (provide 'init-git)

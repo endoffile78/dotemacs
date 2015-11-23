@@ -88,10 +88,6 @@
 	"k" 'kill-this-buffer
 	"l" 'load-file
 	"b" 'helm-buffers-list
-	"fn" 'flycheck-next-error
-	"fp" 'flycheck-previous-error
-	"fe" 'flycheck-list-errors
-	"fc" 'flycheck-buffer
 	"pf" 'helm-projectile
 	"ps" 'helm-projectile-switch-project
 	"pb" 'helm-projectile-switch-to-buffer
@@ -109,11 +105,6 @@
 	"md" 'magit-diff
 	"mb" 'magit-blame
 	"ml" 'magit-log-popup
-	"ed" 'elpy-goto-definition
-	"er" 'elpy-refactor
-	"es" 'elpy-shell-switch-to-shell
-	"yn" 'yas-new-snippet
-	"yr" 'yas-reload-all
 	"c" 'compile
 	"t" 'elscreen-create
 	"d" 'gud-gdb))

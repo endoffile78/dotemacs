@@ -2,12 +2,16 @@
 
 (use-package elpy
   :commands elpy-enable
-  :bind (("C-c e d" . elpy-goto-definition)
-		 ("C-c e s" . elpy-rgrep-symbol)
-		 ("C-c e m" . elpy-multiedit))
   :init
   (setq elpy-rpc-backend "jedi")
-  (elpy-enable))
+  (elpy-enable)
+  :config
+  (defhydra hydra-elpy (:exit t)
+	("d" elyp-goto-definition "Got definition")
+	("r" elpy-refactor "Refactor")
+	("s" elpy-rgrep-symbol "Find symbol")
+	("m" elpy-multiedit "Multiple cursors"))
+  (global-set-key (kbd "C-c e") 'hydra-elpy/body))
 
 (use-package jedi
   :commands jedi:setup

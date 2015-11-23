@@ -4,16 +4,6 @@
 		  (lambda ()
 			(set (make-local-variable 'sgml-basic-offset) 2)))
 
-(defun my-php-mode-hook ()
-  (setq indent-tabs-mode t)
-  (let ((my-tab-width 4))
-    (setq tab-width my-tab-width
-		  c-basic-indent my-tab-width)
-    (set (make-local-variable 'tab-stop-list)
-         (number-sequence my-tab-width 200 my-tab-width))))
-
-(add-hook 'php-mode-hook 'my-php-mode-hook)
-
 (use-package web-mode
   :ensure
   :mode (("\\.html?\\'" . web-mode)

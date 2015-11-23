@@ -30,6 +30,7 @@
 (require 'diminish)
 (require 'bind-key)
 
+(use-package init-hydra)
 (use-package init-company)
 (use-package init-dired)
 (use-package init-evil)
