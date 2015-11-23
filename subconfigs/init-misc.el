@@ -15,6 +15,19 @@
   :config
   (global-aggressive-indent-mode 1))
 
+(use-package expand-region
+  :demand
+  :bind (("C-=" . er/expand-region)
+		 ("C--" . er/contract-region))
+  :config
+  (defhydra hydra-expand-region ()
+	("e" er/expand-region "Expand")
+	("c" er/contract-region "Contract")
+	("w" er/mark-word "Mark word")
+	("m" er/mark-method-call "Mark method")
+	("s" er/mark-symbol "Mark symbol"))
+  (global-set-key (kbd "C-c r") 'hydra-expand-region/body))
+
 (setq ring-bell-function 'ignore
 	  browse-url-browser-function 'browse-url-generic
 	  browse-url-generic-program "firefox"

@@ -21,6 +21,7 @@ My emacs config.
    + evil-surround
    + evil-tabs
    + evil-vimish-fold
+   + expand-region
    + flycheck
    + flycheck-irony
    + ggtags
