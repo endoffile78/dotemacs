@@ -235,6 +235,12 @@
 										  'brace-list-open '+
 										  'case-label '+)))
 
+(defun my-c-hook ()
+  (setq indent-tabs-mode t)
+  (c-set-style "my-c-style"))
+
+(add-hook 'c-mode-hook 'my-c-hook)
+
 ;; ggtags
 
 (use-package ggtags
@@ -268,9 +274,7 @@
 	(define-key irony-mode-map [remap completion-at-point]
 	  'irony-completion-at-point-async)
 	(define-key irony-mode-map [remap complete-symbol]
-	  'irony-completion-at-point-async)
-	(setq indent-tabs-mode t)
-	(c-set-style "my-c-style"))
+	  'irony-completion-at-point-async))
   :init
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
@@ -285,7 +289,8 @@
   :diminish company-mode
   :init
   (setq company-idle-delay 0
-		company-minimum-prefix-length 2)
+		company-minimum-prefix-length 2
+		company-tooltip-limit 20)
   :config
   (use-package company-irony)
   (use-package company-irony-c-headers)
@@ -344,6 +349,13 @@
 	("s" er/mark-symbol "mark symbol" :exit t)
 	("q" nil "quit"))
   (global-set-key (kbd "C-c r") 'hydra-expand-region/body))
+
+(use-package uniquify
+  :config
+  (setq uniquify-buffer-name-style 'forward
+		uniquify-separator "/"
+		uniquify-ignore-buffers-re "^\\*"
+		uniquify-after-kill-buffer-p t))
 
 ;; Projectile
 

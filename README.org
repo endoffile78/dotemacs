@@ -1,6 +1,6 @@
 * dotemacs
 
-My emacs config.
+My emacs config. Inspired by [[https://github.com/bling/dotemacs][bling/dotemacs]] and [[https://github.com/purcell/emacs.d][purcell/emacs.d]].
 
 ** Requirements
    1. Emacs 24.4+
