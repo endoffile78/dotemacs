@@ -18,7 +18,7 @@ Backup your configuration if you have one
 Download the repository
 
 #+begin_src sh
-  git clone https://github.com/endoffile78/dotemacs ~/.emacs.d
+  git clone --recursive https://github.com/endoffile78/dotemacs ~/.emacs.d
 #+end_src
 
 ** Plugins
