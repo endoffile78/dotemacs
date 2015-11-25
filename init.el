@@ -485,6 +485,8 @@
 	("q" nil "quit"))
   (global-set-key (kbd "C-c y") 'hydra-yasnippet/body))
 
+;; Org
+
 (defhydra hydra-org (:exit t)
   "Org"
   ("eh" org-html-export-to-html "html")
@@ -496,6 +498,10 @@
   ("dr" org-table-kill-row "del row")
   ("q" nil "quit"))
 (global-set-key (kbd "C-c o") 'hydra-org/body)
+
+;; Emacs Lisp
+
+(add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 
 ;; Misc
 
