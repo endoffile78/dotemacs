@@ -6,6 +6,21 @@ My emacs config.
    1. Emacs 24.4+
    2. Git
 
+** Installation
+
+Backup your configuration if you have one
+
+#+begin_src sh
+  cd ~
+  mv .emacs.d .emacs.d.bak
+#+end_src
+
+Download the repository
+
+#+begin_src sh
+  git clone https://github.com/endoffile78/dotemacs ~/.emacs.d
+#+end_src
+
 ** Plugins
    + aggressive-indent
    + auctex
@@ -18,7 +33,6 @@ My emacs config.
    + evil
    + evil-leader
    + evil-org
-   + evil-surround
    + evil-tabs
    + evil-vimish-fold
    + expand-region
@@ -29,7 +43,6 @@ My emacs config.
    + helm
    + helm-flx
    + helm-projectile
-   + highlight-symbol
    + hydra
    + irony
    + java-file-create
