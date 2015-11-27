@@ -214,6 +214,11 @@
   (use-package helm-flx
 	:config
 	(helm-flx-mode +1))
+  (use-package helm-descbinds
+	:bind (("C-h b" . helm-descbinds))
+	:config
+	(setq helm-descbinds-window-style 'split-window)
+	(helm-descbinds-mode))
   (helm-mode 1)
   (defhydra hydra-helm (:exit t)
 	"Helm"
@@ -310,7 +315,7 @@
   :defer 4)
 
 (use-package jdee
-  :commands jedi-mode)
+  :commands jdee-mode)
 
 ;; LaTeX
 

@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: usep
+# key: usep
+# binding: direct-keybinding
+# --
+(use-package ${1:package})

@@ -41,6 +41,7 @@ Download the repository
    + ggtags
    + git-gutter-fringe+
    + helm
+   + helm-descbinds
    + helm-flx
    + helm-projectile
    + hydra

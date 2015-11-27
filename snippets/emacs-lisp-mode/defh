@@ -1,0 +1,9 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: defh
+# key: defh
+# binding: direct-keybinding
+# --
+(defhydra hydra-$1 ()
+  "$2"
+  $3)
+(global-set-key (kbd "C-c $0") 'hydra-$1/body)
