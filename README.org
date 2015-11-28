@@ -54,6 +54,7 @@ Download the repository
    + libmpdee
    + magit
    + markdown-mode
+   + pretty-mode
    + projectile
    + rainbow-mode
    + smartparens

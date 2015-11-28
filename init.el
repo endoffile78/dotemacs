@@ -519,6 +519,13 @@
 (use-package abbrev
   :diminish abbrev-mode)
 
+;; pretty-mode
+
+(use-package pretty-mode
+  :commands turn-on-pretty-mode
+  :init
+  (add-hook 'prog-mode-hook 'turn-on-pretty-mode))
+
 ;; Misc
 
 (use-package libmpdee
