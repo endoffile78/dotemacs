@@ -485,16 +485,29 @@
 
 (use-package org
   :config
-  (defhydra hydra-org (:exit t)
-	"Org"
-	("eh" org-html-export-to-html "html")
-	("el" org-latex-export-to-latex "latex")
-	("ep" org-latex-export-to-pdf "pdf")
-	("em" org-md-export-to-markdown "markdown")
-	("t" org-table-create-or-convert-from-region "table")
-	("dc" org-table-delete-column "del column")
-	("dr" org-table-kill-row "del row")
-	("q" nil "quit"))
+  (defhydra hydra-org (:hint nil)
+	"
+^Export^               ^Tables^           ^Movement^
+------------------------------------------------------------------
+export to _h_tml       create _t_able     _g_oto
+export to _l_atex      _d_elete column
+export to _p_df        _k_ill row
+export to _m_arkdown   insert _c_olumn
+                     insert _r_ow
+
+_q_uit
+"
+	("h" org-html-export-to-html :exit t)
+	("l" org-latex-export-to-latex :exit t)
+	("p" org-latex-export-to-pdf :exit t)
+	("m" org-md-export-to-markdown :exit t)
+	("t" org-table-create-or-convert-from-region :exit t)
+	("d" org-table-delete-column)
+	("k" org-table-kill-row)
+	("c" org-table-insert-column)
+	("r" org-table-insert-row)
+    ("g" org-goto :exit t)
+	("q" nil))
   (global-set-key (kbd "C-c o") 'hydra-org/body))
 
 ;; Emacs Lisp
