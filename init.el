@@ -49,7 +49,7 @@
 	  delete-old-versions t
 	  vc-follow-symlinks t
 	  initial-major-mode 'text-mode
-	  custom-file "~/.emacs.d/custom.el")
+	  custom-file (concat user-emacs-directory "custom.el"))
 
 (setq-default truncate-lines 1
 			  backward-delete-function nil
@@ -492,21 +492,41 @@
 
 ;; Org
 
-(defhydra hydra-org (:exit t)
-  "Org"
-  ("eh" org-html-export-to-html "html")
-  ("el" org-latex-export-to-latex "latex")
-  ("ep" org-latex-export-to-pdf "pdf")
-  ("em" org-md-export-to-markdown "markdown")
-  ("t" org-table-create-or-convert-from-region "table")
-  ("dc" org-table-delete-column "del column")
-  ("dr" org-table-kill-row "del row")
-  ("q" nil "quit"))
-(global-set-key (kbd "C-c o") 'hydra-org/body)
+(use-package org
+  :config
+  (defhydra hydra-org (:exit t)
+	"Org"
+	("eh" org-html-export-to-html "html")
+	("el" org-latex-export-to-latex "latex")
+	("ep" org-latex-export-to-pdf "pdf")
+	("em" org-md-export-to-markdown "markdown")
+	("t" org-table-create-or-convert-from-region "table")
+	("dc" org-table-delete-column "del column")
+	("dr" org-table-kill-row "del row")
+	("q" nil "quit"))
+  (global-set-key (kbd "C-c o") 'hydra-org/body))
 
 ;; Emacs Lisp
 
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
+
+;; undo-tree
+
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :config
+  (defhydra hydra-undo-tree ()
+	"undo tree"
+	("v" undo-tree-visualize "visualize" :exit t)
+	("u" undo-tree-undo "undo")
+	("r" undo-tree-redo "redo")
+	("q" nil "quit"))
+  (global-set-key (kbd "C-c u") 'hydra-undo-tree/body))
+
+;; Abbrev
+
+(use-package abbrev
+  :diminish abbrev-mode)
 
 ;; Misc
 
@@ -517,9 +537,6 @@
   :config
   (unless (server-running-p)
     (server-start)))
-
-(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
-(eval-after-load "abbrev" '(diminish 'abbrev-mode))
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
