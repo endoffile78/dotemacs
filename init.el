@@ -8,16 +8,7 @@
                          ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
 
-(defun fullscreen (&optional f)
-  "Makes emacs maximize"
-  (interactive)
-  (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-						 '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
-  (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-						 '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0)))
-
-(when (display-graphic-p) ;When in the gui make emacs fullscreen
-  (fullscreen))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (unless '(packge-installed-p 'use-package) ;Make sure use-package is installed
   (package-refresh-contents)
