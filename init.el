@@ -543,7 +543,8 @@ _q_uit
   :init
   (add-hook 'prog-mode-hook 'turn-on-pretty-mode))
 
-(global-set-key (kbd "C-x C-b") 'ibuffer)
+(use-package ibuffer
+  :bind (("C-x C-b" . ibuffer)))
 
 ;; Misc
 
