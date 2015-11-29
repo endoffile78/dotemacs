@@ -558,6 +558,12 @@ _q_uit
 (use-package ibuffer
   :bind (("C-x C-b" . ibuffer)))
 
+(use-package elscreen
+  :bind (("C-c t" . elscreen-create)
+		 ("C-c k" . elscreen-kill)
+		 ("C-c n" . elscreen-next)
+		 ("C-c b" . elscreen-previous)))
+
 ;; Misc
 
 (use-package libmpdee
