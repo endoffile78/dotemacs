@@ -28,6 +28,7 @@
 (my-global-linum-mode)
 (global-hl-line-mode 1)
 (column-number-mode t)
+(recentf-mode)
 
 (when window-system
   (tool-bar-mode -1)
