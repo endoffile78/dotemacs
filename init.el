@@ -560,7 +560,7 @@ _q_uit
   "Scale"
   ("i" text-scale-increase "in")
   ("o" text-scale-decrease "out")
-  ("0" (tex-scale-reset 0) "reset" :exit t)
+  ("0" (text-scale-adjust 0) "reset" :exit t)
   ("q" nil "Quit"))
 (global-set-key (kbd "C-c s") 'hydra-scale/body)
 
