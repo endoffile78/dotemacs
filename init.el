@@ -67,7 +67,7 @@
   :prefix 'dotemacs-evil)
 
 (defcustom dotemacs-evil/emacs-state-minor-modes
-  '(git-commit-mode magit-blame-mode eshell-mode calendar-mode)
+  '(git-commit-mode magit-blame-mode)
   "List of minor modes that when active should switch to Emacs state."
   :type '(repeat (symbol))
   :group 'dotemacs-evil)
@@ -99,6 +99,9 @@
   (setq evil-normal-state-cursor '("white" box) ;Change the cursor color and shape based on the state
 		evil-insert-state-cursor '("red" bar)
 		evil-operator-state-cursor '("red" hollow))
+
+  (evil-set-initial-state 'eshell-mode 'emacs)
+  (evil-set-initial-state 'calendar-mode 'emacs)
 
   (use-package evil-tabs
 	:ensure
@@ -171,11 +174,14 @@
 
 (use-package git-gutter-fringe+
   :diminish git-gutter+-mode
+  :defer 2
+  :commands git-gutter+-mode
+  :init
+  (add-hook 'prog-mode-hook 'git-gutter+-mode)
   :config
   (set-face-foreground 'git-gutter-fr+-modified "yellow")
   (set-face-foreground 'git-gutter-fr+-added    "green")
-  (set-face-foreground 'git-gutter-fr+-deleted  "red")
-  (global-git-gutter+-mode))
+  (set-face-foreground 'git-gutter-fr+-deleted  "red"))
 
 (use-package magit
   :ensure
