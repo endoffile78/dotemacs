@@ -19,7 +19,13 @@
 (require 'diminish)
 (require 'bind-key)
 
-(global-linum-mode)
+(define-global-minor-mode my-global-linum-mode linum-mode
+  (lambda ()
+    (when (not (memq major-mode
+				   (list 'eshell-mode 'calendar-mode)))
+      (linum-mode))))
+
+(my-global-linum-mode)
 (global-hl-line-mode 1)
 (column-number-mode t)
 
