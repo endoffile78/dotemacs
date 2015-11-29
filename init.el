@@ -514,6 +514,9 @@ _q_uit
 
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 
+(define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
+(define-key emacs-lisp-mode-map (kbd "C-c b") 'eval-buffer)
+
 ;; undo-tree
 
 (use-package undo-tree
@@ -538,6 +541,8 @@ _q_uit
   :commands turn-on-pretty-mode
   :init
   (add-hook 'prog-mode-hook 'turn-on-pretty-mode))
+
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;; Misc
 
