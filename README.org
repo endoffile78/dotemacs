@@ -21,50 +21,6 @@ Download the repository
   git clone --recursive https://github.com/endoffile78/dotemacs ~/.emacs.d
 #+end_src
 
-** Plugins
-   + aggressive-indent
-   + auctex
-   + company
-   + company-irony
-   + company-irony-c-headers
-   + company-jedi
-   + elscreen
-   + emmet-mode
-   + evil
-   + evil-leader
-   + evil-org
-   + evil-tabs
-   + evil-vimish-fold
-   + expand-region
-   + flycheck
-   + flycheck-irony
-   + ggtags
-   + git-gutter-fringe+
-   + helm
-   + helm-descbinds
-   + helm-flx
-   + helm-projectile
-   + hydra
-   + irony
-   + java-file-create
-   + java-snippets
-   + jdee
-   + jedi-core
-   + js2-mode
-   + libmpdee
-   + magit
-   + markdown-mode
-   + pretty-mode
-   + projectile
-   + rainbow-mode
-   + smartparens
-   + ujelly-theme
-   + use-package
-   + vimish-fold
-   + vimrc-mode
-   + web-mode
-   + yasnippet
-
 *** Theme
 
 [[https://github.com/endoffile78/color-theme-ujelly][ujelly]]

@@ -1,5 +1,10 @@
 ;;; init.el --- Emacs configuration
 
+;;; Commentary:
+;;; My emacs config
+
+;;; Code:
+
 (require 'package)
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -21,9 +26,9 @@
 
 (define-global-minor-mode my-global-linum-mode linum-mode
   (lambda ()
-    (when (not (memq major-mode
-				   (list 'eshell-mode 'calendar-mode)))
-      (linum-mode))))
+	(when (not (memq major-mode
+					 (list 'eshell-mode 'calendar-mode)))
+	  (linum-mode))))
 
 (my-global-linum-mode)
 (global-hl-line-mode 1)
@@ -181,14 +186,11 @@
 
 (use-package git-gutter-fringe+
   :diminish git-gutter+-mode
-  :defer 2
-  :commands git-gutter+-mode
-  :init
-  (add-hook 'prog-mode-hook 'git-gutter+-mode)
   :config
   (set-face-foreground 'git-gutter-fr+-modified "yellow")
   (set-face-foreground 'git-gutter-fr+-added    "green")
-  (set-face-foreground 'git-gutter-fr+-deleted  "red"))
+  (set-face-foreground 'git-gutter-fr+-deleted  "red")
+  (global-git-gutter+-mode))
 
 (use-package magit
   :ensure
@@ -246,6 +248,7 @@
 										  'case-label '+)))
 
 (defun my-c-hook ()
+  "Hook for `c-mode'."
   (setq indent-tabs-mode t)
   (c-set-style "my-c-style"))
 
@@ -310,7 +313,7 @@
 
   (eval-after-load 'company
 	'(add-to-list
-	  'company-backends '(company-irony-c-headers company-irony company-jedi company-yasnippet company-css company-elisp company-semantic company-files)))
+	  'company-backends '(company-irony company-irony-c-headers company-jedi company-yasnippet company-css company-elisp company-semantic company-files)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
@@ -346,7 +349,7 @@
   (add-hook 'prog-mode-hook 'aggressive-indent-mode))
 
 (use-package expand-region
-  :demand
+  :demand t
   :bind (("C-=" . er/expand-region)
 		 ("C--" . er/contract-region))
   :config
@@ -358,7 +361,7 @@
 	("m" er/mark-method-call "mark method" :exit t)
 	("s" er/mark-symbol "mark symbol" :exit t)
 	("q" nil "quit"))
-  (global-set-key (kbd "C-c r") 'hydra-expand-region/body))
+  (global-set-key (kbd "C-c e") 'hydra-expand-region/body))
 
 (use-package uniquify
   :config
@@ -388,22 +391,6 @@
 	(helm-projectile-on)))
 
 ;; Python
-
-(use-package elpy
-  :commands elpy-enable
-  :init
-  (setq elpy-rpc-backend "jedi")
-  (elpy-enable)
-  :config
-  (defhydra hydra-elpy (:exit t)
-	"Elpy"
-	("d" elyp-goto-definition "got definition")
-	("r" elpy-refactor "refactor")
-	("s" elpy-rgrep-symbol "find symbol")
-	("f" elpy-find-file "find file")
-	("m" elpy-multiedit "multiple cursors")
-	("q" nil "quit"))
-  (global-set-key (kbd "C-c e") 'hydra-elpy/body))
 
 (use-package jedi
   :commands jedi:setup
@@ -438,6 +425,13 @@
   :commands rainbow-mode
   :init
   (add-hook 'css-mode-hook 'rainbow-mode))
+
+(defhydra hydra-rainbow (:exit t)
+  "rainbow"
+  ("m" rainbow-mode "mode")
+  ("d" rainbow-delimiters-mode "delimiters")
+  ("q" nil "quit"))
+(global-set-key (kbd "C-c r") 'hydra-rainbow/body)
 
 ;; HTML
 
@@ -526,7 +520,10 @@ _q_uit
 
 ;; Emacs Lisp
 
-(add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
+(use-package eldoc
+  :diminish eldoc-mode
+  :init
+  (add-hook 'emacs-lisp-mode-hook 'eldoc-mode))
 
 (define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
 (define-key emacs-lisp-mode-map (kbd "C-c b") 'eval-buffer)
@@ -549,17 +546,15 @@ _q_uit
 (use-package abbrev
   :diminish abbrev-mode)
 
-;; pretty-mode
-
-(use-package pretty-mode
-  :commands turn-on-pretty-mode
-  :init
-  (add-hook 'prog-mode-hook 'turn-on-pretty-mode))
+;; ibuffer
 
 (use-package ibuffer
   :bind (("C-x C-b" . ibuffer)))
 
+;; elscreen
+
 (use-package elscreen
+  :demand t
   :bind (("C-c t" . elscreen-create)
 		 ("C-c k" . elscreen-kill)
 		 ("C-c n" . elscreen-next)
@@ -582,9 +577,10 @@ _q_uit
   ("i" text-scale-increase "in")
   ("o" text-scale-decrease "out")
   ("0" (text-scale-adjust 0) "reset" :exit t)
-  ("q" nil "Quit"))
+  ("q" nil "quit"))
 (global-set-key (kbd "C-c s") 'hydra-scale/body)
 
 (load custom-file)
 
 (provide 'init)
+;;; init.el ends here
