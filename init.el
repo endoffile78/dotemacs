@@ -560,6 +560,9 @@ _q_uit
 		 ("C-c n" . elscreen-next)
 		 ("C-c b" . elscreen-previous)))
 
+(use-package lua-mode
+  :mode ("\\.lua$" . lua-mode))
+
 ;; Misc
 
 (use-package libmpdee
