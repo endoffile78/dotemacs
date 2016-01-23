@@ -1,7 +1,7 @@
 ;;; init.el --- Emacs configuration
 
 ;;; Commentary:
-;;; My emacs config
+;;; My Emacs config
 
 ;;; Code:
 
@@ -14,6 +14,7 @@
 (package-initialize)
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(font . "Monaco-11"))
 
 (unless '(packge-installed-p 'use-package) ;Make sure use-package is installed
   (package-refresh-contents)
@@ -35,11 +36,10 @@
 (column-number-mode t)
 (recentf-mode)
 
-(when window-system
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-  (tooltip-mode -1)
-  (scroll-bar-mode -1))
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(tooltip-mode -1)
+(scroll-bar-mode -1)
 
 (setq ring-bell-function 'ignore
 	  browse-url-browser-function 'browse-url-generic
@@ -91,19 +91,19 @@
                                              (evil-emacs-state)
                                            (evil-normal-state))))))
 
+(defun my-evil-modeline-change (default-color)
+  "Change the modeline color when the mode changes."
+  (let ((color (cond
+				((evil-insert-state-p) '("#FFFFFF" . "#000000"))
+				((evil-visual-state-p) '("#330022" . "#FFFFFF"))
+				((evil-normal-state-p) '("#000000" . "#FFFFFF"))
+				((evil-emacs-state-p) '("#440000" . "#ffffff")))))
+	(set-face-background 'mode-line (car color))
+	(set-face-foreground 'mode-line (cdr color))))
+
 (use-package evil
   :ensure
   :config
-  (defun my-evil-modeline-change (default-color)
-	"Changes the modeline color when the evil mode changes"
-	(let ((color (cond
-				  ((evil-insert-state-p) '("#FFFFFF" . "#000000"))
-				  ((evil-visual-state-p) '("#330022" . "#FFFFFF"))
-				  ((evil-normal-state-p) '("#000000" . "#FFFFFF"))
-				  ((evil-emacs-state-p) '("#440000" . "#ffffff")))))
-	  (set-face-background 'mode-line (car color))
-	  (set-face-foreground 'mode-line (cdr color))))
-
   (lexical-let ((default-color (cons (face-background 'mode-line)
 									 (face-foreground 'mode-line))))
 	(add-hook 'post-command-hook (lambda () (my-evil-modeline-change default-color))))
@@ -114,6 +114,7 @@
 
   (evil-set-initial-state 'eshell-mode 'emacs)
   (evil-set-initial-state 'calendar-mode 'emacs)
+  (evil-set-initial-state 'term-mode 'emacs)
 
   (use-package evil-tabs
 	:ensure
@@ -126,8 +127,6 @@
 	(evil-leader/set-leader ",")
 	(global-evil-leader-mode)
 	(evil-leader/set-key
-	  "mg" 'mpd-get-current-song
-	  "mc" 'mpd-clear-playlist
 	  "k" 'kill-this-buffer
 	  "l" 'load-file
 	  "b" 'helm-buffers-list
@@ -136,9 +135,6 @@
 	  "pb" 'helm-projectile-switch-to-buffer
 	  "pd" 'helm-projectile-find-dir
 	  "pi" 'projectile-invalidate-cache
-	  "mn" 'mpd-next
-	  "mb" 'mpd-prev
-	  "mp" 'mpd-pause
 	  "gc" 'ggtags-create-tags
 	  "gu" 'ggtags-update-tags
 	  "gf" 'ggtags-find-file
@@ -249,6 +245,7 @@
 
 (defun my-c-hook ()
   "Hook for `c-mode'."
+  (electric-indent-mode -1)
   (setq indent-tabs-mode t)
   (c-set-style "my-c-style"))
 
@@ -308,12 +305,13 @@
   (use-package company-irony)
   (use-package company-irony-c-headers)
   (use-package company-jedi)
+  (use-package company-tern)
 
   (add-hook 'after-init-hook 'global-company-mode)
 
   (eval-after-load 'company
 	'(add-to-list
-	  'company-backends '(company-irony company-irony-c-headers company-jedi company-yasnippet company-css company-elisp company-semantic company-files)))
+	  'company-backends '(company-irony company-irony-c-headers company-jedi company-yasnippet company-css company-elisp company-semantic company-files company-tern)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
@@ -346,7 +344,13 @@
   :diminish aggressive-indent-mode
   :commands agressive-indent-mode
   :init
-  (add-hook 'prog-mode-hook 'aggressive-indent-mode))
+  (add-hook 'prog-mode-hook 'aggressive-indent-mode)
+  :config
+  (add-to-list
+   'aggressive-indent-dont-indent-if
+   '(and (derived-mode-p 'c-mode)
+		 (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
+							 (thing-at-point 'line))))))
 
 (use-package expand-region
   :demand t
@@ -372,17 +376,18 @@
 
 ;; Projectile
 
+(defun my-projectile-hook ()
+  "Check to see if the project is in a git repo or not and then set the indexing method."
+  (let ((vcs (projectile-project-vcs)))
+	(cond
+	 ((eq vcs 'git) (setq projectile-indexing-method 'alien ;Use .gitignore
+						  projectile-enable-caching nil))
+	 (t (setq projectile-indexing-method 'native ;Use .projectile
+			  projectile-enable-caching t)))))
+
 (use-package projectile
   :ensure
   :config
-  (defun my-projectile-hook ()
-	"Checks to see if project is in a git repo or not and then sets the indexing method"
-	(let ((vcs (projectile-project-vcs)))
-	  (cond
-	   ((eq vcs 'git) (setq projectile-indexing-method 'alien ;Use .gitignore
-							projectile-enable-caching nil))
-	   (t (setq projectile-indexing-method 'native ;Use .projectile
-				projectile-enable-caching t)))))
   (add-hook 'projectile-before-switch-project-hook 'my-projectile-hook)
   (projectile-global-mode)
   (use-package helm-projectile
@@ -470,6 +475,10 @@
 (use-package js2-mode
   :ensure
   :mode ("\\.js$" . js2-mode))
+
+(use-package tern
+  :init
+  (add-hook 'js2-mode-hook (lambda () (tern-mode t))))
 
 ;; Yasnippet
 
@@ -560,18 +569,31 @@ _q_uit
 		 ("C-c n" . elscreen-next)
 		 ("C-c b" . elscreen-previous)))
 
+;; Lua
+
 (use-package lua-mode
   :mode ("\\.lua$" . lua-mode))
 
+;; C#
+
+(use-package csharp-mode
+  :mode ("\\.cs$" . csharp-mode))
+
+;; Font
+
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8-unix)
+(set-frame-font "Monaco-11")
+
+(use-package pkgbuild-mode
+  :config
+  (setq auto-mode-alist (append '(("/PKGBUILD$" . pkgbuild-mode))
+                                auto-mode-alist)))
+
 ;; Misc
 
-(use-package libmpdee
-  :defer 1)
-
-(use-package server
-  :config
-  (unless (server-running-p)
-    (server-start)))
+(use-package auto-revert-mode
+  :diminish auto-revert-mode)
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
