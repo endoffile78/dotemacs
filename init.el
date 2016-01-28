@@ -35,6 +35,7 @@
 (global-hl-line-mode 1)
 (column-number-mode t)
 (recentf-mode)
+(blink-cursor-mode 1)
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -311,7 +312,8 @@
 
   (eval-after-load 'company
 	'(add-to-list
-	  'company-backends '(company-irony company-irony-c-headers company-jedi company-yasnippet company-css company-elisp company-semantic company-files company-tern)))
+	  'company-backends '(company-irony company-irony-c-headers company-jedi company-yasnippet
+										company-css company-elisp company-semantic company-files company-tern)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
@@ -416,7 +418,6 @@
 ;; Visual
 
 (use-package nyan-mode
-  :if window-system
   :config
   (nyan-mode 1))
 
