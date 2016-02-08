@@ -21,7 +21,8 @@
   (package-install 'use-package))
 
 (eval-when-compile
-  (require 'use-package))
+  (require 'use-package)
+  (require 'cl))
 (require 'diminish)
 (require 'bind-key)
 
