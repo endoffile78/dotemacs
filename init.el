@@ -309,6 +309,10 @@
   (use-package company-jedi)
   (use-package company-tern)
 
+  (use-package company-quickhelp
+	:config
+	(company-quickhelp-mode 1))
+
   (add-hook 'after-init-hook 'global-company-mode)
 
   (eval-after-load 'company
