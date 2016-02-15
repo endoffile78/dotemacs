@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: fixme
+# key: fixme
+# binding: direct-keybinding
+# --
+//FIXME: $0

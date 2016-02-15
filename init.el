@@ -137,6 +137,8 @@
 	  "pb" 'helm-projectile-switch-to-buffer
 	  "pd" 'helm-projectile-find-dir
 	  "pi" 'projectile-invalidate-cache
+	  "po" 'projectile-find-other-file
+	  "pk" 'projectile-kill-buffers
 	  "gc" 'ggtags-create-tags
 	  "gu" 'ggtags-update-tags
 	  "gf" 'ggtags-find-file
@@ -199,7 +201,7 @@
 	("b" magit-blame "blame")
 	("d" magit-diff "diff")
 	("l" magit-log-popup "log")
-	("b" magit-branch-manager "branch manager")
+	("r" magit-branch-popup "branch")
 	("q" nil "quit"))
   (global-set-key (kbd "C-c m") 'hydra-magit/body))
 
@@ -240,18 +242,21 @@
 (c-add-style "my-c-style" '((c-continued-statement-offset 4)
 							(c-tab-always-indent t)
 							(c-toggle-hungry-state t)
-							(c-set-offset 'inline-open '+
-										  'block-open '+
-										  'brace-list-open '+
-										  'case-label '+)))
+							(c-offsets-alist
+							 (inline-open . +)
+							 (block-open . +)
+							 (brace-list-open . +)
+							 (case-label . +)
+							 (access-label . /))))
 
 (defun my-c-hook ()
   "Hook for `c-mode'."
-  (electric-indent-mode -1)
-  (setq indent-tabs-mode t)
+  (setq indent-tabs-mode t
+		c-default-style "my-c-style")
   (c-set-style "my-c-style"))
 
 (add-hook 'c-mode-hook 'my-c-hook)
+(add-hook 'c++-mode-hook 'my-c-hook)
 
 ;; ggtags
 
@@ -349,13 +354,13 @@
 
 (use-package aggressive-indent
   :diminish aggressive-indent-mode
-  :commands agressive-indent-mode
+  :commands aggressive-indent-mode
   :init
   (add-hook 'prog-mode-hook 'aggressive-indent-mode)
   :config
   (add-to-list
    'aggressive-indent-dont-indent-if
-   '(and (derived-mode-p 'c-mode)
+   '(and (derived-mode-p 'c-mode 'c++-mode)
 		 (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
 							 (thing-at-point 'line))))))
 
@@ -591,10 +596,18 @@ _q_uit
 (set-default-coding-systems 'utf-8-unix)
 (set-frame-font "Monaco-11")
 
+;; pkgbuild
+
 (use-package pkgbuild-mode
   :config
   (setq auto-mode-alist (append '(("/PKGBUILD$" . pkgbuild-mode))
                                 auto-mode-alist)))
+
+;; CMake
+
+(use-package cmake-mode
+  :mode (("CMakeLists\\.txt\\'" . cmake-mode)
+		 ("\\.cmake\\'" . cmake-mode)))
 
 ;; Misc
 
