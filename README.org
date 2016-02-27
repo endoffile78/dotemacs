@@ -8,20 +8,20 @@ My emacs config. Inspired by [[https://github.com/bling/dotemacs][bling/dotemacs
 
 ** Installation
 
-Backup your configuration if you have one
+Backup your configuration if you have one.
 
 #+begin_src sh
   cd ~
   mv .emacs.d .emacs.d.bak
 #+end_src
 
-Download the repository
+Clone the repository.
 
 #+begin_src sh
   git clone --recursive https://github.com/endoffile78/dotemacs ~/.emacs.d
 #+end_src
 
-*** Theme
+** Theme
 
 [[https://github.com/endoffile78/color-theme-ujelly][ujelly]]
 

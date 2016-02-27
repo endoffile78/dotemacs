@@ -148,15 +148,20 @@
 	  "md" 'magit-diff
 	  "mb" 'magit-blame
 	  "ml" 'magit-log-popup
+	  "mr" 'magit-branch-popup
 	  "c" 'compile
 	  "t" 'elscreen-create
-	  "d" 'gud-gdb))
+	  "d" 'gud-gdb
+	  "hr" 'helm-recentf))
 
   (use-package vimish-fold
 	:defer 3
 	:config
 	(vimish-fold-global-mode 1)
-	(use-package evil-vimish-fold))
+	(use-package evil-vimish-fold
+	  :diminish evil-vimish-fold-mode
+	  :config
+	  (evil-vimish-fold-mode)))
 
   (use-package evil-org
 	:defer 2
@@ -193,17 +198,9 @@
   (global-git-gutter+-mode))
 
 (use-package magit
-  :ensure
-  :config
-  (defhydra hydra-magit (:exit t)
-	"Magit"
-	("s" magit-status "status")
-	("b" magit-blame "blame")
-	("d" magit-diff "diff")
-	("l" magit-log-popup "log")
-	("r" magit-branch-popup "branch")
-	("q" nil "quit"))
-  (global-set-key (kbd "C-c m") 'hydra-magit/body))
+  :ensure)
+
+(use-package gitignore-mode)
 
 ;; Helm
 
@@ -226,13 +223,7 @@
 	:config
 	(setq helm-descbinds-window-style 'split-window)
 	(helm-descbinds-mode))
-  (helm-mode 1)
-  (defhydra hydra-helm (:exit t)
-	"Helm"
-	("x" helm-M-x "M-x")
-	("r" helm-recentf "recent file")
-	("q" nil "quit"))
-  (global-set-key (kbd "C-c h") 'hydra-helm/body))
+  (helm-mode 1))
 
 ;; C
 
@@ -267,16 +258,7 @@
   (add-hook 'c-mode-common-hook
 			(lambda ()
 			  (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-				(ggtags-mode 1))))
-  :config
-  (defhydra hydra-ggtags (:exit t)
-	"ggtags"
-	("c" ggtags-create-tags "create tags")
-	("u" ggtags-update-tags "update tags")
-	("t" ggtags-find-tag-dwim "find tag")
-	("f" ggtags-find-file "find file")
-	("q" nil "quit"))
-  (global-set-key (kbd "C-c g") 'hydra-ggtags/body))
+				(ggtags-mode 1)))))
 
 ;; Irony
 
@@ -313,6 +295,7 @@
   (use-package company-irony-c-headers)
   (use-package company-jedi)
   (use-package company-tern)
+  (use-package company-shell)
 
   (use-package company-quickhelp
 	:config
@@ -323,7 +306,8 @@
   (eval-after-load 'company
 	'(add-to-list
 	  'company-backends '(company-irony company-irony-c-headers company-jedi company-yasnippet
-										company-css company-elisp company-semantic company-files company-tern)))
+										company-css company-elisp company-semantic company-files company-tern
+										company-shell)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
@@ -360,24 +344,9 @@
   :config
   (add-to-list
    'aggressive-indent-dont-indent-if
-   '(and (derived-mode-p 'c-mode 'c++-mode)
+   '(and (derived-mode-p 'c-mode 'c++-mode 'java-mode)
 		 (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
 							 (thing-at-point 'line))))))
-
-(use-package expand-region
-  :demand t
-  :bind (("C-=" . er/expand-region)
-		 ("C--" . er/contract-region))
-  :config
-  (defhydra hydra-expand-region ()
-	"Expand region"
-	("e" er/expand-region "expand")
-	("c" er/contract-region "contract")
-	("w" er/mark-word "mark word" :exit t)
-	("m" er/mark-method-call "mark method" :exit t)
-	("s" er/mark-symbol "mark symbol" :exit t)
-	("q" nil "quit"))
-  (global-set-key (kbd "C-c e") 'hydra-expand-region/body))
 
 (use-package uniquify
   :config
@@ -440,6 +409,7 @@
   :diminish rainbow-mode
   :commands rainbow-mode
   :init
+  (add-hook 'web-mode-hook 'rainbow-mode)
   (add-hook 'css-mode-hook 'rainbow-mode))
 
 (defhydra hydra-rainbow (:exit t)
@@ -477,8 +447,7 @@
 		  web-mode-style-padding 2
 		  web-mode-script-padding 2
 		  web-mode-enable-current-element-highlight t
-		  web-mode-enable-block-face t)
-	(rainbow-mode))
+		  web-mode-enable-block-face t))
   (add-hook 'web-mode-hook 'my-web-mode-hook))
 
 ;; Javascript
@@ -599,9 +568,7 @@ _q_uit
 ;; pkgbuild
 
 (use-package pkgbuild-mode
-  :config
-  (setq auto-mode-alist (append '(("/PKGBUILD$" . pkgbuild-mode))
-                                auto-mode-alist)))
+  :mode ("/PKGBUILD$" . pkgbuild-mode))
 
 ;; CMake
 
@@ -610,6 +577,10 @@ _q_uit
 		 ("\\.cmake\\'" . cmake-mode)))
 
 ;; Misc
+
+(use-package fancy-battery-mode
+  :init
+  (add-hook 'after-init-hook #'fancy-battery-mode))
 
 (use-package auto-revert-mode
   :diminish auto-revert-mode)
