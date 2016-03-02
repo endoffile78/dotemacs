@@ -70,8 +70,8 @@
 
 ;; Theme
 
-(use-package ujelly-theme
-  :load-path "themes/ujelly")
+(use-package nujelly-theme
+  :load-path "themes/nujelly")
 
 ;; Evil
 
@@ -118,6 +118,15 @@
   (evil-set-initial-state 'calendar-mode 'emacs)
   (evil-set-initial-state 'term-mode 'emacs)
 
+  (global-unset-key (kbd "C-w"))
+  (global-set-key (kbd "C-w <right>") 'evil-window-right)
+  (global-set-key (kbd "C-w <left>") 'evil-window-left)
+  (global-set-key (kbd "C-w <down>") 'evil-window-down)
+  (global-set-key (kbd "C-w <up>") 'evil-window-up)
+
+  (evil-ex-define-cmd "W" 'evil-write)
+  (evil-ex-define-cmd "Q" 'evil-quit)
+
   (use-package evil-tabs
 	:ensure
 	:config
@@ -152,7 +161,8 @@
 	  "c" 'compile
 	  "t" 'elscreen-create
 	  "d" 'gud-gdb
-	  "hr" 'helm-recentf))
+	  "h" 'split-window-horizontally
+	  "v" 'split-window-vertically))
 
   (use-package vimish-fold
 	:defer 3
@@ -166,6 +176,7 @@
   (use-package evil-org
 	:defer 2
 	:diminish evil-org-mode)
+
   (evil-mode 1))
 
 ;; Flycheck
@@ -296,6 +307,7 @@
   (use-package company-jedi)
   (use-package company-tern)
   (use-package company-shell)
+  (use-package company-cmake)
 
   (use-package company-quickhelp
 	:config
@@ -307,7 +319,7 @@
 	'(add-to-list
 	  'company-backends '(company-irony company-irony-c-headers company-jedi company-yasnippet
 										company-css company-elisp company-semantic company-files company-tern
-										company-shell)))
+										company-shell company-cmake)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
@@ -388,6 +400,10 @@
 (use-package smartparens-config
   :diminish smartparens-mode
   :config
+  (use-package evil-smartparens
+	:diminish evil-smartparens-mode
+	:init
+	(add-hook 'smartparens-enabled-hook #'evil-smartparens-mode))
   (setq sp-show-pair-delay 0
 		sp-show-pair-from-inside t)
   (sp-use-smartparens-bindings)
@@ -413,7 +429,7 @@
   (add-hook 'css-mode-hook 'rainbow-mode))
 
 (defhydra hydra-rainbow (:exit t)
-  "rainbow"
+  "Rainbow"
   ("m" rainbow-mode "mode")
   ("d" rainbow-delimiters-mode "delimiters")
   ("q" nil "quit"))
@@ -515,7 +531,7 @@ _q_uit
   (add-hook 'emacs-lisp-mode-hook 'eldoc-mode))
 
 (define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
-(define-key emacs-lisp-mode-map (kbd "C-c b") 'eval-buffer)
+(define-key emacs-lisp-mode-map (kbd "C-c e") 'eval-buffer)
 
 ;; undo-tree
 
