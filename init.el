@@ -162,7 +162,9 @@
 	  "t" 'elscreen-create
 	  "d" 'gud-gdb
 	  "h" 'split-window-horizontally
-	  "v" 'split-window-vertically))
+	  "v" 'split-window-vertically
+	  "fs" 'flyspell-mode
+	  "fp" 'flyspell-prog-mode))
 
   (use-package vimish-fold
 	:defer 3
@@ -599,6 +601,7 @@ _q_uit
   (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'markdown-mode-hook 'flyspell-mode)
   (add-hook 'text-mode-hook 'flyspell-mode)
+  (add-hook 'latex-mode-hook 'flyspell-mode)
   :config
   ;; NO spell check for embedded snippets
   (defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
