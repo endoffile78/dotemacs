@@ -29,7 +29,7 @@
 (define-global-minor-mode my-global-linum-mode linum-mode
   (lambda ()
 	(when (not (memq major-mode
-					 (list 'eshell-mode 'calendar-mode)))
+					 (list 'eshell-mode 'calendar-mode 'term-mode)))
 	  (linum-mode))))
 
 (my-global-linum-mode)
@@ -619,6 +619,13 @@ _q_uit
 		  (setq case-fold-search old-flag))
 		(if (and b e (< (point) e)) (setq rlt nil)))
 	  (setq ad-return-value rlt))))
+
+(use-package visual-line-mode
+  :init
+  (add-hook 'text-mode-hook 'visual-line-mode)
+  (add-hook 'org-mode-hook 'visual-line-mode)
+  (add-hook 'latex-mode-hook 'visual-line-mode)
+  (add-hook 'markdown-mode-hook 'visual-line-mode))
 
 ;; Misc
 
