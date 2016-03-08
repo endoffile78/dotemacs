@@ -288,11 +288,14 @@
 	(define-key irony-mode-map [remap complete-symbol]
 	  'irony-completion-at-point-async))
   :init
+  (use-package irony-eldoc)
+
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
 
   (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  (add-hook 'irony-mode-hook 'irony-eldoc))
 
 ;; Company
 
