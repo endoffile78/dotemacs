@@ -10,6 +10,7 @@ url
 semanticdb
 abbrev_defs
 vimish-fold
+anaconda-mode
 
 #files
 *.elc

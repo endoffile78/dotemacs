@@ -164,7 +164,10 @@
 	  "h" 'split-window-horizontally
 	  "v" 'split-window-vertically
 	  "fs" 'flyspell-mode
-	  "fp" 'flyspell-prog-mode))
+	  "fp" 'flyspell-prog-mode
+	  "ar" 'anaconda-mode-find-references
+	  "ad" 'anaconda-mode-find-definitions
+	  "aa" 'anaconda-mode-find-assignments))
 
   (use-package vimish-fold
 	:defer 3
@@ -309,10 +312,10 @@
   :config
   (use-package company-irony)
   (use-package company-irony-c-headers)
-  (use-package company-jedi)
   (use-package company-tern)
   (use-package company-shell)
   (use-package company-cmake)
+  (use-package company-anaconda)
 
   (use-package company-quickhelp
 	:config
@@ -322,9 +325,9 @@
 
   (eval-after-load 'company
 	'(add-to-list
-	  'company-backends '(company-irony company-irony-c-headers company-jedi company-yasnippet
+	  'company-backends '(company-irony company-irony-c-headers company-yasnippet
 										company-css company-elisp company-semantic company-files company-tern
-										company-shell company-cmake)))
+										company-shell company-cmake company-anaconda)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
@@ -355,15 +358,15 @@
 
 (use-package aggressive-indent
   :diminish aggressive-indent-mode
-  :commands aggressive-indent-mode
-  :init
-  (add-hook 'prog-mode-hook 'aggressive-indent-mode)
   :config
+  (add-to-list 'aggressive-indent-excluded-modes 'python-mode)
+  (add-to-list 'aggressive-indent-excluded-modes 'makefile-mode)
   (add-to-list
    'aggressive-indent-dont-indent-if
    '(and (derived-mode-p 'c-mode 'c++-mode 'java-mode)
 		 (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
-							 (thing-at-point 'line))))))
+							 (thing-at-point 'line)))))
+  (global-aggressive-indent-mode))
 
 (use-package uniquify
   :config
@@ -395,10 +398,10 @@
 
 ;; Python
 
-(use-package jedi
-  :commands jedi:setup
+(use-package anaconda-mode
   :init
-  (add-hook 'python-mode-hook 'jedi:setup))
+  (add-hook 'python-mode-hook 'anaconda-mode)
+  (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
 
 ;; Smartparens
 
