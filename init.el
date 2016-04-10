@@ -16,7 +16,7 @@
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(font . "Monaco-11"))
 
-(unless '(packge-installed-p 'use-package) ;Make sure use-package is installed
+(unless '(packge-installed-p 'use-package) ;;Make sure use-package is installed
   (package-refresh-contents)
   (package-install 'use-package))
 
@@ -37,6 +37,7 @@
 (column-number-mode t)
 (recentf-mode)
 (blink-cursor-mode 1)
+(toggle-save-place-globally)
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -110,7 +111,7 @@
 									 (face-foreground 'mode-line))))
 	(add-hook 'post-command-hook (lambda () (my-evil-modeline-change default-color))))
 
-  (setq evil-normal-state-cursor '("white" box) ;Change the cursor color and shape based on the state
+  (setq evil-normal-state-cursor '("white" box) ;;Change the cursor color and shape based on the state
 		evil-insert-state-cursor '("red" bar)
 		evil-operator-state-cursor '("red" hollow))
 
@@ -148,6 +149,7 @@
 	  "pi" 'projectile-invalidate-cache
 	  "po" 'projectile-find-other-file
 	  "pk" 'projectile-kill-buffers
+	  "pg" 'helm-projectile-grep
 	  "gc" 'ggtags-create-tags
 	  "gu" 'ggtags-update-tags
 	  "gf" 'ggtags-find-file
@@ -160,14 +162,18 @@
 	  "mr" 'magit-branch-popup
 	  "c" 'compile
 	  "t" 'elscreen-create
-	  "d" 'gud-gdb
+	  "db" 'gud-gdb
 	  "h" 'split-window-horizontally
 	  "v" 'split-window-vertically
 	  "fs" 'flyspell-mode
 	  "fp" 'flyspell-prog-mode
 	  "ar" 'anaconda-mode-find-references
 	  "ad" 'anaconda-mode-find-definitions
-	  "aa" 'anaconda-mode-find-assignments))
+	  "aa" 'anaconda-mode-find-assignments
+	  "ad" 'anaconda-mode-show-doc
+	  "iu" 'insert-char
+	  "mw" 'helm-man-woman
+	  "dp" 'sp-unwrap-sexp))
 
   (use-package vimish-fold
 	:defer 3
@@ -224,7 +230,8 @@
   :ensure
   :demand t
   :diminish helm-mode
-  :bind (("M-x" . helm-M-x))
+  :bind (("M-x" . helm-M-x)
+		 ("C-c h m" . helm-man-woman))
   :init
   (setq helm-quick-update t
 		helm-bookmark-show-location t
@@ -315,7 +322,7 @@
   (use-package company-tern)
   (use-package company-shell)
   (use-package company-cmake)
-  (use-package company-anaconda)
+  (use-package company-jedi)
 
   (use-package company-quickhelp
 	:config
@@ -326,8 +333,9 @@
   (eval-after-load 'company
 	'(add-to-list
 	  'company-backends '(company-irony company-irony-c-headers company-yasnippet
-										company-css company-elisp company-semantic company-files company-tern
-										company-shell company-cmake company-anaconda)))
+										company-css company-elisp company-semantic
+										company-files company-tern company-shell
+										company-cmake company-jedi)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
@@ -363,7 +371,7 @@
   (add-to-list 'aggressive-indent-excluded-modes 'makefile-mode)
   (add-to-list
    'aggressive-indent-dont-indent-if
-   '(and (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+   '(and (derived-mode-p 'c-mode 'c++-mode 'java-mode 'csharp-mode)
 		 (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
 							 (thing-at-point 'line)))))
   (global-aggressive-indent-mode))
@@ -375,15 +383,18 @@
 		uniquify-ignore-buffers-re "^\\*"
 		uniquify-after-kill-buffer-p t))
 
+(use-package smart-comment
+  :bind("M-;" . smart-comment))
+
 ;; Projectile
 
 (defun my-projectile-hook ()
   "Check to see if the project is in a git repo or not and then set the indexing method."
   (let ((vcs (projectile-project-vcs)))
 	(cond
-	 ((eq vcs 'git) (setq projectile-indexing-method 'alien ;Use .gitignore
+	 ((eq vcs 'git) (setq projectile-indexing-method 'alien ;;Use .gitignore
 						  projectile-enable-caching nil))
-	 (t (setq projectile-indexing-method 'native ;Use .projectile
+	 (t (setq projectile-indexing-method 'native ;;Use .projectile
 			  projectile-enable-caching t)))))
 
 (use-package projectile
@@ -398,10 +409,15 @@
 
 ;; Python
 
-(use-package anaconda-mode
-  :init
-  (add-hook 'python-mode-hook 'anaconda-mode)
-  (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
+(defun python-f5 ()
+  "Sends the buffer to a python shell."
+  (interactive)
+  (python-shell-send-buffer)
+  (python-shell-switch-to-shell))
+
+(eval-after-load "python"
+  '(progn
+     (define-key python-mode-map (kbd "<f5>") 'python-f5)))
 
 ;; Smartparens
 
@@ -589,7 +605,7 @@ _q_uit
 (set-default-coding-systems 'utf-8-unix)
 (set-frame-font "Monaco-11")
 
-;; pkgbuild
+;; PKGBUILD
 
 (use-package pkgbuild-mode
   :mode ("/PKGBUILD$" . pkgbuild-mode))
@@ -632,6 +648,11 @@ _q_uit
   (add-hook 'org-mode-hook 'visual-line-mode)
   (add-hook 'latex-mode-hook 'visual-line-mode)
   (add-hook 'markdown-mode-hook 'visual-line-mode))
+
+;; yaml
+
+(use-package yaml-mode
+  :mode ("\\.yml$" . yaml-mode))
 
 ;; Misc
 
