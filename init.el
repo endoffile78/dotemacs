@@ -44,6 +44,8 @@
 (tooltip-mode -1)
 (scroll-bar-mode -1)
 
+(defvar private-file)
+
 (setq ring-bell-function 'ignore
 	  browse-url-browser-function 'browse-url-generic
 	  browse-url-generic-program "firefox"
@@ -56,7 +58,8 @@
 	  delete-old-versions t
 	  vc-follow-symlinks t
 	  initial-major-mode 'text-mode
-	  custom-file (concat user-emacs-directory "custom.el"))
+	  custom-file (concat user-emacs-directory "custom.el")
+	  private-file (concat user-emacs-directory "private.el"))
 
 (setq-default truncate-lines 1
 			  backward-delete-function nil
@@ -71,8 +74,11 @@
 
 ;; Theme
 
-(use-package nujelly-theme
-  :load-path "themes/nujelly")
+(use-package darkokai-theme
+  :init
+  (setq darkokai-mode-line-padding 1)
+  :config
+  (load-theme 'darkokai t))
 
 ;; Evil
 
@@ -97,10 +103,10 @@
 (defun my-evil-modeline-change (default-color)
   "Change the modeline color when the mode changes."
   (let ((color (cond
-				((evil-insert-state-p) '("#FFFFFF" . "#000000"))
-				((evil-visual-state-p) '("#330022" . "#FFFFFF"))
-				((evil-normal-state-p) '("#000000" . "#FFFFFF"))
-				((evil-emacs-state-p) '("#440000" . "#ffffff")))))
+				((evil-insert-state-p) '("#555555" . "#FFFFFF"))
+				((evil-visual-state-p) '("#AB7EFF" . "#000000"))
+				((evil-normal-state-p) '("#35393B" . "#FFFFFF"))
+				((evil-emacs-state-p) '("#FF6159" . "#FFFFFF")))))
 	(set-face-background 'mode-line (car color))
 	(set-face-foreground 'mode-line (cdr color))))
 
@@ -319,7 +325,6 @@
   :config
   (use-package company-irony)
   (use-package company-irony-c-headers)
-  (use-package company-tern)
   (use-package company-shell)
   (use-package company-cmake)
   (use-package company-jedi)
@@ -334,7 +339,7 @@
 	'(add-to-list
 	  'company-backends '(company-irony company-irony-c-headers company-yasnippet
 										company-css company-elisp company-semantic
-										company-files company-tern company-shell
+										company-files company-shell
 										company-cmake company-jedi)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
@@ -432,7 +437,14 @@
 		sp-show-pair-from-inside t)
   (sp-use-smartparens-bindings)
   (show-smartparens-global-mode)
-  (smartparens-global-mode t))
+  (smartparens-global-mode t)
+  (defhydra hydra-smartparens ()
+	("f" sp-forward-sexp "forward")
+	("b" sp-backward-sexp "backward")
+	("u" sp-unwrap-sexp "unwrap" :exit t)
+	("s" sp-show-enclosing-pair "show" :exit t)
+	("q" nil "quit"))
+  (global-set-key (kbd "C-c s") 'hydra-smartparens/body))
 
 ;; Visual
 
@@ -495,10 +507,6 @@
 (use-package js2-mode
   :ensure
   :mode ("\\.js$" . js2-mode))
-
-(use-package tern
-  :init
-  (add-hook 'js2-mode-hook (lambda () (tern-mode t))))
 
 ;; Yasnippet
 
@@ -649,7 +657,7 @@ _q_uit
   (add-hook 'latex-mode-hook 'visual-line-mode)
   (add-hook 'markdown-mode-hook 'visual-line-mode))
 
-;; yaml
+;; YAML
 
 (use-package yaml-mode
   :mode ("\\.yml$" . yaml-mode))
@@ -663,6 +671,11 @@ _q_uit
 (use-package auto-revert-mode
   :diminish auto-revert-mode)
 
+(use-package real-auto-save
+  :diminish real-auto-save-mode
+  :init
+  (add-hook 'prog-mode-hook 'real-auto-save-mode))
+
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (defhydra hydra-scale ()
@@ -671,9 +684,10 @@ _q_uit
   ("o" text-scale-decrease "out")
   ("0" (text-scale-adjust 0) "reset" :exit t)
   ("q" nil "quit"))
-(global-set-key (kbd "C-c s") 'hydra-scale/body)
+(global-set-key (kbd "C-c z") 'hydra-scale/body)
 
 (load custom-file)
+(load private-file)
 
 (provide 'init)
 ;;; init.el ends here
