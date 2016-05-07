@@ -16,7 +16,7 @@
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(font . "Monaco-11"))
 
-(unless '(packge-installed-p 'use-package) ;;Make sure use-package is installed
+(unless '(packge-installed-p 'use-package) ;; Make sure use-package is installed
   (package-refresh-contents)
   (package-install 'use-package))
 
@@ -70,11 +70,13 @@
 
 ;; Hydra
 
-(use-package hydra)
+(use-package hydra
+  :ensure)
 
 ;; Theme
 
 (use-package darkokai-theme
+  :ensure
   :init
   (setq darkokai-mode-line-padding 1)
   :config
@@ -117,7 +119,7 @@
 									 (face-foreground 'mode-line))))
 	(add-hook 'post-command-hook (lambda () (my-evil-modeline-change default-color))))
 
-  (setq evil-normal-state-cursor '("white" box) ;;Change the cursor color and shape based on the state
+  (setq evil-normal-state-cursor '("white" box) ;; Change the cursor color and shape based on the state
 		evil-insert-state-cursor '("red" bar)
 		evil-operator-state-cursor '("red" hollow))
 
@@ -161,6 +163,7 @@
 	  "gf" 'ggtags-find-file
 	  "gs" 'ggtags-find-other-symbol
 	  "gt" 'ggtags-find-tag-dwim
+	  "gg" 'ggtags-grep
 	  "ms" 'magit-status
 	  "md" 'magit-diff
 	  "mb" 'magit-blame
@@ -397,9 +400,9 @@
   "Check to see if the project is in a git repo or not and then set the indexing method."
   (let ((vcs (projectile-project-vcs)))
 	(cond
-	 ((eq vcs 'git) (setq projectile-indexing-method 'alien ;;Use .gitignore
+	 ((eq vcs 'git) (setq projectile-indexing-method 'alien ;; Use .gitignore
 						  projectile-enable-caching nil))
-	 (t (setq projectile-indexing-method 'native ;;Use .projectile
+	 (t (setq projectile-indexing-method 'native ;; Use .projectile
 			  projectile-enable-caching t)))))
 
 (use-package projectile
@@ -439,6 +442,7 @@
   (show-smartparens-global-mode)
   (smartparens-global-mode t)
   (defhydra hydra-smartparens ()
+	"Smartparens"
 	("f" sp-forward-sexp "forward")
 	("b" sp-backward-sexp "backward")
 	("u" sp-unwrap-sexp "unwrap" :exit t)
@@ -662,14 +666,15 @@ _q_uit
 (use-package yaml-mode
   :mode ("\\.yml$" . yaml-mode))
 
+;; Haskell
+
+(use-package haskell-mode)
+
 ;; Misc
 
 (use-package fancy-battery-mode
   :init
   (add-hook 'after-init-hook #'fancy-battery-mode))
-
-(use-package auto-revert-mode
-  :diminish auto-revert-mode)
 
 (use-package real-auto-save
   :diminish real-auto-save-mode
@@ -677,6 +682,8 @@ _q_uit
   (add-hook 'prog-mode-hook 'real-auto-save-mode))
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(fset 'yes-or-no-p 'y-or-n-p)
 
 (defhydra hydra-scale ()
   "Scale"
@@ -687,7 +694,9 @@ _q_uit
 (global-set-key (kbd "C-c z") 'hydra-scale/body)
 
 (load custom-file)
-(load private-file)
+
+(if (file-exists-p private-file)
+	(load private-file))
 
 (provide 'init)
 ;;; init.el ends here
