@@ -136,79 +136,80 @@
   (evil-ex-define-cmd "W" 'evil-write)
   (evil-ex-define-cmd "Q" 'evil-quit)
 
-  (use-package evil-tabs
-	:ensure
-	:config
-	(global-evil-tabs-mode t))
-
-  (use-package evil-leader
-	:ensure
-	:config
-	(evil-leader/set-leader ",")
-	(global-evil-leader-mode)
-	(evil-leader/set-key
-	  "k" 'kill-this-buffer
-	  "l" 'load-file
-	  "b" 'helm-buffers-list
-	  "pf" 'helm-projectile
-	  "ps" 'helm-projectile-switch-project
-	  "pb" 'helm-projectile-switch-to-buffer
-	  "pd" 'helm-projectile-find-dir
-	  "pi" 'projectile-invalidate-cache
-	  "po" 'projectile-find-other-file
-	  "pk" 'projectile-kill-buffers
-	  "pg" 'helm-projectile-grep
-	  "gc" 'ggtags-create-tags
-	  "gu" 'ggtags-update-tags
-	  "gf" 'ggtags-find-file
-	  "gs" 'ggtags-find-other-symbol
-	  "gt" 'ggtags-find-tag-dwim
-	  "gg" 'ggtags-grep
-	  "ms" 'magit-status
-	  "md" 'magit-diff
-	  "mb" 'magit-blame
-	  "ml" 'magit-log-popup
-	  "mr" 'magit-branch-popup
-	  "c" 'compile
-	  "t" 'elscreen-create
-	  "db" 'gud-gdb
-	  "h" 'split-window-horizontally
-	  "v" 'split-window-vertically
-	  "fs" 'flyspell-mode
-	  "fp" 'flyspell-prog-mode
-	  "ar" 'anaconda-mode-find-references
-	  "ad" 'anaconda-mode-find-definitions
-	  "aa" 'anaconda-mode-find-assignments
-	  "ad" 'anaconda-mode-show-doc
-	  "iu" 'insert-char
-	  "mw" 'helm-man-woman
-	  "dp" 'sp-unwrap-sexp))
-
-  (use-package vimish-fold
-	:defer 3
-	:config
-	(vimish-fold-global-mode 1)
-	(use-package evil-vimish-fold
-	  :diminish evil-vimish-fold-mode
-	  :config
-	  (evil-vimish-fold-mode)))
-
-  (use-package evil-org
-	:defer 2
-	:diminish evil-org-mode)
-
   (evil-mode 1))
+
+(use-package evil-tabs
+  :ensure evil
+  :config
+  (global-evil-tabs-mode t))
+
+(use-package evil-leader
+  :ensure evil
+  :config
+  (evil-leader/set-leader ",")
+  (global-evil-leader-mode)
+  (evil-leader/set-key
+	"k" 'kill-this-buffer
+	"l" 'load-file
+	"b" 'helm-buffers-list
+	"pf" 'helm-projectile
+	"ps" 'helm-projectile-switch-project
+	"pb" 'helm-projectile-switch-to-buffer
+	"pd" 'helm-projectile-find-dir
+	"pi" 'projectile-invalidate-cache
+	"po" 'projectile-find-other-file
+	"pk" 'projectile-kill-buffers
+	"pg" 'helm-projectile-grep
+	"gc" 'ggtags-create-tags
+	"gu" 'ggtags-update-tags
+	"gf" 'ggtags-find-file
+	"gs" 'ggtags-find-other-symbol
+	"gt" 'ggtags-find-tag-dwim
+	"gg" 'ggtags-grep
+	"ms" 'magit-status
+	"md" 'magit-diff
+	"mb" 'magit-blame
+	"ml" 'magit-log-popup
+	"mr" 'magit-branch-popup
+	"c" 'compile
+	"t" 'elscreen-create
+	"db" 'gud-gdb
+	"h" 'split-window-horizontally
+	"v" 'split-window-vertically
+	"fs" 'flyspell-mode
+	"fp" 'flyspell-prog-mode
+	"ar" 'anaconda-mode-find-references
+	"ad" 'anaconda-mode-find-definitions
+	"aa" 'anaconda-mode-find-assignments
+	"ad" 'anaconda-mode-show-doc
+	"iu" 'insert-char
+	"mw" 'helm-man-woman
+	"dp" 'sp-unwrap-sexp))
+
+(use-package vimish-fold
+  :defer 3
+  :config
+  (vimish-fold-global-mode 1))
+
+(use-package evil-vimish-fold
+  :ensure vimish-fold
+  :diminish evil-vimish-fold-mode
+  :config
+  (evil-vimish-fold-mode))
+
+(use-package evil-org
+  :ensure evil
+  :defer 2
+  :diminish evil-org-mode)
 
 ;; Flycheck
 
 (use-package flycheck
+  :ensure
   :init
   (add-hook 'after-init-hook #'global-flycheck-mode)
-  (use-package flycheck-irony
-	:init
-	(eval-after-load 'flycheck
-	  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
   :config
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
   (defhydra hydra-flycheck ()
 	"Flycheck"
 	("l" flycheck-list-errors "list errors" :exit t)
@@ -217,6 +218,12 @@
 	("p" flycheck-previous-error "prev error")
 	("q" nil "quit"))
   (global-set-key (kbd "C-c f") 'hydra-flycheck/body))
+
+(use-package flycheck-irony
+  :ensure flycheck
+  :init
+  (eval-after-load 'flycheck
+	'(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
 
 ;; Git
 
@@ -240,22 +247,26 @@
   :demand t
   :diminish helm-mode
   :bind (("M-x" . helm-M-x)
-		 ("C-c h m" . helm-man-woman))
+		 ("C-c m" . helm-man-woman))
   :init
   (setq helm-quick-update t
 		helm-bookmark-show-location t
 		helm-M-x-fuzzy-match t
 		helm-buffers-fuzzy-matching t)
   :config
-  (use-package helm-flx
-	:config
-	(helm-flx-mode +1))
-  (use-package helm-descbinds
-	:bind (("C-h b" . helm-descbinds))
-	:config
-	(setq helm-descbinds-window-style 'split-window)
-	(helm-descbinds-mode))
   (helm-mode 1))
+
+(use-package helm-flx
+  :ensure helm
+  :config
+  (helm-flx-mode +1))
+
+(use-package helm-descbinds
+  :ensure helm
+  :bind (("C-h b" . helm-descbinds))
+  :config
+  (setq helm-descbinds-window-style 'split-window)
+  (helm-descbinds-mode))
 
 ;; C
 
@@ -307,13 +318,15 @@
 	(define-key irony-mode-map [remap complete-symbol]
 	  'irony-completion-at-point-async))
   :init
-  (use-package irony-eldoc)
-
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
 
   (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+(use-package irony-eldoc
+  :ensure irony
+  :init
   (add-hook 'irony-mode-hook 'irony-eldoc))
 
 ;; Company
@@ -332,10 +345,6 @@
   (use-package company-cmake)
   (use-package company-jedi)
 
-  (use-package company-quickhelp
-	:config
-	(company-quickhelp-mode 1))
-
   (add-hook 'after-init-hook 'global-company-mode)
 
   (eval-after-load 'company
@@ -346,6 +355,11 @@
 										company-cmake company-jedi)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
+
+(use-package company-quickhelp
+  :ensure company
+  :config
+  (company-quickhelp-mode 1))
 
 ;; Java
 
@@ -409,11 +423,12 @@
   :ensure
   :config
   (add-hook 'projectile-before-switch-project-hook 'my-projectile-hook)
-  (projectile-global-mode)
-  (use-package helm-projectile
-	:ensure
-	:config
-	(helm-projectile-on)))
+  (projectile-global-mode))
+
+(use-package helm-projectile
+  :ensure helm
+  :config
+  (helm-projectile-on))
 
 ;; Python
 
@@ -432,10 +447,6 @@
 (use-package smartparens-config
   :diminish smartparens-mode
   :config
-  (use-package evil-smartparens
-	:diminish evil-smartparens-mode
-	:init
-	(add-hook 'smartparens-enabled-hook #'evil-smartparens-mode))
   (setq sp-show-pair-delay 0
 		sp-show-pair-from-inside t)
   (sp-use-smartparens-bindings)
@@ -450,6 +461,12 @@
 	("q" nil "quit"))
   (global-set-key (kbd "C-c s") 'hydra-smartparens/body))
 
+(use-package evil-smartparens
+  :ensure smartparens
+  :diminish evil-smartparens-mode
+  :init
+  (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode))
+
 ;; Visual
 
 (use-package nyan-mode
@@ -457,6 +474,7 @@
   (nyan-mode 1))
 
 (use-package rainbow-delimiters
+  :ensure
   :commands rainbow-delimiters-mode
   :init
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
@@ -680,6 +698,19 @@ _q_uit
   :diminish real-auto-save-mode
   :init
   (add-hook 'prog-mode-hook 'real-auto-save-mode))
+
+(defvar sanityinc/theme-mode-hook nil
+  "Hook triggered when editing a theme file.")
+
+(defun sanityinc/run-theme-mode-hooks-if-theme ()
+  "Run `sanityinc/theme-mode-hook' if this appears to a theme."
+  (when (string-match "\\(color-theme-\\|-theme\\.el\\)" (buffer-name))
+    (run-hooks 'sanityinc/theme-mode-hook)))
+
+(add-hook 'emacs-lisp-mode-hook 'sanityinc/run-theme-mode-hooks-if-theme)
+
+(add-hook 'sanityinc/theme-mode-hook 'rainbow-mode)
+(add-hook 'sanityinc/theme-mode-hook '(lambda () (aggressive-indent-mode -1)))
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
