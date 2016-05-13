@@ -9,8 +9,8 @@
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 						 ("org" . "http://orgmode.org/elpa/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.org/packages/")))
+						 ("marmalade" . "http://marmalade-repo.org/packages/")
+						 ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -96,11 +96,11 @@
   :group 'dotemacs-evil)
 
 (cl-loop for mode in dotemacs-evil/emacs-state-minor-modes
-         do (let ((hook (concat (symbol-name mode) "-hook")))
-              (add-hook (intern hook) `(lambda ()
+		 do (let ((hook (concat (symbol-name mode) "-hook")))
+			  (add-hook (intern hook) `(lambda ()
 										 (if ,mode
-                                             (evil-emacs-state)
-                                           (evil-normal-state))))))
+											 (evil-emacs-state)
+										   (evil-normal-state))))))
 
 (defun my-evil-modeline-change (default-color)
   "Change the modeline color when the mode changes."
@@ -139,12 +139,12 @@
   (evil-mode 1))
 
 (use-package evil-tabs
-  :ensure evil
+  :ensure
   :config
   (global-evil-tabs-mode t))
 
 (use-package evil-leader
-  :ensure evil
+  :ensure
   :config
   (evil-leader/set-leader ",")
   (global-evil-leader-mode)
@@ -220,7 +220,6 @@
   (global-set-key (kbd "C-c f") 'hydra-flycheck/body))
 
 (use-package flycheck-irony
-  :ensure flycheck
   :init
   (eval-after-load 'flycheck
 	'(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
@@ -257,12 +256,10 @@
   (helm-mode 1))
 
 (use-package helm-flx
-  :ensure helm
   :config
   (helm-flx-mode +1))
 
 (use-package helm-descbinds
-  :ensure helm
   :bind (("C-h b" . helm-descbinds))
   :config
   (setq helm-descbinds-window-style 'split-window)
@@ -325,7 +322,6 @@
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
 (use-package irony-eldoc
-  :ensure irony
   :init
   (add-hook 'irony-mode-hook 'irony-eldoc))
 
@@ -357,7 +353,6 @@
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
 (use-package company-quickhelp
-  :ensure company
   :config
   (company-quickhelp-mode 1))
 
@@ -426,7 +421,6 @@
   (projectile-global-mode))
 
 (use-package helm-projectile
-  :ensure helm
   :config
   (helm-projectile-on))
 
