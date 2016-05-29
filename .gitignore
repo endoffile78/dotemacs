@@ -1,6 +1,5 @@
 #folders
 elpa
-eshell
 backups
 irony
 auto-save-list
@@ -21,3 +20,5 @@ projectile-bookmarks.eld
 projectile.cache
 recentf
 places
+eshell/history
+eshell/lastdir

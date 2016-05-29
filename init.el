@@ -44,7 +44,8 @@
 (tooltip-mode -1)
 (scroll-bar-mode -1)
 
-(defvar private-file)
+(defvar private-file (concat user-emacs-directory "private.el")
+  "Private file that is not tracked.")
 
 (setq ring-bell-function 'ignore
 	  browse-url-browser-function 'browse-url-generic
@@ -59,7 +60,7 @@
 	  vc-follow-symlinks t
 	  initial-major-mode 'text-mode
 	  custom-file (concat user-emacs-directory "custom.el")
-	  private-file (concat user-emacs-directory "private.el"))
+	  ad-redefinition-action 'accept)
 
 (setq-default truncate-lines 1
 			  backward-delete-function nil
@@ -150,12 +151,10 @@
   (global-evil-leader-mode)
   (evil-leader/set-key
 	"k" 'kill-this-buffer
-	"l" 'load-file
 	"b" 'helm-buffers-list
 	"pf" 'helm-projectile
 	"ps" 'helm-projectile-switch-project
 	"pb" 'helm-projectile-switch-to-buffer
-	"pd" 'helm-projectile-find-dir
 	"pi" 'projectile-invalidate-cache
 	"po" 'projectile-find-other-file
 	"pk" 'projectile-kill-buffers
@@ -173,18 +172,13 @@
 	"mr" 'magit-branch-popup
 	"c" 'compile
 	"t" 'elscreen-create
-	"db" 'gud-gdb
-	"h" 'split-window-horizontally
-	"v" 'split-window-vertically
+	"b" 'gud-gdb
 	"fs" 'flyspell-mode
 	"fp" 'flyspell-prog-mode
-	"ar" 'anaconda-mode-find-references
-	"ad" 'anaconda-mode-find-definitions
-	"aa" 'anaconda-mode-find-assignments
-	"ad" 'anaconda-mode-show-doc
 	"iu" 'insert-char
 	"mw" 'helm-man-woman
-	"dp" 'sp-unwrap-sexp))
+	"hg" 'helm-grep-do-git-grep
+	"ha" 'helm-do-grep-ag))
 
 (use-package vimish-fold
   :defer 3
@@ -198,7 +192,6 @@
   (evil-vimish-fold-mode))
 
 (use-package evil-org
-  :ensure evil
   :defer 2
   :diminish evil-org-mode)
 
@@ -246,12 +239,15 @@
   :demand t
   :diminish helm-mode
   :bind (("M-x" . helm-M-x)
-		 ("C-c m" . helm-man-woman))
+		 ("C-c m" . helm-man-woman)
+		 ("C-x C-b" . helm-buffers-list))
   :init
+  (require 'helm-config)
   (setq helm-quick-update t
 		helm-bookmark-show-location t
 		helm-M-x-fuzzy-match t
-		helm-buffers-fuzzy-matching t)
+		helm-buffers-fuzzy-matching t
+		helm-ff-file-name-history-use-recentf t)
   :config
   (helm-mode 1))
 
@@ -282,12 +278,18 @@
 
 (defun my-c-hook ()
   "Hook for `c-mode'."
-  (setq indent-tabs-mode t
-		c-default-style "my-c-style")
+  (setq indent-tabs-mode t)
   (c-set-style "my-c-style"))
 
 (add-hook 'c-mode-hook 'my-c-hook)
 (add-hook 'c++-mode-hook 'my-c-hook)
+
+;; C ++
+
+(use-package modern-cpp-font-lock
+  :diminish modern-c++-font-lock-mode
+  :init
+  (add-hook 'c++-mode-hook 'modern-c++-font-lock-mode))
 
 ;; ggtags
 
@@ -317,7 +319,6 @@
   :init
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
-
   (add-hook 'irony-mode-hook 'my-irony-mode-hook)
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
@@ -333,13 +334,15 @@
   :init
   (setq company-idle-delay 0
 		company-minimum-prefix-length 2
-		company-tooltip-limit 20)
+		company-tooltip-limit 20
+		company-global-modes '(not eshell-mode))
   :config
   (use-package company-irony)
   (use-package company-irony-c-headers)
   (use-package company-shell)
   (use-package company-cmake)
   (use-package company-jedi)
+  (use-package company-tern)
 
   (add-hook 'after-init-hook 'global-company-mode)
 
@@ -347,7 +350,7 @@
 	'(add-to-list
 	  'company-backends '(company-irony company-irony-c-headers company-yasnippet
 										company-css company-elisp company-semantic
-										company-files company-shell
+										company-files company-shell company-tern
 										company-cmake company-jedi)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
@@ -405,16 +408,16 @@
 
 ;; Projectile
 
-(defun my-projectile-hook ()
-  "Check to see if the project is in a git repo or not and then set the indexing method."
-  (let ((vcs (projectile-project-vcs)))
-	(cond
-	 ((eq vcs 'git) (setq projectile-indexing-method 'alien ;; Use .gitignore
-						  projectile-enable-caching nil))
-	 (t (setq projectile-indexing-method 'native ;; Use .projectile
-			  projectile-enable-caching t)))))
-
 (use-package projectile
+  :preface
+  (defun my-projectile-hook ()
+	"Check to see if the project is in a git repo or not and then set the indexing method."
+	(let ((vcs (projectile-project-vcs)))
+	  (cond
+	   ((eq vcs 'git) (setq projectile-indexing-method 'alien ;; Use .gitignore
+							projectile-enable-caching nil))
+	   (t (setq projectile-indexing-method 'native ;; Use .projectile
+				projectile-enable-caching t)))))
   :ensure
   :config
   (add-hook 'projectile-before-switch-project-hook 'my-projectile-hook)
@@ -441,19 +444,12 @@
 (use-package smartparens-config
   :diminish smartparens-mode
   :config
+  (require 'smartparens-config)
   (setq sp-show-pair-delay 0
 		sp-show-pair-from-inside t)
   (sp-use-smartparens-bindings)
   (show-smartparens-global-mode)
-  (smartparens-global-mode t)
-  (defhydra hydra-smartparens ()
-	"Smartparens"
-	("f" sp-forward-sexp "forward")
-	("b" sp-backward-sexp "backward")
-	("u" sp-unwrap-sexp "unwrap" :exit t)
-	("s" sp-show-enclosing-pair "show" :exit t)
-	("q" nil "quit"))
-  (global-set-key (kbd "C-c s") 'hydra-smartparens/body))
+  (smartparens-global-mode t))
 
 (use-package evil-smartparens
   :ensure smartparens
@@ -474,6 +470,7 @@
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
 (use-package rainbow-mode
+  :ensure
   :diminish rainbow-mode
   :commands rainbow-mode
   :init
@@ -524,6 +521,10 @@
   :ensure
   :mode ("\\.js$" . js2-mode))
 
+(use-package tern
+  :init
+  (add-hook 'js2-mode-hook (lambda () (tern-mode t))))
+
 ;; Yasnippet
 
 (use-package yasnippet
@@ -571,38 +572,22 @@ _q_uit
 	("q" nil))
   (global-set-key (kbd "C-c o") 'hydra-org/body))
 
-;; Emacs Lisp
+;; Eldoc
 
 (use-package eldoc
   :diminish eldoc-mode
   :init
   (add-hook 'emacs-lisp-mode-hook 'eldoc-mode))
 
-(define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
-(define-key emacs-lisp-mode-map (kbd "C-c e") 'eval-buffer)
-
 ;; undo-tree
 
 (use-package undo-tree
-  :diminish undo-tree-mode
-  :config
-  (defhydra hydra-undo-tree ()
-	"undo tree"
-	("v" undo-tree-visualize "visualize" :exit t)
-	("u" undo-tree-undo "undo")
-	("r" undo-tree-redo "redo")
-	("q" nil "quit"))
-  (global-set-key (kbd "C-c u") 'hydra-undo-tree/body))
+  :diminish undo-tree-mode)
 
 ;; Abbrev
 
 (use-package abbrev
   :diminish abbrev-mode)
-
-;; ibuffer
-
-(use-package ibuffer
-  :bind (("C-x C-b" . ibuffer)))
 
 ;; elscreen
 
@@ -627,7 +612,6 @@ _q_uit
 
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8-unix)
-(set-frame-font "Monaco-11")
 
 ;; PKGBUILD
 
@@ -666,6 +650,10 @@ _q_uit
 		(if (and b e (< (point) e)) (setq rlt nil)))
 	  (setq ad-return-value rlt))))
 
+(use-package flyspell-popup
+  :bind (:map flyspell-mode-map
+			  ("C-;" . flyspell-popup-correct)))
+
 (use-package visual-line-mode
   :init
   (add-hook 'text-mode-hook 'visual-line-mode)
@@ -682,6 +670,11 @@ _q_uit
 
 (use-package haskell-mode)
 
+;; Keybindings
+
+(define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
+(define-key emacs-lisp-mode-map (kbd "C-c e") 'eval-buffer)
+
 ;; Misc
 
 (use-package fancy-battery-mode
@@ -692,6 +685,10 @@ _q_uit
   :diminish real-auto-save-mode
   :init
   (add-hook 'prog-mode-hook 'real-auto-save-mode))
+
+(use-package immortal-scratch
+  :config
+  (immortal-scratch-mode))
 
 (defvar sanityinc/theme-mode-hook nil
   "Hook triggered when editing a theme file.")
