@@ -5,6 +5,9 @@
 
 ;;; Code:
 
+(when (version< emacs-version "24.4")
+  (error (concat "This config requires Emacs 24.4+. Current version: " emacs-version)))
+
 (require 'package)
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -239,7 +242,7 @@
   :demand t
   :diminish helm-mode
   :bind (("M-x" . helm-M-x)
-		 ("C-c m" . helm-man-woman)
+		 ("C-c w" . helm-man-woman)
 		 ("C-x C-b" . helm-buffers-list))
   :init
   (require 'helm-config)
@@ -611,7 +614,8 @@ _q_uit
 ;; Font
 
 (set-language-environment "UTF-8")
-(set-default-coding-systems 'utf-8-unix)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
 
 ;; PKGBUILD
 
@@ -670,6 +674,28 @@ _q_uit
 
 (use-package haskell-mode)
 
+;; Editorconfig
+
+(use-package editorconfig
+  :config
+  (editorconfig-mode 1))
+
+;; Mingus
+
+(use-package mingus-stays-home
+  :config
+  (defhydra hydra-mingus ()
+	"Mingus"
+	("t" mingus-toggle "toggle" :exit t)
+	("i" mingus-insert "insert")
+	("p" mingus-prev "prev")
+	("n" mingus-next "next")
+	("u" mingus-vol-up "up")
+	("d" mingus-vol-down "down")
+	("s" mingus-search "search")
+	("q" nil "quit"))
+  (global-set-key (kbd "C-c m") 'hydra-mingus/body))
+
 ;; Keybindings
 
 (define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
@@ -713,7 +739,7 @@ _q_uit
   ("o" text-scale-decrease "out")
   ("0" (text-scale-adjust 0) "reset" :exit t)
   ("q" nil "quit"))
-(global-set-key (kbd "C-c z") 'hydra-scale/body)
+(global-set-key (kbd "C-c s") 'hydra-scale/body)
 
 (load custom-file)
 
