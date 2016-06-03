@@ -13,6 +13,7 @@ Backup your configuration if you have one.
 #+begin_src sh
   cd ~
   mv .emacs.d .emacs.d.bak
+  mv .emacs .emacs.bak
 #+end_src
 
 Clone the repository.

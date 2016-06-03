@@ -1,1 +1,2 @@
 alias df df -kTh
+alias emacs find-file $1

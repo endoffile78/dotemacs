@@ -81,9 +81,8 @@
 
 (use-package darkokai-theme
   :ensure
-  :init
-  (setq darkokai-mode-line-padding 1)
   :config
+  (setq darkokai-mode-line-padding 1)
   (load-theme 'darkokai t))
 
 ;; Evil
@@ -130,7 +129,9 @@
   (evil-set-initial-state 'eshell-mode 'emacs)
   (evil-set-initial-state 'calendar-mode 'emacs)
   (evil-set-initial-state 'term-mode 'emacs)
+  (evil-set-initial-state 'calculator-mode 'emacs)
 
+  ;; Vim-like window movement
   (global-unset-key (kbd "C-w"))
   (global-set-key (kbd "C-w <right>") 'evil-window-right)
   (global-set-key (kbd "C-w <left>") 'evil-window-left)
@@ -154,7 +155,6 @@
   (global-evil-leader-mode)
   (evil-leader/set-key
 	"k" 'kill-this-buffer
-	"b" 'helm-buffers-list
 	"pf" 'helm-projectile
 	"ps" 'helm-projectile-switch-project
 	"pb" 'helm-projectile-switch-to-buffer
@@ -175,8 +175,7 @@
 	"mr" 'magit-branch-popup
 	"c" 'compile
 	"t" 'elscreen-create
-	"b" 'gud-gdb
-	"fs" 'flyspell-mode
+	"d" 'gud-gdb
 	"fp" 'flyspell-prog-mode
 	"iu" 'insert-char
 	"mw" 'helm-man-woman
@@ -184,7 +183,6 @@
 	"ha" 'helm-do-grep-ag))
 
 (use-package vimish-fold
-  :defer 3
   :config
   (vimish-fold-global-mode 1))
 
@@ -195,7 +193,6 @@
   (evil-vimish-fold-mode))
 
 (use-package evil-org
-  :defer 2
   :diminish evil-org-mode)
 
 ;; Flycheck
@@ -231,7 +228,9 @@
   (global-git-gutter+-mode))
 
 (use-package magit
-  :ensure)
+  :ensure
+  :config
+  (setq magit-auto-revert-mode nil))
 
 (use-package gitignore-mode)
 
@@ -242,16 +241,14 @@
   :demand t
   :diminish helm-mode
   :bind (("M-x" . helm-M-x)
-		 ("C-c w" . helm-man-woman)
-		 ("C-x C-b" . helm-buffers-list))
-  :init
+		 ("C-c w" . helm-man-woman))
+  :config
   (require 'helm-config)
   (setq helm-quick-update t
 		helm-bookmark-show-location t
 		helm-M-x-fuzzy-match t
 		helm-buffers-fuzzy-matching t
 		helm-ff-file-name-history-use-recentf t)
-  :config
   (helm-mode 1))
 
 (use-package helm-flx
@@ -281,6 +278,7 @@
 
 (defun my-c-hook ()
   "Hook for `c-mode'."
+  (local-set-key (kbd "C-c d") 'gud-gdb)
   (setq indent-tabs-mode t)
   (c-set-style "my-c-style"))
 
@@ -300,10 +298,7 @@
   :diminish ggtags-mode
   :commands ggtags-mode
   :init
-  (add-hook 'c-mode-common-hook
-			(lambda ()
-			  (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-				(ggtags-mode 1)))))
+  (add-hook 'c-mode-common-hook 'ggtags-mode))
 
 ;; Irony
 
@@ -329,23 +324,40 @@
   :init
   (add-hook 'irony-mode-hook 'irony-eldoc))
 
+;; Rust
+
+(use-package rust-mode
+  :mode ("\\.rs\\'" . rust-mode))
+
+(use-package racer
+  :demand t
+  :diminish racer-mode
+  :bind (:map rust-mode-map
+			  ("M-." . racer-find-definition))
+  :init
+  (add-hook 'rust-mode-hook #'racer-mode)
+  (add-hook 'racer-mode-hook #'eldoc-mode)
+  :config
+  (setq racer-rust-src-path "/home/endoffile/.rust/src/"))
+
 ;; Company
 
 (use-package company
   :ensure
   :diminish company-mode
-  :init
+  :config
   (setq company-idle-delay 0
 		company-minimum-prefix-length 2
 		company-tooltip-limit 20
 		company-global-modes '(not eshell-mode))
-  :config
+
   (use-package company-irony)
   (use-package company-irony-c-headers)
   (use-package company-shell)
   (use-package company-cmake)
   (use-package company-jedi)
   (use-package company-tern)
+  (use-package company-racer)
 
   (add-hook 'after-init-hook 'global-company-mode)
 
@@ -354,7 +366,7 @@
 	  'company-backends '(company-irony company-irony-c-headers company-yasnippet
 										company-css company-elisp company-semantic
 										company-files company-shell company-tern
-										company-cmake company-jedi)))
+										company-cmake company-jedi company-racer)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
@@ -364,16 +376,14 @@
 
 ;; Java
 
-(use-package java-file-create
-  :defer 4)
+(use-package java-file-create)
 
 (use-package jdee
   :commands jdee-mode)
 
 ;; LaTeX
 
-(use-package tex
-  :defer 3)
+(use-package tex)
 
 ;; Markdown
 
@@ -412,6 +422,7 @@
 ;; Projectile
 
 (use-package projectile
+  :ensure
   :preface
   (defun my-projectile-hook ()
 	"Check to see if the project is in a git repo or not and then set the indexing method."
@@ -421,7 +432,6 @@
 							projectile-enable-caching nil))
 	   (t (setq projectile-indexing-method 'native ;; Use .projectile
 				projectile-enable-caching t)))))
-  :ensure
   :config
   (add-hook 'projectile-before-switch-project-hook 'my-projectile-hook)
   (projectile-global-mode))
@@ -440,7 +450,8 @@
 
 (eval-after-load "python"
   '(progn
-     (define-key python-mode-map (kbd "<f5>") 'python-f5)))
+     (define-key python-mode-map (kbd "<f5>") 'python-f5)
+	 (define-key python-mode-map (kbd "C-c d") 'pdb)))
 
 ;; Smartparens
 
@@ -696,10 +707,19 @@ _q_uit
 	("q" nil "quit"))
   (global-set-key (kbd "C-c m") 'hydra-mingus/body))
 
+(use-package dired-k
+  :bind (:map dired-mode-map
+			  ("K" . dired-k)))
+
+(use-package ibuffer
+  :bind (("C-x C-b" . ibuffer)))
+
 ;; Keybindings
 
 (define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
-(define-key emacs-lisp-mode-map (kbd "C-c e") 'eval-buffer)
+
+(global-set-key (kbd "C-c i") 'insert-char)
+(global-set-key (kbd "C-c e") 'eshell)
 
 ;; Misc
 
