@@ -692,7 +692,7 @@ _q_uit
 			  ("K" . dired-k)))
 
 (use-package ibuffer
-  :bind (("C-x C-b" . ibuffer)))
+  :bind (("C-x C-b" . ibuffer-other-window)))
 
 ;; Keybindings
 
