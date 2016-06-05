@@ -182,16 +182,6 @@
 	"hg" 'helm-grep-do-git-grep
 	"ha" 'helm-do-grep-ag))
 
-(use-package vimish-fold
-  :config
-  (vimish-fold-global-mode 1))
-
-(use-package evil-vimish-fold
-  :ensure vimish-fold
-  :diminish evil-vimish-fold-mode
-  :config
-  (evil-vimish-fold-mode))
-
 (use-package evil-org
   :diminish evil-org-mode)
 
@@ -284,13 +274,6 @@
 
 (add-hook 'c-mode-hook 'my-c-hook)
 (add-hook 'c++-mode-hook 'my-c-hook)
-
-;; C ++
-
-(use-package modern-cpp-font-lock
-  :diminish modern-c++-font-lock-mode
-  :init
-  (add-hook 'c++-mode-hook 'modern-c++-font-lock-mode))
 
 ;; ggtags
 
@@ -415,9 +398,6 @@
 		uniquify-separator "/"
 		uniquify-ignore-buffers-re "^\\*"
 		uniquify-after-kill-buffer-p t))
-
-(use-package smart-comment
-  :bind("M-;" . smart-comment))
 
 ;; Projectile
 
