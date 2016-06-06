@@ -139,7 +139,7 @@
   (global-set-key (kbd "C-w <up>") 'evil-window-up)
 
   (evil-ex-define-cmd "W" 'evil-write)
-  (evil-ex-define-cmd "Q" 'evil-quit)
+  (evil-ex-define-cmd "Q" 'evil-tab-sensitive-quit)
 
   (evil-mode 1))
 
