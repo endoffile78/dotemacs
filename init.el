@@ -177,13 +177,20 @@
 	"t" 'elscreen-create
 	"d" 'gud-gdb
 	"fp" 'flyspell-prog-mode
-	"iu" 'insert-char
 	"mw" 'helm-man-woman
 	"hg" 'helm-grep-do-git-grep
 	"ha" 'helm-do-grep-ag))
 
 (use-package evil-org
   :diminish evil-org-mode)
+
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1))
+
+(use-package evil-visualstar
+  :config
+  (global-evil-visualstar-mode t))
 
 ;; Flycheck
 
