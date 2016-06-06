@@ -192,6 +192,10 @@
   :config
   (global-evil-visualstar-mode t))
 
+(use-package evil-commentary
+  :config
+  (evil-commentary-mode))
+
 ;; Flycheck
 
 (use-package flycheck
