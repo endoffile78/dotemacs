@@ -193,6 +193,7 @@
   (global-evil-visualstar-mode t))
 
 (use-package evil-commentary
+  :diminish evil-commentary-mode
   :config
   (evil-commentary-mode))
 
