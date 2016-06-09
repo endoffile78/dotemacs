@@ -398,8 +398,6 @@
 (use-package aggressive-indent
   :diminish aggressive-indent-mode
   :config
-  (add-to-list 'aggressive-indent-excluded-modes 'python-mode)
-  (add-to-list 'aggressive-indent-excluded-modes 'makefile-mode)
   (add-to-list
    'aggressive-indent-dont-indent-if
    '(and (derived-mode-p 'c-mode 'c++-mode 'java-mode 'csharp-mode)
