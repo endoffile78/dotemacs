@@ -156,7 +156,6 @@
   (evil-leader/set-key
 	"k" 'kill-this-buffer
 	"pf" 'helm-projectile
-	"ps" 'helm-projectile-switch-project
 	"pb" 'helm-projectile-switch-to-buffer
 	"pi" 'projectile-invalidate-cache
 	"po" 'projectile-find-other-file
@@ -218,6 +217,10 @@
   :init
   (eval-after-load 'flycheck
 	'(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
+
+(use-package flycheck-rust
+  :config
+  (add-hook 'rust-mode-hook 'flycheck-rust-setup))
 
 ;; Git
 
