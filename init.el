@@ -41,6 +41,7 @@
 (recentf-mode)
 (blink-cursor-mode 1)
 (toggle-save-place-globally)
+(show-paren-mode 1)
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -445,24 +446,6 @@
   '(progn
      (define-key python-mode-map (kbd "<f5>") 'python-f5)
 	 (define-key python-mode-map (kbd "C-c d") 'pdb)))
-
-;; Smartparens
-
-(use-package smartparens-config
-  :diminish smartparens-mode
-  :config
-  (require 'smartparens-config)
-  (setq sp-show-pair-delay 0
-		sp-show-pair-from-inside t)
-  (sp-use-smartparens-bindings)
-  (show-smartparens-global-mode)
-  (smartparens-global-mode t))
-
-(use-package evil-smartparens
-  :ensure smartparens
-  :diminish evil-smartparens-mode
-  :init
-  (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode))
 
 ;; Visual
 
