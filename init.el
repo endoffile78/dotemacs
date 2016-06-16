@@ -53,8 +53,7 @@
   "Private file that is not tracked.")
 
 (setq ring-bell-function 'ignore
-	  browse-url-browser-function 'browse-url-generic
-	  browse-url-generic-program "firefox"
+	  browse-url-browser-function 'browse-url-xdg-open
 	  inhibit-startup-message t
 	  initial-scratch-message nil
 	  auto-save-default nil
@@ -705,11 +704,6 @@ _q_uit
 (use-package fancy-battery-mode
   :init
   (add-hook 'after-init-hook #'fancy-battery-mode))
-
-(use-package real-auto-save
-  :diminish real-auto-save-mode
-  :init
-  (add-hook 'prog-mode-hook 'real-auto-save-mode))
 
 (use-package immortal-scratch
   :config
