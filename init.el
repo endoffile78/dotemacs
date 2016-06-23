@@ -337,7 +337,7 @@
   (add-hook 'rust-mode-hook #'racer-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode)
   :config
-  (setq racer-rust-src-path "/home/endoffile/.rust/src/"))
+  (setq racer-rust-src-path "~/.rust/src/"))
 
 ;; Company
 

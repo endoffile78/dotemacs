@@ -8,17 +8,17 @@ tramp
 url
 semanticdb
 abbrev_defs
-vimish-fold
-anaconda-mode
 
 #files
+eshell/history
+eshell/lastdir
+
 *.elc
 *~
 *.swp
+
 private.el
 projectile-bookmarks.eld
 projectile.cache
 recentf
 places
-eshell/history
-eshell/lastdir
