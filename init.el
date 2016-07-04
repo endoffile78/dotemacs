@@ -285,7 +285,7 @@
 (defun my-c-hook ()
   "Hook for `c-mode'."
   (local-set-key (kbd "C-c d") 'gud-gdb)
-  (setq indent-tabs-mode t)
+  (setq-local indent-tabs-mode t)
   (c-set-style "my-c-style"))
 
 (add-hook 'c-mode-hook 'my-c-hook)
@@ -397,6 +397,7 @@
 ;; Programming Utilities
 
 (use-package aggressive-indent
+  :disabled
   :diminish aggressive-indent-mode
   :config
   (add-to-list
