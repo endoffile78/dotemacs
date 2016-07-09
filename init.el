@@ -118,6 +118,11 @@
 
 (use-package evil
   :ensure
+  :demand t
+  :bind (:map evil-normal-state-map
+			  ("C-e" . end-of-line)
+			  :map evil-insert-state-map
+			  ("C-e" . end-of-line))
   :config
   (lexical-let ((default-color (cons (face-background 'mode-line)
 									 (face-foreground 'mode-line))))
@@ -134,10 +139,11 @@
 
   ;; Vim-like window movement
   (global-unset-key (kbd "C-w"))
-  (global-set-key (kbd "C-w <right>") 'evil-window-right)
-  (global-set-key (kbd "C-w <left>") 'evil-window-left)
-  (global-set-key (kbd "C-w <down>") 'evil-window-down)
-  (global-set-key (kbd "C-w <up>") 'evil-window-up)
+  (global-set-key (kbd "C-w <right>") #'evil-window-right)
+  (global-set-key (kbd "C-w <left>")  #'evil-window-left)
+  (global-set-key (kbd "C-w <down>")  #'evil-window-down)
+  (global-set-key (kbd "C-w <up>")    #'evil-window-up)
+
 
   (evil-ex-define-cmd "W" 'evil-write)
   (evil-ex-define-cmd "Q" 'evil-tab-sensitive-quit)
@@ -177,7 +183,6 @@
 	"t" 'elscreen-create
 	"d" 'gud-gdb
 	"fp" 'flyspell-prog-mode
-	"mw" 'helm-man-woman
 	"hg" 'helm-grep-do-git-grep
 	"ha" 'helm-do-grep-ag))
 
@@ -221,7 +226,7 @@
 
 (use-package flycheck-rust
   :config
-  (add-hook 'rust-mode-hook 'flycheck-rust-setup))
+  (add-hook 'rust-mode-hook #'flycheck-rust-setup))
 
 ;; Git
 
