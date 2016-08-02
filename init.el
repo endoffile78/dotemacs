@@ -483,6 +483,7 @@
 
 (add-hook 'html-mode-hook
 		  (lambda ()
+			(setq-local indent-tabs-mode nil)
 			(set (make-local-variable 'sgml-basic-offset) 2)))
 
 (use-package emmet-mode
@@ -499,9 +500,10 @@
 		 ("\\.php?\\'" . web-mode))
   :config
   (defun my-web-mode-hook ()
-	(setq electric-pair-pairs '((?\< . ?\>)
-								(?\' . ?\'))
-		  web-mode-markup-indent-offset 2
+	(setq-local indent-tabs-mode nil)
+	(setq-local electric-pair-pairs '((?\< . ?\>)
+									  (?\' . ?\')))
+	(setq web-mode-markup-indent-offset 2
 		  web-mode-css-indent-offset 4
 		  web-mode-code-indent-offset 4
 		  web-mode-enable-auto-pairing nil
@@ -698,6 +700,19 @@ _q_uit
   :bind (("C-x C-b" . ibuffer-other-window)))
 
 (use-package hyperbole)
+
+(use-package clang-format)
+
+(use-package autoinsert
+  :config
+  (add-hook 'find-file-hook #'auto-insert)
+  (setq auto-insert 'other
+		auto-insert-query nil
+		auto-insert-mode t
+		auto-insert-directory (concat user-emacs-directory "auto-insert")
+		auto-insert-alist '(("\.html\'" . "template.html")
+							("^.*html.*$" . "template.html")
+							('web-mode . "template.html"))))
 
 ;; Keybindings
 
