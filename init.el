@@ -119,10 +119,9 @@
 (use-package evil
   :ensure
   :demand t
-  :bind (:map evil-normal-state-map
+  :bind (:map evil-insert-state-map
 			  ("C-e" . end-of-line)
-			  :map evil-insert-state-map
-			  ("C-e" . end-of-line))
+			  ("C-a" . beginning-of-line))
   :config
   (lexical-let ((default-color (cons (face-background 'mode-line)
 									 (face-foreground 'mode-line))))
@@ -697,6 +696,8 @@ _q_uit
 
 (use-package ibuffer
   :bind (("C-x C-b" . ibuffer-other-window)))
+
+(use-package hyperbole)
 
 ;; Keybindings
 
