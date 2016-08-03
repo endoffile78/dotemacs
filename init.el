@@ -137,6 +137,7 @@
   (evil-set-initial-state 'calendar-mode 'emacs)
   (evil-set-initial-state 'term-mode 'emacs)
   (evil-set-initial-state 'calculator-mode 'emacs)
+  (evil-set-initial-state 'eww-mode 'emacs)
 
   ;; Vim-like window movement
   (global-unset-key (kbd "C-w"))
@@ -290,7 +291,7 @@
 
 (defun my-c-hook ()
   "Hook for `c-mode'."
-  (local-set-key (kbd "C-c d") 'gud-gdb)
+  (local-set-key (kbd "C-c d") #'gud-gdb)
   (setq-local indent-tabs-mode t)
   (c-set-style "my-c-style"))
 
@@ -320,10 +321,10 @@
     (define-key irony-mode-map [remap complete-symbol]
       'irony-completion-at-point-async))
   :init
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+  (add-hook 'c++-mode-hook #'irony-mode)
+  (add-hook 'c-mode-hook #'irony-mode)
+  (add-hook 'irony-mode-hook #'my-irony-mode-hook)
+  (add-hook 'irony-mode-hook #'irony-cdb-autosetup-compile-options))
 
 (use-package irony-eldoc
   :init
@@ -721,14 +722,14 @@ _q_uit
   (interactive)
   (setq-local indent-tabs-mode nil))
 
-(add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
+(add-hook 'emacs-lisp-mode-hook #'my-emacs-lisp-mode-hook)
 
 ;; Keybindings
 
-(define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
+(define-key emacs-lisp-mode-map (kbd "C-j") #'eval-region)
 
-(global-set-key (kbd "C-c i") 'insert-char)
-(global-set-key (kbd "C-c e") 'eshell)
+(global-set-key (kbd "C-c i") #'insert-char)
+(global-set-key (kbd "C-c e") #'eshell)
 
 ;; Misc
 
@@ -748,12 +749,12 @@ _q_uit
   (when (string-match "\\(color-theme-\\|-theme\\.el\\)" (buffer-name))
     (run-hooks 'sanityinc/theme-mode-hook)))
 
-(add-hook 'emacs-lisp-mode-hook 'sanityinc/run-theme-mode-hooks-if-theme)
+(add-hook 'emacs-lisp-mode-hook #'sanityinc/run-theme-mode-hooks-if-theme)
 
-(add-hook 'sanityinc/theme-mode-hook 'rainbow-mode)
+(add-hook 'sanityinc/theme-mode-hook #'rainbow-mode)
 (add-hook 'sanityinc/theme-mode-hook '(lambda () (aggressive-indent-mode -1)))
 
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-hook #'delete-trailing-whitespace)
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
