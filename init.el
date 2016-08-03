@@ -29,6 +29,8 @@
 (require 'diminish)
 (require 'bind-key)
 
+(use-package linum)
+
 (define-global-minor-mode my-global-linum-mode linum-mode
   (lambda ()
     (when (not (memq major-mode
@@ -212,7 +214,7 @@
   (defhydra hydra-flycheck ()
     "Flycheck"
     ("l" flycheck-list-errors "list errors" :exit t)
-    ("c" flycheck-check-buffer "check buffer" :exit t)
+    ("c" flycheck-buffer "check buffer" :exit t)
     ("n" flycheck-next-error "next error")
     ("p" flycheck-previous-error "prev error")
     ("q" nil "quit"))
@@ -447,10 +449,10 @@
   (python-shell-send-buffer)
   (python-shell-switch-to-shell))
 
-(eval-after-load "python"
-  '(progn
-     (define-key python-mode-map (kbd "<f5>") 'python-f5)
-     (define-key python-mode-map (kbd "C-c d") 'pdb)))
+(use-package python
+  :bind (:map python-mode-map
+              ("<f5>" . python-f5)
+              ("C-c d" . pdb)))
 
 ;; Visual
 
@@ -538,7 +540,7 @@
     ("e" yas-activate-extra-mode "extra mode")
     ("n" yas-new-snippet "new snippet")
     ("r" yas-reload-all "reload")
-    ("d" yas-load-direcoty "load directory")
+    ("d" yas-load-directory "load directory")
     ("q" nil "quit"))
   (global-set-key (kbd "C-c y") 'hydra-yasnippet/body))
 
