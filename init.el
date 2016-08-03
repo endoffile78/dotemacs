@@ -11,9 +11,9 @@
 (require 'package)
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-						 ("org" . "http://orgmode.org/elpa/")
-						 ("marmalade" . "http://marmalade-repo.org/packages/")
-						 ("melpa" . "http://melpa.org/packages/")))
+                         ("org" . "http://orgmode.org/elpa/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -31,9 +31,9 @@
 
 (define-global-minor-mode my-global-linum-mode linum-mode
   (lambda ()
-	(when (not (memq major-mode
-					 (list 'eshell-mode 'calendar-mode 'term-mode)))
-	  (linum-mode))))
+    (when (not (memq major-mode
+                     (list 'eshell-mode 'calendar-mode 'term-mode)))
+      (linum-mode))))
 
 (my-global-linum-mode)
 (global-hl-line-mode 1)
@@ -53,25 +53,25 @@
   "Private file that is not tracked.")
 
 (setq ring-bell-function 'ignore
-	  browse-url-browser-function 'browse-url-xdg-open
-	  inhibit-startup-message t
-	  initial-scratch-message nil
-	  auto-save-default nil
-	  make-backup-files t
-	  version-control t
-	  backup-directory-alist (quote ((".*" . "~/.emacs.d/backups/")))
-	  delete-old-versions t
-	  vc-follow-symlinks t
-	  initial-major-mode 'text-mode
-	  custom-file (concat user-emacs-directory "custom.el")
-	  ad-redefinition-action 'accept)
+      browse-url-browser-function 'browse-url-xdg-open
+      inhibit-startup-message t
+      initial-scratch-message nil
+      auto-save-default nil
+      make-backup-files t
+      version-control t
+      backup-directory-alist (quote ((".*" . "~/.emacs.d/backups/")))
+      delete-old-versions t
+      vc-follow-symlinks t
+      initial-major-mode 'text-mode
+      custom-file (concat user-emacs-directory "custom.el")
+      ad-redefinition-action 'accept)
 
 (setq-default truncate-lines 1
-			  backward-delete-function nil
-			  dired-listing-switches "-alhv"
-			  dired-recursive-copies 'always
-			  indent-tabs-mode t
-			  tab-width 4)
+              backward-delete-function nil
+              dired-listing-switches "-alhv"
+              dired-recursive-copies 'always
+              indent-tabs-mode t
+              tab-width 4)
 
 ;; Hydra
 
@@ -100,36 +100,36 @@
   :group 'dotemacs-evil)
 
 (cl-loop for mode in dotemacs-evil/emacs-state-minor-modes
-		 do (let ((hook (concat (symbol-name mode) "-hook")))
-			  (add-hook (intern hook) `(lambda ()
-										 (if ,mode
-											 (evil-emacs-state)
-										   (evil-normal-state))))))
+         do (let ((hook (concat (symbol-name mode) "-hook")))
+              (add-hook (intern hook) `(lambda ()
+                                         (if ,mode
+                                             (evil-emacs-state)
+                                           (evil-normal-state))))))
 
 (defun my-evil-modeline-change (default-color)
   "Change the modeline color when the mode changes."
   (let ((color (cond
-				((evil-insert-state-p) '("#555555" . "#FFFFFF"))
-				((evil-visual-state-p) '("#AB7EFF" . "#000000"))
-				((evil-normal-state-p) '("#35393B" . "#FFFFFF"))
-				((evil-emacs-state-p) '("#FF6159" . "#FFFFFF")))))
-	(set-face-background 'mode-line (car color))
-	(set-face-foreground 'mode-line (cdr color))))
+                ((evil-insert-state-p) '("#555555" . "#FFFFFF"))
+                ((evil-visual-state-p) '("#AB7EFF" . "#000000"))
+                ((evil-normal-state-p) '("#35393B" . "#FFFFFF"))
+                ((evil-emacs-state-p) '("#FF6159" . "#FFFFFF")))))
+    (set-face-background 'mode-line (car color))
+    (set-face-foreground 'mode-line (cdr color))))
 
 (use-package evil
   :ensure
   :demand t
   :bind (:map evil-insert-state-map
-			  ("C-e" . end-of-line)
-			  ("C-a" . beginning-of-line))
+              ("C-e" . end-of-line)
+              ("C-a" . beginning-of-line))
   :config
   (lexical-let ((default-color (cons (face-background 'mode-line)
-									 (face-foreground 'mode-line))))
-	(add-hook 'post-command-hook (lambda () (my-evil-modeline-change default-color))))
+                                     (face-foreground 'mode-line))))
+    (add-hook 'post-command-hook (lambda () (my-evil-modeline-change default-color))))
 
   (setq evil-normal-state-cursor '("white" box) ;; Change the cursor color and shape based on the state
-		evil-insert-state-cursor '("red" bar)
-		evil-operator-state-cursor '("red" hollow))
+        evil-insert-state-cursor '("red" bar)
+        evil-operator-state-cursor '("red" hollow))
 
   (evil-set-initial-state 'eshell-mode 'emacs)
   (evil-set-initial-state 'calendar-mode 'emacs)
@@ -160,30 +160,30 @@
   (evil-leader/set-leader ",")
   (global-evil-leader-mode)
   (evil-leader/set-key
-	"k" 'kill-this-buffer
-	"pf" 'helm-projectile
-	"pb" 'helm-projectile-switch-to-buffer
-	"pi" 'projectile-invalidate-cache
-	"po" 'projectile-find-other-file
-	"pk" 'projectile-kill-buffers
-	"pg" 'helm-projectile-grep
-	"gc" 'ggtags-create-tags
-	"gu" 'ggtags-update-tags
-	"gf" 'ggtags-find-file
-	"gs" 'ggtags-find-other-symbol
-	"gt" 'ggtags-find-tag-dwim
-	"gg" 'ggtags-grep
-	"ms" 'magit-status
-	"md" 'magit-diff
-	"mb" 'magit-blame
-	"ml" 'magit-log-popup
-	"mr" 'magit-branch-popup
-	"c" 'compile
-	"t" 'elscreen-create
-	"d" 'gud-gdb
-	"fp" 'flyspell-prog-mode
-	"hg" 'helm-grep-do-git-grep
-	"ha" 'helm-do-grep-ag))
+    "k" 'kill-this-buffer
+    "pf" 'helm-projectile
+    "pb" 'helm-projectile-switch-to-buffer
+    "pi" 'projectile-invalidate-cache
+    "po" 'projectile-find-other-file
+    "pk" 'projectile-kill-buffers
+    "pg" 'helm-projectile-grep
+    "gc" 'ggtags-create-tags
+    "gu" 'ggtags-update-tags
+    "gf" 'ggtags-find-file
+    "gs" 'ggtags-find-other-symbol
+    "gt" 'ggtags-find-tag-dwim
+    "gg" 'ggtags-grep
+    "ms" 'magit-status
+    "md" 'magit-diff
+    "mb" 'magit-blame
+    "ml" 'magit-log-popup
+    "mr" 'magit-branch-popup
+    "c" 'compile
+    "t" 'elscreen-create
+    "d" 'gud-gdb
+    "fp" 'flyspell-prog-mode
+    "hg" 'helm-grep-do-git-grep
+    "ha" 'helm-do-grep-ag))
 
 (use-package evil-org
   :diminish evil-org-mode)
@@ -210,18 +210,18 @@
   :config
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
   (defhydra hydra-flycheck ()
-	"Flycheck"
-	("l" flycheck-list-errors "list errors" :exit t)
-	("c" flycheck-check-buffer "check buffer" :exit t)
-	("n" flycheck-next-error "next error")
-	("p" flycheck-previous-error "prev error")
-	("q" nil "quit"))
+    "Flycheck"
+    ("l" flycheck-list-errors "list errors" :exit t)
+    ("c" flycheck-check-buffer "check buffer" :exit t)
+    ("n" flycheck-next-error "next error")
+    ("p" flycheck-previous-error "prev error")
+    ("q" nil "quit"))
   (global-set-key (kbd "C-c f") 'hydra-flycheck/body))
 
 (use-package flycheck-irony
   :init
   (eval-after-load 'flycheck
-	'(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
+    '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
 
 (use-package flycheck-rust
   :config
@@ -251,14 +251,14 @@
   :demand t
   :diminish helm-mode
   :bind (("M-x" . helm-M-x)
-		 ("C-c w" . helm-man-woman))
+         ("C-c w" . helm-man-woman))
   :config
   (require 'helm-config)
   (setq helm-quick-update t
-		helm-bookmark-show-location t
-		helm-M-x-fuzzy-match t
-		helm-buffers-fuzzy-matching t
-		helm-ff-file-name-history-use-recentf t)
+        helm-bookmark-show-location t
+        helm-M-x-fuzzy-match t
+        helm-buffers-fuzzy-matching t
+        helm-ff-file-name-history-use-recentf t)
   (helm-mode 1))
 
 (use-package helm-flx
@@ -277,14 +277,14 @@
 (defvaralias 'cperl-indent-level 'tab-width)
 
 (c-add-style "my-c-style" '((c-continued-statement-offset 4)
-							(c-tab-always-indent t)
-							(c-toggle-hungry-state t)
-							(c-offsets-alist
-							 (inline-open . +)
-							 (block-open . +)
-							 (brace-list-open . +)
-							 (case-label . +)
-							 (access-label . /))))
+                            (c-tab-always-indent t)
+                            (c-toggle-hungry-state t)
+                            (c-offsets-alist
+                             (inline-open . +)
+                             (block-open . +)
+                             (brace-list-open . +)
+                             (case-label . +)
+                             (access-label . /))))
 
 (defun my-c-hook ()
   "Hook for `c-mode'."
@@ -313,10 +313,10 @@
   ;; replace the `completion-at-point' and `complete-symbol' bindings in
   ;; irony-mode's buffers by irony-mode's asynchronous function
   (defun my-irony-mode-hook ()
-	(define-key irony-mode-map [remap completion-at-point]
-	  'irony-completion-at-point-async)
-	(define-key irony-mode-map [remap complete-symbol]
-	  'irony-completion-at-point-async))
+    (define-key irony-mode-map [remap completion-at-point]
+      'irony-completion-at-point-async)
+    (define-key irony-mode-map [remap complete-symbol]
+      'irony-completion-at-point-async))
   :init
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
@@ -336,7 +336,7 @@
   :demand t
   :diminish racer-mode
   :bind (:map rust-mode-map
-			  ("M-." . racer-find-definition))
+              ("M-." . racer-find-definition))
   :init
   (add-hook 'rust-mode-hook #'racer-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode)
@@ -350,9 +350,9 @@
   :diminish company-mode
   :config
   (setq company-idle-delay 0
-		company-minimum-prefix-length 2
-		company-tooltip-limit 20
-		company-global-modes '(not eshell-mode))
+        company-minimum-prefix-length 2
+        company-tooltip-limit 20
+        company-global-modes '(not eshell-mode))
 
   (use-package company-irony)
   (use-package company-irony-c-headers)
@@ -365,11 +365,11 @@
   (add-hook 'after-init-hook 'global-company-mode)
 
   (eval-after-load 'company
-	'(add-to-list
-	  'company-backends '(company-irony company-irony-c-headers company-yasnippet
-										company-css company-elisp company-semantic
-										company-files company-shell company-tern
-										company-cmake company-jedi company-racer)))
+    '(add-to-list
+      'company-backends '(company-irony company-irony-c-headers company-yasnippet
+                                        company-css company-elisp company-semantic
+                                        company-files company-shell company-tern
+                                        company-cmake company-jedi company-racer)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
@@ -407,16 +407,16 @@
   (add-to-list
    'aggressive-indent-dont-indent-if
    '(and (derived-mode-p 'c-mode 'c++-mode 'java-mode 'csharp-mode)
-		 (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
-							 (thing-at-point 'line)))))
+         (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
+                             (thing-at-point 'line)))))
   (global-aggressive-indent-mode))
 
 (use-package uniquify
   :config
   (setq uniquify-buffer-name-style 'forward
-		uniquify-separator "/"
-		uniquify-ignore-buffers-re "^\\*"
-		uniquify-after-kill-buffer-p t))
+        uniquify-separator "/"
+        uniquify-ignore-buffers-re "^\\*"
+        uniquify-after-kill-buffer-p t))
 
 ;; Projectile
 
@@ -424,13 +424,13 @@
   :ensure
   :preface
   (defun my-projectile-hook ()
-	"Check to see if the project is in a git repo or not and then set the indexing method."
-	(let ((vcs (projectile-project-vcs)))
-	  (cond
-	   ((eq vcs 'git) (setq projectile-indexing-method 'alien ;; Use .gitignore
-							projectile-enable-caching nil))
-	   (t (setq projectile-indexing-method 'native ;; Use .projectile
-				projectile-enable-caching t)))))
+    "Check to see if the project is in a git repo or not and then set the indexing method."
+    (let ((vcs (projectile-project-vcs)))
+      (cond
+       ((eq vcs 'git) (setq projectile-indexing-method 'alien ;; Use .gitignore
+                            projectile-enable-caching nil))
+       (t (setq projectile-indexing-method 'native ;; Use .projectile
+                projectile-enable-caching t)))))
   :config
   (add-hook 'projectile-before-switch-project-hook 'my-projectile-hook)
   (projectile-global-mode))
@@ -450,7 +450,7 @@
 (eval-after-load "python"
   '(progn
      (define-key python-mode-map (kbd "<f5>") 'python-f5)
-	 (define-key python-mode-map (kbd "C-c d") 'pdb)))
+     (define-key python-mode-map (kbd "C-c d") 'pdb)))
 
 ;; Visual
 
@@ -482,9 +482,9 @@
 ;; HTML
 
 (add-hook 'html-mode-hook
-		  (lambda ()
-			(setq-local indent-tabs-mode nil)
-			(set (make-local-variable 'sgml-basic-offset) 2)))
+          (lambda ()
+            (setq-local indent-tabs-mode nil)
+            (set (make-local-variable 'sgml-basic-offset) 2)))
 
 (use-package emmet-mode
   :commands emmet-mode
@@ -497,21 +497,21 @@
 (use-package web-mode
   :ensure
   :mode (("\\.html?\\'" . web-mode)
-		 ("\\.php?\\'" . web-mode))
+         ("\\.php?\\'" . web-mode))
   :config
   (defun my-web-mode-hook ()
-	(setq-local indent-tabs-mode nil)
-	(setq-local electric-pair-pairs '((?\< . ?\>)
-									  (?\' . ?\')))
-	(setq web-mode-markup-indent-offset 2
-		  web-mode-css-indent-offset 4
-		  web-mode-code-indent-offset 4
-		  web-mode-enable-auto-pairing nil
-		  web-mode-enable-auto-closing t
-		  web-mode-style-padding 2
-		  web-mode-script-padding 2
-		  web-mode-enable-current-element-highlight t
-		  web-mode-enable-block-face t))
+    (setq-local indent-tabs-mode nil)
+    (setq-local electric-pair-pairs '((?\< . ?\>)
+                                      (?\' . ?\')))
+    (setq web-mode-markup-indent-offset 2
+          web-mode-css-indent-offset 4
+          web-mode-code-indent-offset 4
+          web-mode-enable-auto-pairing nil
+          web-mode-enable-auto-closing t
+          web-mode-style-padding 2
+          web-mode-script-padding 2
+          web-mode-enable-current-element-highlight t
+          web-mode-enable-block-face t))
   (add-hook 'web-mode-hook 'my-web-mode-hook))
 
 ;; Javascript
@@ -532,14 +532,14 @@
   :config
   (yas-global-mode 1)
   (defhydra hydra-yasnippet (:exit t)
-	"Yasnippet"
-	("g" yas-global-mode "global mode")
-	("m" yas-minor-mode "minor mode")
-	("e" yas-activate-extra-mode "extra mode")
-	("n" yas-new-snippet "new snippet")
-	("r" yas-reload-all "reload")
-	("d" yas-load-direcoty "load directory")
-	("q" nil "quit"))
+    "Yasnippet"
+    ("g" yas-global-mode "global mode")
+    ("m" yas-minor-mode "minor mode")
+    ("e" yas-activate-extra-mode "extra mode")
+    ("n" yas-new-snippet "new snippet")
+    ("r" yas-reload-all "reload")
+    ("d" yas-load-direcoty "load directory")
+    ("q" nil "quit"))
   (global-set-key (kbd "C-c y") 'hydra-yasnippet/body))
 
 ;; Org
@@ -547,7 +547,7 @@
 (use-package org
   :config
   (defhydra hydra-org (:hint nil)
-	"
+    "
 ^Export^               ^Tables^           ^Movement^
 ------------------------------------------------------------------
 export to _h_tml       create _t_able     _g_oto
@@ -558,17 +558,17 @@ export to _m_arkdown   insert _c_olumn
 
 _q_uit
 "
-	("h" org-html-export-to-html :exit t)
-	("l" org-latex-export-to-latex :exit t)
-	("p" org-latex-export-to-pdf :exit t)
-	("m" org-md-export-to-markdown :exit t)
-	("t" org-table-create-or-convert-from-region :exit t)
-	("d" org-table-delete-column)
-	("k" org-table-kill-row)
-	("c" org-table-insert-column)
-	("r" org-table-insert-row)
+    ("h" org-html-export-to-html :exit t)
+    ("l" org-latex-export-to-latex :exit t)
+    ("p" org-latex-export-to-pdf :exit t)
+    ("m" org-md-export-to-markdown :exit t)
+    ("t" org-table-create-or-convert-from-region :exit t)
+    ("d" org-table-delete-column)
+    ("k" org-table-kill-row)
+    ("c" org-table-insert-column)
+    ("r" org-table-insert-row)
     ("g" org-goto :exit t)
-	("q" nil))
+    ("q" nil))
   (global-set-key (kbd "C-c o") 'hydra-org/body))
 
 ;; Eldoc
@@ -593,9 +593,9 @@ _q_uit
 (use-package elscreen
   :demand t
   :bind (("C-c t" . elscreen-create)
-		 ("C-c k" . elscreen-kill)
-		 ("C-c n" . elscreen-next)
-		 ("C-c b" . elscreen-previous)))
+         ("C-c k" . elscreen-kill)
+         ("C-c n" . elscreen-next)
+         ("C-c b" . elscreen-previous)))
 
 ;; Lua
 
@@ -622,7 +622,7 @@ _q_uit
 
 (use-package cmake-mode
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
-		 ("\\.cmake\\'" . cmake-mode)))
+         ("\\.cmake\\'" . cmake-mode)))
 
 ;; flyspell
 
@@ -635,24 +635,24 @@ _q_uit
   :config
   ;; NO spell check for embedded snippets
   (defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
-	(let ((rlt ad-return-value)
-		  (begin-regexp "^[ \t]*#\\+begin_\\(src\\|html\\|latex\\)")
-		  (end-regexp "^[ \t]*#\\+end_\\(src\\|html\\|latex\\)")
-		  old-flag
-		  b e)
-	  (when ad-return-value
-		(save-excursion
-		  (setq old-flag case-fold-search)
-		  (setq case-fold-search t)
-		  (setq b (re-search-backward begin-regexp nil t))
-		  (if b (setq e (re-search-forward end-regexp nil t)))
-		  (setq case-fold-search old-flag))
-		(if (and b e (< (point) e)) (setq rlt nil)))
-	  (setq ad-return-value rlt))))
+    (let ((rlt ad-return-value)
+          (begin-regexp "^[ \t]*#\\+begin_\\(src\\|html\\|latex\\)")
+          (end-regexp "^[ \t]*#\\+end_\\(src\\|html\\|latex\\)")
+          old-flag
+          b e)
+      (when ad-return-value
+        (save-excursion
+          (setq old-flag case-fold-search)
+          (setq case-fold-search t)
+          (setq b (re-search-backward begin-regexp nil t))
+          (if b (setq e (re-search-forward end-regexp nil t)))
+          (setq case-fold-search old-flag))
+        (if (and b e (< (point) e)) (setq rlt nil)))
+      (setq ad-return-value rlt))))
 
 (use-package flyspell-popup
   :bind (:map flyspell-mode-map
-			  ("C-;" . flyspell-popup-correct)))
+              ("C-;" . flyspell-popup-correct)))
 
 (use-package visual-line-mode
   :init
@@ -681,20 +681,20 @@ _q_uit
 (use-package mingus-stays-home
   :config
   (defhydra hydra-mingus ()
-	"Mingus"
-	("t" mingus-toggle "toggle" :exit t)
-	("i" mingus-insert "insert")
-	("p" mingus-prev "prev")
-	("n" mingus-next "next")
-	("u" mingus-vol-up "up")
-	("d" mingus-vol-down "down")
-	("s" mingus-search "search")
-	("q" nil "quit"))
+    "Mingus"
+    ("t" mingus-toggle "toggle" :exit t)
+    ("i" mingus-insert "insert")
+    ("p" mingus-prev "prev")
+    ("n" mingus-next "next")
+    ("u" mingus-vol-up "up")
+    ("d" mingus-vol-down "down")
+    ("s" mingus-search "search")
+    ("q" nil "quit"))
   (global-set-key (kbd "C-c m") 'hydra-mingus/body))
 
 (use-package dired-k
   :bind (:map dired-mode-map
-			  ("K" . dired-k)))
+              ("K" . dired-k)))
 
 (use-package ibuffer
   :bind (("C-x C-b" . ibuffer-other-window)))
@@ -707,12 +707,19 @@ _q_uit
   :config
   (add-hook 'find-file-hook #'auto-insert)
   (setq auto-insert 'other
-		auto-insert-query nil
-		auto-insert-mode t
-		auto-insert-directory (concat user-emacs-directory "auto-insert")
-		auto-insert-alist '(("\.html\'" . "template.html")
-							("^.*html.*$" . "template.html")
-							('web-mode . "template.html"))))
+        auto-insert-query nil
+        auto-insert-mode t
+        auto-insert-directory (concat user-emacs-directory "auto-insert")
+        auto-insert-alist '(("\.html\'" . "template.html")
+                            ("^.*html.*$" . "template.html")
+                            ('web-mode . "template.html"))))
+
+(defun my-emacs-lisp-mode-hook ()
+  "Hook for `emacs-lisp-mode'."
+  (interactive)
+  (setq-local indent-tabs-mode nil))
+
+(add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
 
 ;; Keybindings
 
@@ -759,7 +766,7 @@ _q_uit
 (load custom-file)
 
 (if (file-exists-p private-file)
-	(load private-file))
+    (load private-file))
 
 (provide 'init)
 ;;; init.el ends here
