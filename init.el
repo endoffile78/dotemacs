@@ -455,6 +455,10 @@
               ("<f5>" . python-f5)
               ("C-c d" . pdb)))
 
+(use-package virtualenvwrapper
+  :config
+  (venv-initialize-eshell))
+
 ;; Visual
 
 (use-package nyan-mode
