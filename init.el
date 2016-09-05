@@ -721,6 +721,12 @@ _q_uit
                             ("^.*html.*$" . "template.html")
                             ('web-mode . "template.html"))))
 
+(use-package which-key
+  :diminish which-key-mode
+  :config
+  (which-key-setup-side-window-bottom)
+  (which-key-mode))
+
 (defun my-emacs-lisp-mode-hook ()
   "Hook for `emacs-lisp-mode'."
   (interactive)
