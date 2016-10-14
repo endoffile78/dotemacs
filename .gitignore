@@ -9,6 +9,7 @@ url
 semanticdb
 abbrev_defs
 games
+ensime
 
 #files
 eshell/history
@@ -17,6 +18,7 @@ eshell/lastdir
 *.elc
 *~
 *.swp
+*.dat
 
 private.el
 projectile-bookmarks.eld

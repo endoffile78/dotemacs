@@ -10,14 +10,19 @@
 
 (require 'package)
 
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("org" . "http://orgmode.org/elpa/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.org/packages/")))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(add-to-list 'package-archives
+             '("org" . "http://orgmode.org/elpa/") t)
+
 (package-initialize)
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(font . "Monaco-11"))
+
+(add-to-list 'exec-path "/usr/local/bin")
 
 (unless '(packge-installed-p 'use-package) ;; Make sure use-package is installed
   (package-refresh-contents)
@@ -53,6 +58,14 @@
 
 (defvar private-file (concat user-emacs-directory "private.el")
   "Private file that is not tracked.")
+(defvar normal-state-color '("#35393B" . "#FFFFFF")
+  "Default color for the modeline when in normal mode")
+(defvar visual-state-color '("#AB7EFF" . "#000000")
+  "Default color for the modeline when in visual mode")
+(defvar insert-state-color '("#555555" . "#FFFFFF")
+  "Default color for the modeline when in insert mode")
+(defvar emacs-state-color '("#FF6159" . "#FFFFFF")
+  "Default color for the modeline when in emacs mode")
 
 (setq ring-bell-function 'ignore
       browse-url-browser-function 'browse-url-xdg-open
@@ -88,6 +101,12 @@
   (setq darkokai-mode-line-padding 1)
   (load-theme 'darkokai t))
 
+(use-package doom-theme
+  :disabled t
+  :ensure
+  :init
+  (load-theme 'doom-one t))
+
 ;; Evil
 
 (defgroup dotemacs-evil nil
@@ -111,10 +130,10 @@
 (defun my-evil-modeline-change (default-color)
   "Change the modeline color when the mode changes."
   (let ((color (cond
-                ((evil-insert-state-p) '("#555555" . "#FFFFFF"))
-                ((evil-visual-state-p) '("#AB7EFF" . "#000000"))
-                ((evil-normal-state-p) '("#35393B" . "#FFFFFF"))
-                ((evil-emacs-state-p) '("#FF6159" . "#FFFFFF")))))
+                ((evil-insert-state-p) insert-state-color)
+                ((evil-visual-state-p) visual-state-color)
+                ((evil-normal-state-p) normal-state-color)
+                ((evil-emacs-state-p) emacs-state-color))))
     (set-face-background 'mode-line (car color))
     (set-face-foreground 'mode-line (cdr color))))
 
@@ -222,6 +241,7 @@
   (global-set-key (kbd "C-c f") 'hydra-flycheck/body))
 
 (use-package flycheck-irony
+  :ensure
   :init
   (eval-after-load 'flycheck
     '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
@@ -295,8 +315,8 @@
   (setq-local indent-tabs-mode t)
   (c-set-style "my-c-style"))
 
-(add-hook 'c-mode-hook 'my-c-hook)
-(add-hook 'c++-mode-hook 'my-c-hook)
+(add-hook 'c-mode-hook #'my-c-hook)
+(add-hook 'c++-mode-hook #'my-c-hook)
 
 ;; ggtags
 
@@ -304,7 +324,7 @@
   :diminish ggtags-mode
   :commands ggtags-mode
   :init
-  (add-hook 'c-mode-common-hook 'ggtags-mode))
+  (add-hook 'c-mode-common-hook #'ggtags-mode))
 
 ;; Irony
 
@@ -346,6 +366,27 @@
   :config
   (setq racer-rust-src-path "~/.rust/src/"))
 
+;; Python
+
+(defun python-f5 ()
+  "Sends the buffer to a python shell."
+  (interactive)
+  (python-shell-send-buffer)
+  (python-shell-switch-to-shell))
+
+(use-package python
+  :bind (:map python-mode-map
+              ("<f5>" . python-f5)
+              ("C-c d" . pdb)))
+
+(use-package elpy
+  :init
+  (elpy-enable))
+
+(use-package virtualenvwrapper
+  :config
+  (venv-initialize-eshell))
+
 ;; Company
 
 (use-package company
@@ -384,12 +425,9 @@
 
 (use-package java-file-create)
 
-(use-package jdee
-  :commands jdee-mode)
-
-;; LaTeX
-
-(use-package tex)
+(use-package ensime
+  :config
+  (setq ensime-startup-snapshot-notification nil))
 
 ;; Markdown
 
@@ -425,39 +463,13 @@
 
 (use-package projectile
   :ensure
-  :preface
-  (defun my-projectile-hook ()
-    "Check to see if the project is in a git repo or not and then set the indexing method."
-    (let ((vcs (projectile-project-vcs)))
-      (cond
-       ((eq vcs 'git) (setq projectile-indexing-method 'alien ;; Use .gitignore
-                            projectile-enable-caching nil))
-       (t (setq projectile-indexing-method 'native ;; Use .projectile
-                projectile-enable-caching t)))))
   :config
-  (add-hook 'projectile-before-switch-project-hook 'my-projectile-hook)
-  (projectile-global-mode))
+  (projectile-mode))
 
 (use-package helm-projectile
+  :ensure
   :config
   (helm-projectile-on))
-
-;; Python
-
-(defun python-f5 ()
-  "Sends the buffer to a python shell."
-  (interactive)
-  (python-shell-send-buffer)
-  (python-shell-switch-to-shell))
-
-(use-package python
-  :bind (:map python-mode-map
-              ("<f5>" . python-f5)
-              ("C-c d" . pdb)))
-
-(use-package virtualenvwrapper
-  :config
-  (venv-initialize-eshell))
 
 ;; Visual
 
@@ -528,6 +540,7 @@
   :mode ("\\.js$" . js2-mode))
 
 (use-package tern
+  :commands tern-mode
   :init
   (add-hook 'js2-mode-hook (lambda () (tern-mode t))))
 
@@ -637,25 +650,7 @@ _q_uit
   :init
   (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'markdown-mode-hook 'flyspell-mode)
-  (add-hook 'text-mode-hook 'flyspell-mode)
-  (add-hook 'latex-mode-hook 'flyspell-mode)
-  :config
-  ;; NO spell check for embedded snippets
-  (defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
-    (let ((rlt ad-return-value)
-          (begin-regexp "^[ \t]*#\\+begin_\\(src\\|html\\|latex\\)")
-          (end-regexp "^[ \t]*#\\+end_\\(src\\|html\\|latex\\)")
-          old-flag
-          b e)
-      (when ad-return-value
-        (save-excursion
-          (setq old-flag case-fold-search)
-          (setq case-fold-search t)
-          (setq b (re-search-backward begin-regexp nil t))
-          (if b (setq e (re-search-forward end-regexp nil t)))
-          (setq case-fold-search old-flag))
-        (if (and b e (< (point) e)) (setq rlt nil)))
-      (setq ad-return-value rlt))))
+  (add-hook 'text-mode-hook 'flyspell-mode))
 
 (use-package flyspell-popup
   :bind (:map flyspell-mode-map
@@ -731,6 +726,11 @@ _q_uit
   "Hook for `emacs-lisp-mode'."
   (interactive)
   (setq-local indent-tabs-mode nil))
+
+;; YAML
+
+(use-package yaml-mode
+  :mode ("\.yml\'" . yaml-mode))
 
 (add-hook 'emacs-lisp-mode-hook #'my-emacs-lisp-mode-hook)
 
