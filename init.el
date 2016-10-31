@@ -10,12 +10,9 @@
 
 (require 'package)
 
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives
-             '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 
 (package-initialize)
 
@@ -452,12 +449,12 @@
                              (thing-at-point 'line)))))
   (global-aggressive-indent-mode))
 
-(use-package uniquify
-  :config
-  (setq uniquify-buffer-name-style 'forward
-        uniquify-separator "/"
-        uniquify-ignore-buffers-re "^\\*"
-        uniquify-after-kill-buffer-p t))
+;; Uniquify
+
+(setq uniquify-buffer-name-style 'forward
+	  uniquify-separator "/"
+	  uniquify-ignore-buffers-re "^\\*"
+	  uniquify-after-kill-buffer-p t)
 
 ;; Projectile
 
@@ -656,12 +653,10 @@ _q_uit
   :bind (:map flyspell-mode-map
               ("C-;" . flyspell-popup-correct)))
 
-(use-package visual-line-mode
-  :init
-  (add-hook 'text-mode-hook 'visual-line-mode)
-  (add-hook 'org-mode-hook 'visual-line-mode)
-  (add-hook 'latex-mode-hook 'visual-line-mode)
-  (add-hook 'markdown-mode-hook 'visual-line-mode))
+(add-hook 'text-mode-hook 'visual-line-mode)
+(add-hook 'org-mode-hook 'visual-line-mode)
+(add-hook 'latex-mode-hook 'visual-line-mode)
+(add-hook 'markdown-mode-hook 'visual-line-mode)
 
 ;; YAML
 
@@ -722,17 +717,18 @@ _q_uit
   (which-key-setup-side-window-bottom)
   (which-key-mode))
 
+;; Emacs Lisp
+
 (defun my-emacs-lisp-mode-hook ()
   "Hook for `emacs-lisp-mode'."
   (interactive)
   (setq-local indent-tabs-mode nil))
 
-;; YAML
-
-(use-package yaml-mode
-  :mode ("\.yml\'" . yaml-mode))
-
 (add-hook 'emacs-lisp-mode-hook #'my-emacs-lisp-mode-hook)
+
+;; Go
+
+(use-package go-mode)
 
 ;; Keybindings
 
@@ -748,6 +744,7 @@ _q_uit
   (add-hook 'after-init-hook #'fancy-battery-mode))
 
 (use-package immortal-scratch
+  :ensure
   :config
   (immortal-scratch-mode))
 
