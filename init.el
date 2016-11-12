@@ -10,9 +10,9 @@
 
 (require 'package)
 
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
 (package-initialize)
 
@@ -84,6 +84,10 @@
               dired-recursive-copies 'always
               indent-tabs-mode t
               tab-width 4)
+
+(add-hook 'before-save-hook #'delete-trailing-whitespace)
+
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Hydra
 
@@ -224,9 +228,8 @@
 
 (use-package flycheck
   :ensure
-  :init
-  (add-hook 'after-init-hook #'global-flycheck-mode)
   :config
+  (add-hook 'after-init-hook #'global-flycheck-mode)
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
   (defhydra hydra-flycheck ()
     "Flycheck"
@@ -239,9 +242,8 @@
 
 (use-package flycheck-irony
   :ensure
-  :init
-  (eval-after-load 'flycheck
-    '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
+  :config
+  (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
 (use-package flycheck-rust
   :config
@@ -291,6 +293,30 @@
   (setq helm-descbinds-window-style 'split-window)
   (helm-descbinds-mode))
 
+;; Company
+
+(use-package company
+  :ensure
+  :diminish company-mode
+  :config
+  (setq company-idle-delay 0
+        company-minimum-prefix-length 2
+        company-tooltip-limit 20
+        company-global-modes '(not eshell-mode))
+
+  (add-hook 'after-init-hook 'global-company-mode)
+
+  (add-to-list
+   'company-backends '(company-css company-elisp company-semantic company-files)))
+
+(use-package company-quickhelp
+  :config
+  (company-quickhelp-mode 1))
+
+(use-package company-shell
+  :config
+  (add-to-list 'company-backends 'company-shell))
+
 ;; C
 
 (defvaralias 'c-basic-offset 'tab-width)
@@ -318,6 +344,7 @@
 ;; ggtags
 
 (use-package ggtags
+  :ensure
   :diminish ggtags-mode
   :commands ggtags-mode
   :init
@@ -344,8 +371,17 @@
   (add-hook 'irony-mode-hook #'irony-cdb-autosetup-compile-options))
 
 (use-package irony-eldoc
-  :init
+  :config
   (add-hook 'irony-mode-hook 'irony-eldoc))
+
+(use-package company-irony
+  :config
+  (add-to-list 'company-backends 'company-irony)
+  (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
+
+(use-package company-irony-c-headers
+  :config
+  (add-to-list 'company-backends 'company-irony-c-headers))
 
 ;; Rust
 
@@ -363,6 +399,10 @@
   :config
   (setq racer-rust-src-path "~/.rust/src/"))
 
+(use-package company-racer
+  :config
+  (add-to-list 'company-backends 'company-racer))
+
 ;; Python
 
 (defun python-f5 ()
@@ -377,6 +417,7 @@
               ("C-c d" . pdb)))
 
 (use-package elpy
+  :ensure
   :init
   (elpy-enable))
 
@@ -384,39 +425,9 @@
   :config
   (venv-initialize-eshell))
 
-;; Company
-
-(use-package company
-  :ensure
-  :diminish company-mode
+(use-package company-jedi
   :config
-  (setq company-idle-delay 0
-        company-minimum-prefix-length 2
-        company-tooltip-limit 20
-        company-global-modes '(not eshell-mode))
-
-  (use-package company-irony)
-  (use-package company-irony-c-headers)
-  (use-package company-shell)
-  (use-package company-cmake)
-  (use-package company-jedi)
-  (use-package company-tern)
-  (use-package company-racer)
-
-  (add-hook 'after-init-hook 'global-company-mode)
-
-  (eval-after-load 'company
-    '(add-to-list
-      'company-backends '(company-irony company-irony-c-headers company-yasnippet
-                                        company-css company-elisp company-semantic
-                                        company-files company-shell company-tern
-                                        company-cmake company-jedi company-racer)))
-
-  (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
-
-(use-package company-quickhelp
-  :config
-  (company-quickhelp-mode 1))
+  (add-to-list 'company-backends 'company-jedi))
 
 ;; Java
 
@@ -449,12 +460,28 @@
                              (thing-at-point 'line)))))
   (global-aggressive-indent-mode))
 
+(use-package bool-flip
+  :bind ("C-c b" . bool-flip-do-flip))
+
+(use-package clang-format)
+
+(use-package autoinsert
+  :config
+  (add-hook 'find-file-hook #'auto-insert)
+  (setq auto-insert 'other
+        auto-insert-query nil
+        auto-insert-mode t
+        auto-insert-directory (concat user-emacs-directory "auto-insert")
+        auto-insert-alist '(("\.html\'" . "template.html")
+                            ("^.*html.*$" . "template.html")
+                            ('web-mode . "template.html"))))
+
 ;; Uniquify
 
 (setq uniquify-buffer-name-style 'forward
-	  uniquify-separator "/"
-	  uniquify-ignore-buffers-re "^\\*"
-	  uniquify-after-kill-buffer-p t)
+      uniquify-separator "/"
+      uniquify-ignore-buffers-re "^\\*"
+      uniquify-after-kill-buffer-p t)
 
 ;; Projectile
 
@@ -541,6 +568,10 @@
   :init
   (add-hook 'js2-mode-hook (lambda () (tern-mode t))))
 
+(use-package company-tern
+  :config
+  (add-to-list 'company-backends 'company-tern))
+
 ;; Yasnippet
 
 (use-package yasnippet
@@ -548,6 +579,7 @@
   :diminish yas-minor-mode
   :config
   (yas-global-mode 1)
+  (add-to-list 'company-backends 'company-yasnippet)
   (defhydra hydra-yasnippet (:exit t)
     "Yasnippet"
     ("g" yas-global-mode "global mode")
@@ -608,11 +640,8 @@ _q_uit
 ;; elscreen
 
 (use-package elscreen
-  :demand t
-  :bind (("C-c t" . elscreen-create)
-         ("C-c k" . elscreen-kill)
-         ("C-c n" . elscreen-next)
-         ("C-c b" . elscreen-previous)))
+  :ensure
+  :demand t)
 
 ;; Lua
 
@@ -641,6 +670,10 @@ _q_uit
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
          ("\\.cmake\\'" . cmake-mode)))
 
+(use-package company-cmake
+  :config
+  (add-to-list 'company-backends 'company-cmake))
+
 ;; flyspell
 
 (use-package flyspell
@@ -667,9 +700,14 @@ _q_uit
 
 (use-package haskell-mode)
 
-;; Editorconfig
+(use-package company-ghc
+  :config
+  (add-to-list 'company-mode 'company-ghc))
+
+;; editorconfig
 
 (use-package editorconfig
+  :diminish editorconfig-mode
   :config
   (editorconfig-mode 1))
 
@@ -697,19 +735,6 @@ _q_uit
   :bind (("C-x C-b" . ibuffer-other-window)))
 
 (use-package hyperbole)
-
-(use-package clang-format)
-
-(use-package autoinsert
-  :config
-  (add-hook 'find-file-hook #'auto-insert)
-  (setq auto-insert 'other
-        auto-insert-query nil
-        auto-insert-mode t
-        auto-insert-directory (concat user-emacs-directory "auto-insert")
-        auto-insert-alist '(("\.html\'" . "template.html")
-                            ("^.*html.*$" . "template.html")
-                            ('web-mode . "template.html"))))
 
 (use-package which-key
   :diminish which-key-mode
@@ -760,10 +785,6 @@ _q_uit
 
 (add-hook 'sanityinc/theme-mode-hook #'rainbow-mode)
 (add-hook 'sanityinc/theme-mode-hook '(lambda () (aggressive-indent-mode -1)))
-
-(add-hook 'before-save-hook #'delete-trailing-whitespace)
-
-(fset 'yes-or-no-p 'y-or-n-p)
 
 (defhydra hydra-scale ()
   "Scale"
