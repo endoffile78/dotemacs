@@ -260,9 +260,7 @@
   (global-git-gutter+-mode))
 
 (use-package magit
-  :ensure
-  :config
-  (setq magit-auto-revert-mode nil))
+  :ensure)
 
 (use-package gitignore-mode)
 
