@@ -183,7 +183,7 @@
   (evil-leader/set-leader ",")
   (global-evil-leader-mode)
   (evil-leader/set-key
-    "k" 'kill-this-buffer
+    "k"  'kill-this-buffer
     "pf" 'helm-projectile
     "pb" 'helm-projectile-switch-to-buffer
     "pi" 'projectile-invalidate-cache
@@ -201,9 +201,9 @@
     "mb" 'magit-blame
     "ml" 'magit-log-popup
     "mr" 'magit-branch-popup
-    "c" 'compile
-    "t" 'elscreen-create
-    "d" 'gud-gdb
+    "c"  'compile
+    "t"  'elscreen-create
+    "d"  'gud-gdb
     "fp" 'flyspell-prog-mode
     "hg" 'helm-grep-do-git-grep
     "ha" 'helm-do-grep-ag))
@@ -696,11 +696,17 @@ _q_uit
 
 ;; Haskell
 
-(use-package haskell-mode)
+(use-package haskell-mode
+  :config
+  (add-hook 'haskell-mode-hook (lambda () (ghc-init))))
 
 (use-package company-ghc
   :config
-  (add-to-list 'company-mode 'company-ghc))
+  (add-to-list 'company-backends 'company-ghc))
+
+(use-package flycheck-ghcmod)
+
+(use-package ebal)
 
 ;; editorconfig
 
