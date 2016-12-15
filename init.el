@@ -240,15 +240,6 @@
     ("q" nil "quit"))
   (global-set-key (kbd "C-c f") 'hydra-flycheck/body))
 
-(use-package flycheck-irony
-  :ensure
-  :config
-  (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
-
-(use-package flycheck-rust
-  :config
-  (add-hook 'rust-mode-hook #'flycheck-rust-setup))
-
 ;; Git
 
 (use-package git-gutter-fringe+
@@ -374,12 +365,16 @@
 
 (use-package company-irony
   :config
-  (add-to-list 'company-backends 'company-irony)
-  (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
+  (add-to-list 'company-backends 'company-irony))
 
 (use-package company-irony-c-headers
   :config
   (add-to-list 'company-backends 'company-irony-c-headers))
+
+(use-package flycheck-irony
+  :ensure
+  :config
+  (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
 ;; Rust
 
@@ -396,6 +391,10 @@
   (add-hook 'racer-mode-hook #'eldoc-mode)
   :config
   (setq racer-rust-src-path "~/.rust/src/"))
+
+(use-package flycheck-rust
+  :config
+  (add-hook 'rust-mode-hook #'flycheck-rust-setup))
 
 (use-package company-racer
   :config
@@ -731,14 +730,16 @@ _q_uit
     ("q" nil "quit"))
   (global-set-key (kbd "C-c m") 'hydra-mingus/body))
 
-(use-package dired-k
-  :bind (:map dired-mode-map
-              ("K" . dired-k)))
+;; ibuffer
 
 (use-package ibuffer
   :bind (("C-x C-b" . ibuffer-other-window)))
 
+;; Hyperbole
+
 (use-package hyperbole)
+
+;; which key
 
 (use-package which-key
   :diminish which-key-mode
@@ -754,6 +755,19 @@ _q_uit
   (setq-local indent-tabs-mode nil))
 
 (add-hook 'emacs-lisp-mode-hook #'my-emacs-lisp-mode-hook)
+
+(defvar sanityinc/theme-mode-hook nil
+  "Hook triggered when editing a theme file.")
+
+(defun sanityinc/run-theme-mode-hooks-if-theme ()
+  "Run `sanityinc/theme-mode-hook' if this appears to a theme."
+  (when (string-match "\\(color-theme-\\|-theme\\.el\\)" (buffer-name))
+    (run-hooks 'sanityinc/theme-mode-hook)))
+
+(add-hook 'emacs-lisp-mode-hook #'sanityinc/run-theme-mode-hooks-if-theme)
+
+(add-hook 'sanityinc/theme-mode-hook #'rainbow-mode)
+(add-hook 'sanityinc/theme-mode-hook '(lambda () (aggressive-indent-mode -1)))
 
 ;; Go
 
@@ -777,18 +791,9 @@ _q_uit
   :config
   (immortal-scratch-mode))
 
-(defvar sanityinc/theme-mode-hook nil
-  "Hook triggered when editing a theme file.")
-
-(defun sanityinc/run-theme-mode-hooks-if-theme ()
-  "Run `sanityinc/theme-mode-hook' if this appears to a theme."
-  (when (string-match "\\(color-theme-\\|-theme\\.el\\)" (buffer-name))
-    (run-hooks 'sanityinc/theme-mode-hook)))
-
-(add-hook 'emacs-lisp-mode-hook #'sanityinc/run-theme-mode-hooks-if-theme)
-
-(add-hook 'sanityinc/theme-mode-hook #'rainbow-mode)
-(add-hook 'sanityinc/theme-mode-hook '(lambda () (aggressive-indent-mode -1)))
+(use-package dired-k
+  :bind (:map dired-mode-map
+              ("K" . dired-k)))
 
 (defhydra hydra-scale ()
   "Scale"
