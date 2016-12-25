@@ -158,6 +158,7 @@
   (evil-set-initial-state 'term-mode 'emacs)
   (evil-set-initial-state 'calculator-mode 'emacs)
   (evil-set-initial-state 'eww-mode 'emacs)
+  (evil-set-initial-state 'shell-mode 'emacs)
 
   ;; Vim-like window movement
   (global-unset-key (kbd "C-w"))
@@ -206,7 +207,8 @@
     "d"  'gud-gdb
     "fp" 'flyspell-prog-mode
     "hg" 'helm-grep-do-git-grep
-    "ha" 'helm-do-grep-ag))
+    "ha" 'helm-do-grep-ag
+    "ir" 'indent-region))
 
 (use-package evil-org
   :diminish evil-org-mode)
@@ -286,7 +288,6 @@
 
 (use-package company
   :ensure
-  :diminish company-mode
   :config
   (setq company-idle-delay 0
         company-minimum-prefix-length 2
@@ -592,6 +593,7 @@
 
 (use-package org
   :config
+  (setq org-directory "~/docs/org/")
   (defhydra hydra-org (:hint nil)
     "
 ^Export^               ^Tables^           ^Movement^
@@ -772,6 +774,11 @@ _q_uit
 ;; Go
 
 (use-package go-mode)
+
+;; arduino
+
+(use-package arduino-mode
+  :mode ("\.ino$" . arduino-mode))
 
 ;; Keybindings
 
