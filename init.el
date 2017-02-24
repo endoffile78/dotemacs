@@ -162,10 +162,10 @@
 
   ;; Vim-like window movement
   (global-unset-key (kbd "C-w"))
-  (global-set-key (kbd "C-w <right>") #'evil-window-right)
-  (global-set-key (kbd "C-w <left>")  #'evil-window-left)
-  (global-set-key (kbd "C-w <down>")  #'evil-window-down)
-  (global-set-key (kbd "C-w <up>")    #'evil-window-up)
+  (global-set-key (kbd "C-w <right>") 'evil-window-right)
+  (global-set-key (kbd "C-w <left>")  'evil-window-left)
+  (global-set-key (kbd "C-w <down>")  'evil-window-down)
+  (global-set-key (kbd "C-w <up>")    'evil-window-up)
 
 
   (evil-ex-define-cmd "W" 'evil-write)
@@ -288,24 +288,37 @@
 
 (use-package company
   :ensure
+  :diminish company-mode
   :config
-  (setq company-idle-delay 0
-        company-minimum-prefix-length 2
-        company-tooltip-limit 20
-        company-global-modes '(not eshell-mode))
+  (setq company-idle-delay 0.1
+		company-minimum-prefix-length 2
+		company-tooltip-limit 20
+		company-global-modes '(not eshell-mode))
+
+  (use-package company-irony)
+  (use-package company-irony-c-headers)
+  (use-package company-shell)
+  (use-package company-cmake)
+  (use-package company-jedi)
+  (use-package company-tern)
+  (use-package company-racer)
+  (use-package company-ghc)
 
   (add-hook 'after-init-hook 'global-company-mode)
 
-  (add-to-list
-   'company-backends '(company-css company-elisp company-semantic company-files)))
+  (eval-after-load 'company
+	'(add-to-list
+	  'company-backends '(company-irony company-irony-c-headers company-yasnippet
+                                        company-css company-elisp company-semantic
+                                        company-files company-shell company-tern
+                                        company-cmake company-jedi company-racer
+                                        company-ghc)))
+
+  (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
 (use-package company-quickhelp
   :config
   (company-quickhelp-mode 1))
-
-(use-package company-shell
-  :config
-  (add-to-list 'company-backends 'company-shell))
 
 ;; C
 
@@ -324,7 +337,7 @@
 
 (defun my-c-hook ()
   "Hook for `c-mode'."
-  (local-set-key (kbd "C-c d") #'gud-gdb)
+  (local-set-key (kbd "C-c d") 'gud-gdb)
   (setq-local indent-tabs-mode t)
   (c-set-style "my-c-style"))
 
@@ -338,7 +351,7 @@
   :diminish ggtags-mode
   :commands ggtags-mode
   :init
-  (add-hook 'c-mode-common-hook #'ggtags-mode))
+  (add-hook 'c-mode-common-hook 'ggtags-mode))
 
 ;; Irony
 
@@ -355,27 +368,19 @@
     (define-key irony-mode-map [remap complete-symbol]
       'irony-completion-at-point-async))
   :init
-  (add-hook 'c++-mode-hook #'irony-mode)
-  (add-hook 'c-mode-hook #'irony-mode)
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
   (add-hook 'irony-mode-hook #'my-irony-mode-hook)
-  (add-hook 'irony-mode-hook #'irony-cdb-autosetup-compile-options))
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
 (use-package irony-eldoc
   :config
   (add-hook 'irony-mode-hook 'irony-eldoc))
 
-(use-package company-irony
-  :config
-  (add-to-list 'company-backends 'company-irony))
-
-(use-package company-irony-c-headers
-  :config
-  (add-to-list 'company-backends 'company-irony-c-headers))
-
 (use-package flycheck-irony
   :ensure
   :config
-  (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+  (add-hook 'flycheck-mode-hook 'flycheck-irony-setup))
 
 ;; Rust
 
@@ -388,18 +393,14 @@
   :bind (:map rust-mode-map
               ("M-." . racer-find-definition))
   :init
-  (add-hook 'rust-mode-hook #'racer-mode)
-  (add-hook 'racer-mode-hook #'eldoc-mode)
+  (add-hook 'rust-mode-hook 'racer-mode)
+  (add-hook 'racer-mode-hook 'eldoc-mode)
   :config
   (setq racer-rust-src-path "~/.rust/src/"))
 
 (use-package flycheck-rust
   :config
-  (add-hook 'rust-mode-hook #'flycheck-rust-setup))
-
-(use-package company-racer
-  :config
-  (add-to-list 'company-backends 'company-racer))
+  (add-hook 'rust-mode-hook 'flycheck-rust-setup))
 
 ;; Python
 
@@ -422,10 +423,6 @@
 (use-package virtualenvwrapper
   :config
   (venv-initialize-eshell))
-
-(use-package company-jedi
-  :config
-  (add-to-list 'company-backends 'company-jedi))
 
 ;; Java
 
@@ -568,7 +565,6 @@
   :diminish yas-minor-mode
   :config
   (yas-global-mode 1)
-  (add-to-list 'company-backends 'company-yasnippet)
   (defhydra hydra-yasnippet (:exit t)
     "Yasnippet"
     ("g" yas-global-mode "global mode")
@@ -660,10 +656,6 @@ _q_uit
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
          ("\\.cmake\\'" . cmake-mode)))
 
-(use-package company-cmake
-  :config
-  (add-to-list 'company-backends 'company-cmake))
-
 ;; flyspell
 
 (use-package flyspell
@@ -691,10 +683,6 @@ _q_uit
 (use-package haskell-mode
   :config
   (add-hook 'haskell-mode-hook (lambda () (ghc-init))))
-
-(use-package company-ghc
-  :config
-  (add-to-list 'company-backends 'company-ghc))
 
 (use-package flycheck-ghcmod)
 
@@ -773,10 +761,10 @@ _q_uit
 
 ;; Keybindings
 
-(define-key emacs-lisp-mode-map (kbd "C-j") #'eval-region)
+(define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
 
-(global-set-key (kbd "C-c i") #'insert-char)
-(global-set-key (kbd "C-c e") #'eshell)
+(global-set-key (kbd "C-c i") 'insert-char)
+(global-set-key (kbd "C-c e") 'eshell)
 
 ;; Misc
 
