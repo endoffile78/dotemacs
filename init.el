@@ -291,9 +291,9 @@
   :diminish company-mode
   :config
   (setq company-idle-delay 0.1
-		company-minimum-prefix-length 2
-		company-tooltip-limit 20
-		company-global-modes '(not eshell-mode))
+        company-minimum-prefix-length 2
+        company-tooltip-limit 20
+        company-global-modes '(not eshell-mode))
 
   (use-package company-irony)
   (use-package company-irony-c-headers)
@@ -307,8 +307,8 @@
   (add-hook 'after-init-hook 'global-company-mode)
 
   (eval-after-load 'company
-	'(add-to-list
-	  'company-backends '(company-irony company-irony-c-headers company-yasnippet
+    '(add-to-list
+      'company-backends '(company-irony company-irony-c-headers company-yasnippet
                                         company-css company-elisp company-semantic
                                         company-files company-shell company-tern
                                         company-cmake company-jedi company-racer
@@ -462,7 +462,7 @@
 
 (use-package autoinsert
   :config
-  (add-hook 'find-file-hook #'auto-insert)
+  (add-hook 'find-file-hook 'auto-insert)
   (setq auto-insert 'other
         auto-insert-query nil
         auto-insert-mode t
@@ -750,6 +750,10 @@ _q_uit
 (add-hook 'sanityinc/theme-mode-hook #'rainbow-mode)
 (add-hook 'sanityinc/theme-mode-hook '(lambda () (aggressive-indent-mode -1)))
 
+;; tramp
+
+(setq tramp-default-method "ssh")
+
 ;; Go
 
 (use-package go-mode)
@@ -770,7 +774,7 @@ _q_uit
 
 (use-package fancy-battery-mode
   :init
-  (add-hook 'after-init-hook #'fancy-battery-mode))
+  (add-hook 'after-init-hook 'fancy-battery-mode))
 
 (use-package immortal-scratch
   :ensure
