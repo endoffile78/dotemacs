@@ -335,9 +335,14 @@
                              (case-label . +)
                              (access-label . /))))
 
+(use-package disaster
+  :ensure)
+
 (defun my-c-hook ()
   "Hook for `c-mode'."
   (local-set-key (kbd "C-c d") 'gud-gdb)
+  (local-set-key (kbd "C-c c") 'compile)
+  (local-set-key (kbd "C-c o") 'disaster)
   (setq-local indent-tabs-mode t)
   (c-set-style "my-c-style"))
 
@@ -579,6 +584,8 @@
 ;; Org
 
 (use-package org
+  :bind (:map org-mode-map
+              ("C-c o" . hydra-org/body))
   :config
   (setq org-directory "~/docs/org/")
   (defhydra hydra-org (:hint nil)
@@ -603,8 +610,7 @@ _q_uit
     ("c" org-table-insert-column)
     ("r" org-table-insert-row)
     ("g" org-goto :exit t)
-    ("q" nil))
-  (global-set-key (kbd "C-c o") 'hydra-org/body))
+    ("q" nil)))
 
 ;; Eldoc
 
@@ -784,6 +790,10 @@ _q_uit
 (use-package dired-k
   :bind (:map dired-mode-map
               ("K" . dired-k)))
+
+(use-package dired-icon
+  :config
+  (add-hook 'dired-mode-hook 'dired-icon-mode))
 
 (defhydra hydra-scale ()
   "Scale"
