@@ -159,6 +159,7 @@
   (evil-set-initial-state 'calculator-mode 'emacs)
   (evil-set-initial-state 'eww-mode 'emacs)
   (evil-set-initial-state 'shell-mode 'emacs)
+  (evil-set-initial-state 'org-capture-mode 'emacs)
 
   ;; Vim-like window movement
   (global-unset-key (kbd "C-w"))
@@ -166,7 +167,6 @@
   (global-set-key (kbd "C-w <left>")  'evil-window-left)
   (global-set-key (kbd "C-w <down>")  'evil-window-down)
   (global-set-key (kbd "C-w <up>")    'evil-window-up)
-
 
   (evil-ex-define-cmd "W" 'evil-write)
   (evil-ex-define-cmd "Q" 'evil-tab-sensitive-quit)
@@ -284,6 +284,10 @@
   (setq helm-descbinds-window-style 'split-window)
   (helm-descbinds-mode))
 
+(use-package jedi
+  :init
+  (add-hook 'python-mode-hook 'jedi:setup))
+
 ;; Company
 
 (use-package company
@@ -300,7 +304,6 @@
   (use-package company-shell)
   (use-package company-cmake)
   (use-package company-jedi)
-  (use-package company-tern)
   (use-package company-racer)
   (use-package company-ghc)
 
@@ -310,9 +313,8 @@
     '(add-to-list
       'company-backends '(company-irony company-irony-c-headers company-yasnippet
                                         company-css company-elisp company-semantic
-                                        company-files company-shell company-tern
-                                        company-cmake company-jedi company-racer
-                                        company-ghc)))
+                                        company-files company-shell company-cmake
+                                        company-jedi company-racer company-ghc)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
@@ -473,8 +475,7 @@
         auto-insert-mode t
         auto-insert-directory (concat user-emacs-directory "auto-insert")
         auto-insert-alist '(("\.html\'" . "template.html")
-                            ("^.*html.*$" . "template.html")
-                            ('web-mode . "template.html"))))
+                            ("^.*html.*$" . "template.html"))))
 
 ;; Uniquify
 
@@ -588,6 +589,19 @@
               ("C-c o" . hydra-org/body))
   :config
   (setq org-directory "~/docs/org/")
+  (setq org-default-notes-file "~/docs/org/notes.org")
+  (setq org-agenda-files `(,org-directory))
+  (setq org-log-done t)
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file+headline (expand-file-name org-default-notes-file) "TODOS")
+           "* TODO %?\n%U\n%a\n")
+          ("n" "Note" entry (file+headline (expand-file-name org-default-notes-file) "NOTES")
+           "* %? :NOTE:\n%U\n%a\n")))
+  (setq org-todo-state-tags-triggers
+        '(("CANCELLED" ("CANCELLED" . t))
+          ("WAITING" ("WAITING" . t))
+          ("TODO" ("WAITING") ("CANCELLED"))
+          ("DONE" ("WAITING") ("CANCELLED"))))
   (defhydra hydra-org (:hint nil)
     "
 ^Export^               ^Tables^           ^Movement^
@@ -610,7 +624,10 @@ _q_uit
     ("c" org-table-insert-column)
     ("r" org-table-insert-row)
     ("g" org-goto :exit t)
-    ("q" nil)))
+    ("q" nil))
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c c") 'org-capture)
+  )
 
 ;; Eldoc
 
