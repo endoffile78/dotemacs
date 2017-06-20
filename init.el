@@ -102,12 +102,6 @@
   (setq darkokai-mode-line-padding 1)
   (load-theme 'darkokai t))
 
-(use-package doom-theme
-  :disabled t
-  :ensure
-  :init
-  (load-theme 'doom-one t))
-
 ;; Evil
 
 (defgroup dotemacs-evil nil
@@ -204,11 +198,11 @@
     "mr" 'magit-branch-popup
     "c"  'compile
     "t"  'elscreen-create
-    "d"  'gud-gdb
     "fp" 'flyspell-prog-mode
     "hg" 'helm-grep-do-git-grep
     "ha" 'helm-do-grep-ag
-    "ir" 'indent-region))
+    "ir" 'indent-region)
+  )
 
 (use-package evil-org
   :diminish evil-org-mode)
@@ -284,10 +278,6 @@
   (setq helm-descbinds-window-style 'split-window)
   (helm-descbinds-mode))
 
-(use-package jedi
-  :init
-  (add-hook 'python-mode-hook 'jedi:setup))
-
 ;; Company
 
 (use-package company
@@ -346,7 +336,8 @@
   (local-set-key (kbd "C-c c") 'compile)
   (local-set-key (kbd "C-c o") 'disaster)
   (setq-local indent-tabs-mode t)
-  (c-set-style "my-c-style"))
+  (c-set-style "my-c-style")
+  (evil-leader/set-key-for-mode 'c-mode "d" 'gdb-gud))
 
 (add-hook 'c-mode-hook #'my-c-hook)
 (add-hook 'c++-mode-hook #'my-c-hook)
@@ -405,6 +396,10 @@
   :config
   (setq racer-rust-src-path "~/.rust/src/"))
 
+(use-package company-racer
+  :config
+  (add-to-list 'company-backends 'company-racer))
+
 (use-package flycheck-rust
   :config
   (add-hook 'rust-mode-hook 'flycheck-rust-setup))
@@ -429,6 +424,9 @@
 
 (use-package virtualenvwrapper
   :config
+  (evil-leader/set-key-for-mode 'python-mdoe "va" 'venv-workon)
+  (evil-leader/set-key-for-mode 'python-mdoe "vd" 'venv-deactivate)
+  (venv-initialize-interactive-shells)
   (venv-initialize-eshell))
 
 ;; Java
@@ -534,6 +532,7 @@
   :commands emmet-mode
   :diminish emmet-mode
   :init
+  (add-hook 'sgml-mode-hook 'emmet-mode)
   (add-hook 'web-mode-hook 'emmet-mode))
 
 ;; Web-mode
@@ -552,6 +551,7 @@
           web-mode-code-indent-offset 4
           web-mode-enable-auto-pairing nil
           web-mode-enable-auto-closing t
+          web-mode-enable-auto-quoting t
           web-mode-style-padding 2
           web-mode-script-padding 2
           web-mode-enable-current-element-highlight t
@@ -592,6 +592,7 @@
   (setq org-default-notes-file "~/docs/org/notes.org")
   (setq org-agenda-files `(,org-directory))
   (setq org-log-done t)
+  (setq org-startup-indented t)
   (setq org-capture-templates
         '(("t" "Todo" entry (file+headline (expand-file-name org-default-notes-file) "TODOS")
            "* TODO %?\n%U\n%a\n")
@@ -626,8 +627,7 @@ _q_uit
     ("g" org-goto :exit t)
     ("q" nil))
   (global-set-key (kbd "C-c a") 'org-agenda)
-  (global-set-key (kbd "C-c c") 'org-capture)
-  )
+  (global-set-key (kbd "C-c c") 'org-capture))
 
 ;; Eldoc
 
@@ -730,7 +730,7 @@ _q_uit
     ("n" mingus-next "next")
     ("u" mingus-vol-up "up")
     ("d" mingus-vol-down "down")
-    ("s" mingus-search "search")
+    ("s" mingus-search "search" :exit t)
     ("q" nil "quit"))
   (global-set-key (kbd "C-c m") 'hydra-mingus/body))
 
@@ -793,6 +793,16 @@ _q_uit
 (global-set-key (kbd "C-c i") 'insert-char)
 (global-set-key (kbd "C-c e") 'eshell)
 
+;; dired
+
+(use-package dired-k
+  :bind (:map dired-mode-map
+              ("K" . dired-k)))
+
+(use-package dired-icon
+  :config
+  (add-hook 'dired-mode-hook 'dired-icon-mode))
+
 ;; Misc
 
 (use-package fancy-battery-mode
@@ -803,14 +813,6 @@ _q_uit
   :ensure
   :config
   (immortal-scratch-mode))
-
-(use-package dired-k
-  :bind (:map dired-mode-map
-              ("K" . dired-k)))
-
-(use-package dired-icon
-  :config
-  (add-hook 'dired-mode-hook 'dired-icon-mode))
 
 (defhydra hydra-scale ()
   "Scale"
