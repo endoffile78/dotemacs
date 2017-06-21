@@ -424,8 +424,8 @@
 
 (use-package virtualenvwrapper
   :config
-  (evil-leader/set-key-for-mode 'python-mdoe "va" 'venv-workon)
-  (evil-leader/set-key-for-mode 'python-mdoe "vd" 'venv-deactivate)
+  (evil-leader/set-key-for-mode 'python-mode "va" 'venv-workon)
+  (evil-leader/set-key-for-mode 'python-mode "vd" 'venv-deactivate)
   (venv-initialize-interactive-shells)
   (venv-initialize-eshell))
 
