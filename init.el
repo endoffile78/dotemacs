@@ -153,7 +153,6 @@
   (evil-set-initial-state 'calculator-mode 'emacs)
   (evil-set-initial-state 'eww-mode 'emacs)
   (evil-set-initial-state 'shell-mode 'emacs)
-  (evil-set-initial-state 'org-capture-mode 'emacs)
 
   ;; Vim-like window movement
   (global-unset-key (kbd "C-w"))
@@ -190,19 +189,18 @@
     "gf" 'ggtags-find-file
     "gs" 'ggtags-find-other-symbol
     "gt" 'ggtags-find-tag-dwim
-    "gg" 'ggtags-grep
     "ms" 'magit-status
     "md" 'magit-diff
     "mb" 'magit-blame
     "ml" 'magit-log-popup
     "mr" 'magit-branch-popup
-    "c"  'compile
+    "mm" 'magit-merge-popup
     "t"  'elscreen-create
     "fp" 'flyspell-prog-mode
     "hg" 'helm-grep-do-git-grep
     "ha" 'helm-do-grep-ag
-    "ir" 'indent-region)
-  )
+    "hr" 'helm-recentf
+    "ir" 'indent-region))
 
 (use-package evil-org
   :diminish evil-org-mode)
@@ -336,11 +334,15 @@
   (local-set-key (kbd "C-c c") 'compile)
   (local-set-key (kbd "C-c o") 'disaster)
   (setq-local indent-tabs-mode t)
-  (c-set-style "my-c-style")
-  (evil-leader/set-key-for-mode 'c-mode "d" 'gdb-gud))
+  (c-set-style "my-c-style"))
 
 (add-hook 'c-mode-hook #'my-c-hook)
 (add-hook 'c++-mode-hook #'my-c-hook)
+
+(evil-leader/set-key-for-mode 'c-mode "c" 'compile)
+(evil-leader/set-key-for-mode 'c-mode "d" 'gdb-gud)
+(evil-leader/set-key-for-mode 'c++-mode "c" 'compile)
+(evil-leader/set-key-for-mode 'c++-mode "d" 'gdb-gud)
 
 ;; ggtags
 
@@ -429,6 +431,8 @@
   (venv-initialize-interactive-shells)
   (venv-initialize-eshell))
 
+(use-package pip-requirements)
+
 ;; Java
 
 (use-package java-file-create)
@@ -448,17 +452,6 @@
   :mode (".vim\\(rc\\)?$" . vimrc-mode))
 
 ;; Programming Utilities
-
-(use-package aggressive-indent
-  :disabled
-  :diminish aggressive-indent-mode
-  :config
-  (add-to-list
-   'aggressive-indent-dont-indent-if
-   '(and (derived-mode-p 'c-mode 'c++-mode 'java-mode 'csharp-mode)
-         (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
-                             (thing-at-point 'line)))))
-  (global-aggressive-indent-mode))
 
 (use-package bool-flip
   :bind ("C-c b" . bool-flip-do-flip))
@@ -603,6 +596,7 @@
           ("WAITING" ("WAITING" . t))
           ("TODO" ("WAITING") ("CANCELLED"))
           ("DONE" ("WAITING") ("CANCELLED"))))
+
   (defhydra hydra-org (:hint nil)
     "
 ^Export^               ^Tables^           ^Movement^
@@ -626,6 +620,7 @@ _q_uit
     ("r" org-table-insert-row)
     ("g" org-goto :exit t)
     ("q" nil))
+
   (global-set-key (kbd "C-c a") 'org-agenda)
   (global-set-key (kbd "C-c c") 'org-capture))
 
@@ -771,7 +766,6 @@ _q_uit
 (add-hook 'emacs-lisp-mode-hook #'sanityinc/run-theme-mode-hooks-if-theme)
 
 (add-hook 'sanityinc/theme-mode-hook #'rainbow-mode)
-(add-hook 'sanityinc/theme-mode-hook '(lambda () (aggressive-indent-mode -1)))
 
 ;; tramp
 
@@ -792,6 +786,7 @@ _q_uit
 
 (global-set-key (kbd "C-c i") 'insert-char)
 (global-set-key (kbd "C-c e") 'eshell)
+(global-set-key (kbd "C-c s") 'term)
 
 ;; dired
 
@@ -820,7 +815,7 @@ _q_uit
   ("o" text-scale-decrease "out")
   ("0" (text-scale-adjust 0) "reset" :exit t)
   ("q" nil "quit"))
-(global-set-key (kbd "C-c s") 'hydra-scale/body)
+(global-set-key (kbd "C-c z") 'hydra-scale/body)
 
 (load custom-file)
 
