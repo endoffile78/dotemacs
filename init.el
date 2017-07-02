@@ -83,7 +83,8 @@
               dired-listing-switches "-alhv"
               dired-recursive-copies 'always
               indent-tabs-mode t
-              tab-width 4)
+              tab-width 4
+              require-final-newline t)
 
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
