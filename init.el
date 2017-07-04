@@ -341,9 +341,9 @@
 (add-hook 'c++-mode-hook #'my-c-hook)
 
 (evil-leader/set-key-for-mode 'c-mode "c" 'compile)
-(evil-leader/set-key-for-mode 'c-mode "d" 'gdb-gud)
+(evil-leader/set-key-for-mode 'c-mode "d" 'gud-gdb)
 (evil-leader/set-key-for-mode 'c++-mode "c" 'compile)
-(evil-leader/set-key-for-mode 'c++-mode "d" 'gdb-gud)
+(evil-leader/set-key-for-mode 'c++-mode "d" 'gud-gdb)
 
 ;; ggtags
 
