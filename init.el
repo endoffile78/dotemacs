@@ -48,10 +48,12 @@
 (show-paren-mode 1)
 (electric-pair-mode 1)
 
-(tool-bar-mode -1)
+(if window-system
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1))
+
 (menu-bar-mode -1)
 (tooltip-mode -1)
-(scroll-bar-mode -1)
 
 (defvar private-file (concat user-emacs-directory "private.el")
   "Private file that is not tracked.")
@@ -780,6 +782,10 @@ _q_uit
 
 (use-package arduino-mode
   :mode ("\.ino$" . arduino-mode))
+
+;; nginx
+
+(use-package nginx-mode)
 
 ;; Keybindings
 
