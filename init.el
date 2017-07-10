@@ -49,8 +49,9 @@
 (electric-pair-mode 1)
 
 (if window-system
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1))
+    (progn
+      (tool-bar-mode -1)
+      (scroll-bar-mode -1)))
 
 (menu-bar-mode -1)
 (tooltip-mode -1)
