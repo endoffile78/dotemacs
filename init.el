@@ -158,6 +158,7 @@
   (evil-set-initial-state 'calculator-mode 'emacs)
   (evil-set-initial-state 'eww-mode 'emacs)
   (evil-set-initial-state 'shell-mode 'emacs)
+  (evil-set-initial-state 'snake-mode 'emacs)
 
   ;; Vim-like window movement
   (global-unset-key (kbd "C-w"))
@@ -787,7 +788,9 @@ _q_uit
 
 ;; nginx
 
-(use-package nginx-mode)
+(use-package nginx-mode
+  :config
+  (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)))
 
 ;; Keybindings
 
