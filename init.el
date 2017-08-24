@@ -19,7 +19,8 @@
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(font . "Monaco-11"))
 
-(add-to-list 'exec-path "/usr/local/bin")
+(if (eq (system-name) 'gnu/linux)
+    (add-to-list 'exec-path "/usr/local/bin"))
 
 (unless '(packge-installed-p 'use-package) ;; Make sure use-package is installed
   (package-refresh-contents)
