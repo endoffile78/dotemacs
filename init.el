@@ -34,6 +34,8 @@
 
 (use-package linum)
 
+;; Modes
+
 (define-global-minor-mode my-global-linum-mode linum-mode
   (lambda ()
     (when (not (memq major-mode
@@ -58,6 +60,8 @@
 (menu-bar-mode -1)
 (tooltip-mode -1)
 
+;; Variables
+
 (defvar private-file (concat user-emacs-directory "private.el")
   "Private file that is not tracked.")
 (defvar normal-state-color '("#35393B" . "#FFFFFF")
@@ -68,6 +72,8 @@
   "Default color for the modeline when in insert mode")
 (defvar emacs-state-color '("#FF6159" . "#FFFFFF")
   "Default color for the modeline when in emacs mode")
+
+;; Settings
 
 (setq ring-bell-function 'ignore
       browse-url-browser-function 'browse-url-xdg-open
@@ -292,7 +298,7 @@
   (setq company-idle-delay 0.1
         company-minimum-prefix-length 2
         company-tooltip-limit 20
-        company-global-modes '(not eshell-mode))
+        company-global-modes '(not eshell-mode shell-mode))
 
   (use-package company-irony)
   (use-package company-irony-c-headers)
