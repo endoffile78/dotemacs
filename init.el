@@ -307,6 +307,7 @@
   (use-package company-jedi)
   (use-package company-racer)
   (use-package company-ghc)
+  (use-package company-auctex)
 
   (add-hook 'after-init-hook 'global-company-mode)
 
@@ -315,7 +316,8 @@
       'company-backends '(company-irony company-irony-c-headers company-yasnippet
                                         company-css company-elisp company-semantic
                                         company-files company-shell company-cmake
-                                        company-jedi company-racer company-ghc)))
+                                        company-jedi company-racer company-ghc
+                                        company-auctex)))
 
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
@@ -703,6 +705,10 @@ _q_uit
 (add-hook 'org-mode-hook 'visual-line-mode)
 (add-hook 'latex-mode-hook 'visual-line-mode)
 (add-hook 'markdown-mode-hook 'visual-line-mode)
+
+;; LaTeX
+
+(use-package tex)
 
 ;; YAML
 
