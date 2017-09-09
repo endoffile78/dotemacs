@@ -97,7 +97,8 @@
               tab-width 4
               require-final-newline t)
 
-(add-hook 'before-save-hook #'delete-trailing-whitespace)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
