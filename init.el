@@ -39,7 +39,7 @@
 (define-global-minor-mode my-global-linum-mode linum-mode
   (lambda ()
     (when (not (memq major-mode
-                     (list 'eshell-mode 'calendar-mode 'term-mode)))
+                     (list 'eshell-mode 'calendar-mode 'term-mode 'doc-view-mode)))
       (linum-mode))))
 
 (my-global-linum-mode)
@@ -320,6 +320,7 @@
                                         company-jedi company-racer company-ghc
                                         company-auctex)))
 
+  (company-auctex-init)
   (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
 (use-package company-quickhelp
@@ -696,7 +697,9 @@ _q_uit
   :init
   (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'markdown-mode-hook 'flyspell-mode)
-  (add-hook 'text-mode-hook 'flyspell-mode))
+  (add-hook 'text-mode-hook 'flyspell-mode)
+  (add-hook 'latex-mode-hook 'flyspell-mode)
+  (add-hook 'tex-mode-hook 'flyspell-mode))
 
 (use-package flyspell-popup
   :bind (:map flyspell-mode-map
@@ -705,11 +708,17 @@ _q_uit
 (add-hook 'text-mode-hook 'visual-line-mode)
 (add-hook 'org-mode-hook 'visual-line-mode)
 (add-hook 'latex-mode-hook 'visual-line-mode)
+(add-hook 'tex-mode-hook 'visual-line-mode)
 (add-hook 'markdown-mode-hook 'visual-line-mode)
 
 ;; LaTeX
 
-(use-package tex)
+(use-package tex
+  :ensure auctex)
+
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+
+(evil-leader/set-key-for-mode 'latex-mode "c" 'TeX-command-master)
 
 ;; YAML
 
