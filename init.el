@@ -87,7 +87,8 @@
       vc-follow-symlinks t
       initial-major-mode 'text-mode
       custom-file (concat user-emacs-directory "custom.el")
-      ad-redefinition-action 'accept)
+      ad-redefinition-action 'accept
+      custom-safe-themes t)
 
 (setq-default truncate-lines 1
               backward-delete-function nil
@@ -641,6 +642,10 @@ _q_uit
   (global-set-key (kbd "C-c a") 'org-agenda)
   (global-set-key (kbd "C-c c") 'org-capture))
 
+(use-package org-bullets
+  :init
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
 ;; Eldoc
 
 (use-package eldoc
@@ -820,7 +825,6 @@ _q_uit
 (define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
 
 (global-set-key (kbd "C-c i") 'insert-char)
-(global-set-key (kbd "C-c e") 'eshell)
 (global-set-key (kbd "C-c s") 'term)
 
 ;; dired
