@@ -92,8 +92,6 @@
 
 (setq-default truncate-lines 1
               backward-delete-function nil
-              dired-listing-switches "-alhv"
-              dired-recursive-copies 'always
               indent-tabs-mode t
               tab-width 4
               require-final-newline t)
@@ -486,6 +484,24 @@
         auto-insert-alist '(("\.html\'" . "template.html")
                             ("^.*html.*$" . "template.html"))))
 
+(use-package comment-tags
+  :init
+  (setq comment-tags-keymap-prefix (kbd "C-c t"))
+  (add-hook 'prog-mode-hook 'comment-tags-mode)
+  :config
+  (setq comment-tags-keyword-faces
+        `(("TODO" . ,(list :weight 'bold :foreground "#28ABE3"))
+          ("FIXME" . ,(list :weight 'bold :foreground "#DB3340"))
+          ("BUG" . ,(list :weight 'bold :foreground "#DB3340"))
+          ("HACK" . ,(list :weight 'bold :foreground "#E8B71A"))
+          ("INFO" . ,(list :weight 'bold :foreground "#F7EAC8"))
+          ("DONE" . ,(list :weight 'bold :foreground "#1FDA9A"))))
+  (setq comment-tags-comment-start-only t
+        comment-tags-require-colon t
+        comment-tags-case-sensitive t
+        comment-tags-show-faces t
+        comment-tags-lighter nil))
+
 ;; Uniquify
 
 (setq uniquify-buffer-name-style 'forward
@@ -829,6 +845,9 @@ _q_uit
 
 ;; dired
 
+(setq dired-listing-switches "-alhv"
+      dired-recursive-copies 'always)
+
 (use-package dired-k
   :bind (:map dired-mode-map
               ("K" . dired-k)))
@@ -836,6 +855,8 @@ _q_uit
 (use-package dired-icon
   :config
   (add-hook 'dired-mode-hook 'dired-icon-mode))
+
+(use-package dired-details+)
 
 ;; Misc
 
