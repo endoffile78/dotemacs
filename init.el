@@ -166,6 +166,8 @@
   (evil-set-initial-state 'eww-mode 'emacs)
   (evil-set-initial-state 'shell-mode 'emacs)
   (evil-set-initial-state 'snake-mode 'emacs)
+  (evil-set-initial-state 'mu4e-headers-mode 'emacs)
+  (evil-set-initial-state 'mu4e-compose-mode 'emacs)
 
   ;; Vim-like window movement
   (global-unset-key (kbd "C-w"))
@@ -857,6 +859,29 @@ _q_uit
   (add-hook 'dired-mode-hook 'dired-icon-mode))
 
 (use-package dired-details+)
+
+;; mu4e
+
+(use-package mu4e
+  :load-path "/usr/share/emacs/site-lisp/mu4e"
+  :config
+
+  (setq mu4e-maildir "~/mail"
+        mu4e-get-mail-command "offlineimap"
+        message-send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "/usr/bin/msmtp"
+        mu4e-decryption-policy t
+        mu4e-headers-skip-duplicates t
+        message-kill-buffer-on-exit t
+        mu4e-use-fancy-chars t
+        mu4e-sent-messages-behavior 'delete
+        mu4e-mu-binary "/usr/bin/mu"))
+
+(use-package mu4e-alert
+  :config
+  (mu4e-alert-set-default-style 'libnotify)
+  (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
+  (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display))
 
 ;; Misc
 
