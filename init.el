@@ -273,7 +273,6 @@
   :bind (("M-x" . helm-M-x)
          ("C-c w" . helm-man-woman))
   :config
-  (require 'helm-config)
   (setq helm-quick-update t
         helm-bookmark-show-location t
         helm-M-x-fuzzy-match t
@@ -865,7 +864,6 @@ _q_uit
 (use-package mu4e
   :load-path "/usr/share/emacs/site-lisp/mu4e"
   :config
-
   (setq mu4e-maildir "~/mail"
         mu4e-get-mail-command "offlineimap"
         message-send-mail-function 'message-send-mail-with-sendmail
