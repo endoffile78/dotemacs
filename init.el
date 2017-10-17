@@ -168,6 +168,8 @@
   (evil-set-initial-state 'snake-mode 'emacs)
   (evil-set-initial-state 'mu4e-headers-mode 'emacs)
   (evil-set-initial-state 'mu4e-compose-mode 'emacs)
+  (evil-set-initial-state 'cider-repl-mode 'emacs)
+  (evil-set-initial-state 'stacktrace-mode 'emacs)
 
   ;; Vim-like window movement
   (global-unset-key (kbd "C-w"))
@@ -836,6 +838,24 @@ _q_uit
 (use-package nginx-mode
   :config
   (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)))
+
+;; clojure
+
+(use-package clojure-mode)
+
+(use-package clojure-mode-extra-font-locking)
+
+(use-package cider)
+
+(use-package elein
+  :bind (:map clojure-mode-map
+              ("C-c c" . elein-compile))
+  :config
+  (evil-leader/set-key-for-mode 'clojure-mode "c" 'elein-compile))
+
+(use-package flycheck-clojure
+  :config
+  (flycheck-clojure-setup))
 
 ;; Keybindings
 
