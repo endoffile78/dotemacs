@@ -352,7 +352,7 @@
   (local-set-key (kbd "C-c d") 'gud-gdb)
   (local-set-key (kbd "C-c c") 'compile)
   (local-set-key (kbd "C-c o") 'disaster)
-  (setq-local indent-tabs-mode t)
+  (setq-local indent-tabs-mode nil)
   (c-set-style "my-c-style"))
 
 (add-hook 'c-mode-hook #'my-c-hook)
