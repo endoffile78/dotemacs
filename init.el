@@ -39,7 +39,8 @@
 (define-global-minor-mode my-global-linum-mode linum-mode
   (lambda ()
     (when (not (memq major-mode
-                     (list 'eshell-mode 'calendar-mode 'term-mode 'doc-view-mode)))
+                     (list 'eshell-mode 'calendar-mode 'term-mode
+                           'doc-view-mode 'erc-mode)))
       (linum-mode))))
 
 (my-global-linum-mode)
@@ -72,6 +73,9 @@
   "Default color for the modeline when in insert mode")
 (defvar emacs-state-color '("#FF6159" . "#FFFFFF")
   "Default color for the modeline when in emacs mode")
+
+(if (file-exists-p private-file)
+    (load private-file))
 
 ;; Settings
 
@@ -170,6 +174,7 @@
   (evil-set-initial-state 'mu4e-compose-mode 'emacs)
   (evil-set-initial-state 'cider-repl-mode 'emacs)
   (evil-set-initial-state 'stacktrace-mode 'emacs)
+  (evil-set-initial-state 'erc-mode 'emacs)
 
   ;; Vim-like window movement
   (global-unset-key (kbd "C-w"))
@@ -240,7 +245,7 @@
 (use-package flycheck
   :ensure
   :config
-  (add-hook 'after-init-hook #'global-flycheck-mode)
+  (add-hook 'prog-mode-hook 'flycheck-mode)
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
   (defhydra hydra-flycheck ()
     "Flycheck"
@@ -685,6 +690,9 @@ _q_uit
 ;; elscreen
 
 (use-package elscreen
+  :bind (("C-c e t" . elscreen-create)
+         ("C-c e n" . elscreen-next)
+         ("C-c e p" . elscreen-previous))
   :ensure
   :demand t)
 
@@ -857,11 +865,100 @@ _q_uit
   :config
   (flycheck-clojure-setup))
 
+;; IRC
+
+(use-package erc
+  :config
+  (use-package erc-log
+    :config
+    (setq erc-log-channels-directory "~/.erc/logs/")
+    (add-to-list 'erc-modules 'log))
+
+  (use-package erc-autoaway
+    :init
+    (setq erc-auto-discard-away t
+          erc-autoaway-idle-seconds 600
+          erc-autoaway-use-emacs-idle t))
+
+  (use-package erc-spelling
+    :config
+    (erc-spelling-mode 1))
+
+  (use-package erc-hl-nicks
+    :ensure)
+
+  (erc-track-mode t)
+  (erc-truncate-mode +1)
+
+  (add-hook 'erc-connect-pre-hook (lambda (x) (erc-update-modules)))
+
+  (setq erc-format-query-as-channel-p t
+        erc-track-priority-faces-only 'all
+        erc-track-faces-priority-list '(erc-error-face
+                                        erc-current-nick-face
+                                        erc-keyword-face
+                                        erc-nick-msg-face
+                                        erc-direct-msg-face
+                                        erc-dangerous-host-face
+                                        erc-notice-face
+                                        erc-prompt-face)
+        erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
+                                  "324" "329" "332" "333" "353" "477")
+        erc-rename-buffers t
+        erc-interpret-mirc-color t
+        erc-kill-buffer-on-part t
+        erc-kill-server-buffer-on-quit t
+        erc-kill-queries-on-quit t
+        erc-nick "e0f"
+        erc-fill-column 170
+        erc-timestamp-format "[%H:%M] "
+        erc-insert-timestamp-function 'erc-insert-timestamp-left))
+
+(defun do-notify (nickname message)
+  (let* ((channel (buffer-name))
+         (nick (erc-hl-nicks-trim-irc-nick nickname))
+         (title (if (string-match-p (concat "^" nickname) channel)
+                    nick
+                  (concat nick " (" channel ")")))
+         (msg (s-trim (s-collapse-whitespace message))))
+    (notifications-notify
+     :title title
+     :body (format "%s said %s" nick msg))))
+
+(use-package ercn
+  :ensure
+  :config
+  (setq ercn-notify-rules
+        '((current-nick . all)
+          (keyword . all)
+          (query-buffer . all)))
+  (add-hook 'ercn-notify-hook 'do-notify))
+
+(defun erc-irc ()
+  (interactive)
+  (erc
+   :server "endoffile.org"
+   :port 2000
+   :nick "e0f"
+   :password my-freenode-znc-password)
+  ;;(erc
+  ;; :server "endoffile.org"
+  ;; :port 2000
+  ;; :nick "e0f"
+  ;; :password my-unix-znc-password)
+  (erc
+   :server "endoffile.org"
+   :port 2000
+   :nick "e0f"
+   :password my-rizon-znc-password))
+
+(global-set-key (kbd "C-c i") 'erc-irc)
+
 ;; Keybindings
 
 (define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
 
-(global-set-key (kbd "C-c i") 'insert-char)
+(global-set-key (kbd "C-c u") 'insert-char)
 (global-set-key (kbd "C-c s") 'term)
 
 ;; dired
@@ -921,9 +1018,6 @@ _q_uit
 (global-set-key (kbd "C-c z") 'hydra-scale/body)
 
 (load custom-file)
-
-(if (file-exists-p private-file)
-    (load private-file))
 
 (provide 'init)
 ;;; init.el ends here
