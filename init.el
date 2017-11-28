@@ -113,7 +113,7 @@
 ;; Theme
 
 (use-package darkokai-theme
-  :ensure
+  :load-path "themes/darkokai"
   :config
   (setq darkokai-mode-line-padding 1)
   (load-theme 'darkokai t))
@@ -490,7 +490,9 @@
         auto-insert-mode t
         auto-insert-directory (concat user-emacs-directory "auto-insert")
         auto-insert-alist '(("\.html\'" . "template.html")
-                            ("^.*html.*$" . "template.html"))))
+                            ("^.*html.*$" . "template.html")
+                            ("\.php\'" . "template.php")
+                            ("^.*php.*$" . "template.php"))))
 
 (use-package comment-tags
   :init
@@ -548,13 +550,6 @@
   :init
   (add-hook 'web-mode-hook 'rainbow-mode)
   (add-hook 'css-mode-hook 'rainbow-mode))
-
-(defhydra hydra-rainbow (:exit t)
-  "Rainbow"
-  ("m" rainbow-mode "mode")
-  ("d" rainbow-delimiters-mode "delimiters")
-  ("q" nil "quit"))
-(global-set-key (kbd "C-c r") 'hydra-rainbow/body)
 
 ;; HTML
 
@@ -886,6 +881,10 @@ _q_uit
 
   (use-package erc-hl-nicks
     :ensure)
+
+  (use-package erc-images
+    :config
+    (add-to-list 'erc-modules 'image))
 
   (erc-track-mode t)
   (erc-truncate-mode +1)
