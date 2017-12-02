@@ -206,6 +206,7 @@
     "po" 'projectile-find-other-file
     "pk" 'projectile-kill-buffers
     "pg" 'helm-projectile-grep
+    "pt" 'projectile-run-term
     "gc" 'ggtags-create-tags
     "gu" 'ggtags-update-tags
     "gf" 'ggtags-find-file
@@ -994,8 +995,8 @@ _q_uit
 (use-package mu4e-alert
   :config
   (mu4e-alert-set-default-style 'libnotify)
-  (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
-  (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display))
+  (add-hook 'after-init-hook 'mu4e-alert-enable-notifications)
+  (add-hook 'after-init-hook 'mu4e-alert-enable-mode-line-display))
 
 ;; Misc
 
