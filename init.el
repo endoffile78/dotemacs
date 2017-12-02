@@ -882,7 +882,7 @@ _q_uit
   (use-package erc-hl-nicks
     :ensure)
 
-  (use-package erc-images
+  (use-package erc-image
     :config
     (add-to-list 'erc-modules 'image))
 
