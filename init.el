@@ -369,6 +369,17 @@
 (evil-leader/set-key-for-mode 'c++-mode "c" 'compile)
 (evil-leader/set-key-for-mode 'c++-mode "d" 'gud-gdb)
 
+;; Makefile
+
+(defun my-makefile-hook ()
+  "Hook for `makefile-mode'."
+  (local-set-key (kbd "C-c c") 'compile)
+  (setq-local indent-tabs-mode t))
+
+(add-hook 'makefile-mode-hook 'my-makefile-hook)
+
+(evil-leader/set-key-for-mode 'makefile-mode "c" 'compile)
+
 ;; ggtags
 
 (use-package ggtags
@@ -501,12 +512,12 @@
   (add-hook 'prog-mode-hook 'comment-tags-mode)
   :config
   (setq comment-tags-keyword-faces
-        `(("TODO" . ,(list :weight 'bold :foreground "#28ABE3"))
+        `(("TODO"  . ,(list :weight 'bold :foreground "#28ABE3"))
           ("FIXME" . ,(list :weight 'bold :foreground "#DB3340"))
-          ("BUG" . ,(list :weight 'bold :foreground "#DB3340"))
-          ("HACK" . ,(list :weight 'bold :foreground "#E8B71A"))
-          ("INFO" . ,(list :weight 'bold :foreground "#F7EAC8"))
-          ("DONE" . ,(list :weight 'bold :foreground "#1FDA9A"))))
+          ("BUG"   . ,(list :weight 'bold :foreground "#DB3340"))
+          ("HACK"  . ,(list :weight 'bold :foreground "#E8B71A"))
+          ("INFO"  . ,(list :weight 'bold :foreground "#F7EAC8"))
+          ("DONE"  . ,(list :weight 'bold :foreground "#1FDA9A"))))
   (setq comment-tags-comment-start-only t
         comment-tags-require-colon t
         comment-tags-case-sensitive t
@@ -617,7 +628,7 @@
 
 (use-package org
   :bind (:map org-mode-map
-              ("C-c o" . hydra-org/body))
+              ("C-c o h" . hydra-org/body))
   :config
   (setq org-directory "~/docs/org/")
   (setq org-default-notes-file "~/docs/org/notes.org")
@@ -659,8 +670,8 @@ _q_uit
     ("g" org-goto :exit t)
     ("q" nil))
 
-  (global-set-key (kbd "C-c a") 'org-agenda)
-  (global-set-key (kbd "C-c c") 'org-capture))
+  (global-set-key (kbd "C-c o a") 'org-agenda)
+  (global-set-key (kbd "C-c o c") 'org-capture))
 
 (use-package org-bullets
   :init
@@ -716,6 +727,7 @@ _q_uit
 ;; CMake
 
 (use-package cmake-mode
+  :ensure
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
          ("\\.cmake\\'" . cmake-mode)))
 
@@ -887,6 +899,13 @@ _q_uit
     :config
     (add-to-list 'erc-modules 'image))
 
+  (use-package erc-fill
+    :config
+    (setq erc-fill-static-center 20
+          erc-fill-column 170
+          erc-fill-function 'erc-fill-static)
+    (erc-fill-mode +1))
+
   (erc-track-mode t)
   (erc-truncate-mode +1)
 
@@ -910,7 +929,6 @@ _q_uit
         erc-kill-server-buffer-on-quit t
         erc-kill-queries-on-quit t
         erc-nick "e0f"
-        erc-fill-column 170
         erc-timestamp-format "[%H:%M] "
         erc-insert-timestamp-function 'erc-insert-timestamp-left))
 
