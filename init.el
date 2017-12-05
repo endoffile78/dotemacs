@@ -883,7 +883,7 @@ _q_uit
     (add-to-list 'erc-modules 'log))
 
   (use-package erc-autoaway
-    :init
+    :config
     (setq erc-auto-discard-away t
           erc-autoaway-idle-seconds 600
           erc-autoaway-use-emacs-idle t))
@@ -1018,7 +1018,7 @@ _q_uit
 
 ;; Misc
 
-(use-package fancy-battery-mode
+(use-package fancy-battery
   :init
   (add-hook 'after-init-hook 'fancy-battery-mode))
 
