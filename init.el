@@ -223,7 +223,8 @@
     "hg" 'helm-grep-do-git-grep
     "ha" 'helm-do-grep-ag
     "hr" 'helm-recentf
-    "ir" 'indent-region))
+    "ir" 'indent-region
+    "x"  'helm-M-x))
 
 (use-package evil-org
   :diminish evil-org-mode)
@@ -306,19 +307,22 @@
   :config
   (setq company-idle-delay 0.1
         company-minimum-prefix-length 2
-        company-tooltip-limit 20
-        company-global-modes '(not eshell-mode shell-mode))
+        company-tooltip-limit 20)
 
-  (use-package company-irony)
+  (use-package company-irony
+    :config
+    (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
   (use-package company-irony-c-headers)
   (use-package company-shell)
   (use-package company-cmake)
   (use-package company-jedi)
   (use-package company-racer)
   (use-package company-ghc)
-  (use-package company-auctex)
+  (use-package company-auctex
+    :config
+    (company-auctex-init))
 
-  (add-hook 'after-init-hook 'global-company-mode)
+  (add-hook 'prog-mode-hook 'company-mode)
 
   (eval-after-load 'company
     '(add-to-list
@@ -326,10 +330,7 @@
                                         company-css company-elisp company-semantic
                                         company-files company-shell company-cmake
                                         company-jedi company-racer company-ghc
-                                        company-auctex)))
-
-  (company-auctex-init)
-  (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
+                                        company-auctex))))
 
 (use-package company-quickhelp
   :config
@@ -387,7 +388,8 @@
   :diminish ggtags-mode
   :commands ggtags-mode
   :init
-  (add-hook 'c-mode-common-hook 'ggtags-mode))
+  (add-hook 'c-mode-common-hook 'ggtags-mode)
+  (add-hook 'php-mode-hook 'ggtags-mode))
 
 ;; Irony
 
@@ -581,8 +583,7 @@
 
 (use-package web-mode
   :ensure
-  :mode (("\\.html?\\'" . web-mode)
-         ("\\.php?\\'" . web-mode))
+  :mode ("\\.html?\\'" . web-mode)
   :config
   (defun my-web-mode-hook ()
     (setq-local indent-tabs-mode nil)
