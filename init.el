@@ -312,15 +312,13 @@
   (use-package company-irony
     :config
     (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
+
   (use-package company-irony-c-headers)
   (use-package company-shell)
   (use-package company-cmake)
   (use-package company-jedi)
   (use-package company-racer)
   (use-package company-ghc)
-  (use-package company-auctex
-    :config
-    (company-auctex-init))
 
   (add-hook 'prog-mode-hook 'company-mode)
 
@@ -329,8 +327,7 @@
       'company-backends '(company-irony company-irony-c-headers company-yasnippet
                                         company-css company-elisp company-semantic
                                         company-files company-shell company-cmake
-                                        company-jedi company-racer company-ghc
-                                        company-auctex))))
+                                        company-jedi company-racer company-ghc))))
 
 (use-package company-quickhelp
   :config
@@ -430,11 +427,10 @@
   :diminish racer-mode
   :bind (:map rust-mode-map
               ("M-." . racer-find-definition))
-  :init
-  (add-hook 'rust-mode-hook 'racer-mode)
-  (add-hook 'racer-mode-hook 'eldoc-mode)
   :config
-  (setq racer-rust-src-path "~/.rust/src/"))
+  (setq racer-rust-src-path "~/.rust/src/")
+  (add-hook 'rust-mode-hook 'racer-mode)
+  (add-hook 'racer-mode-hook 'eldoc-mode))
 
 (use-package company-racer
   :config
@@ -459,7 +455,7 @@
 
 (use-package elpy
   :ensure
-  :init
+  :config
   (elpy-enable))
 
 (use-package virtualenvwrapper
@@ -511,7 +507,6 @@
 (use-package comment-tags
   :init
   (setq comment-tags-keymap-prefix (kbd "C-c t"))
-  (add-hook 'prog-mode-hook 'comment-tags-mode)
   :config
   (setq comment-tags-keyword-faces
         `(("TODO"  . ,(list :weight 'bold :foreground "#28ABE3"))
@@ -524,7 +519,8 @@
         comment-tags-require-colon t
         comment-tags-case-sensitive t
         comment-tags-show-faces t
-        comment-tags-lighter nil))
+        comment-tags-lighter nil)
+  (add-hook 'prog-mode-hook 'comment-tags-mode))
 
 ;; Uniquify
 
@@ -675,14 +671,14 @@ _q_uit
   (global-set-key (kbd "C-c o c") 'org-capture))
 
 (use-package org-bullets
-  :init
+  :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 ;; Eldoc
 
 (use-package eldoc
   :diminish eldoc-mode
-  :init
+  :config
   (add-hook 'emacs-lisp-mode-hook 'eldoc-mode))
 
 ;; undo-tree
@@ -735,7 +731,7 @@ _q_uit
 ;; flyspell
 
 (use-package flyspell
-  :init
+  :config
   (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'markdown-mode-hook 'flyspell-mode)
   (add-hook 'text-mode-hook 'flyspell-mode)
