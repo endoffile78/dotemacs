@@ -1029,6 +1029,8 @@ _q_uit
   :config
   (immortal-scratch-mode))
 
+(use-package zone-nyan)
+
 (defhydra hydra-scale ()
   "Scale"
   ("i" text-scale-increase "in")
