@@ -175,6 +175,8 @@
   (evil-set-initial-state 'cider-repl-mode 'emacs)
   (evil-set-initial-state 'stacktrace-mode 'emacs)
   (evil-set-initial-state 'erc-mode 'emacs)
+  (evil-set-initial-state 'gnus-summary-mode 'emacs)
+  (evil-set-initial-state 'gnus-article-mode 'emacs)
 
   ;; Vim-like window movement
   (global-unset-key (kbd "C-w"))
