@@ -735,6 +735,10 @@ _q_uit
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
          ("\\.cmake\\'" . cmake-mode)))
 
+;; Bazel
+
+(use-package bazel-mode)
+
 ;; flyspell
 
 (use-package flyspell
