@@ -51,6 +51,7 @@
 (toggle-save-place-globally)
 (show-paren-mode 1)
 (electric-pair-mode 1)
+(delete-selection-mode)
 
 (if (fboundp 'scroll-bar-mode)
     (scroll-bar-mode -1))
