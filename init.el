@@ -530,6 +530,11 @@
         comment-tags-lighter nil)
   (add-hook 'prog-mode-hook 'comment-tags-mode))
 
+(defun trailing-whitespace ()
+  (setq show-trailing-whitespace t))
+
+(add-hook 'prog-mode-hook 'trailing-whitespace)
+
 ;; Uniquify
 
 (setq uniquify-buffer-name-style 'forward
