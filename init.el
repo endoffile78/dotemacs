@@ -498,11 +498,6 @@
 
 ;; Programming Utilities
 
-(use-package bool-flip
-  :bind ("C-c b" . bool-flip-do-flip))
-
-(use-package clang-format)
-
 (use-package autoinsert
   :config
   (add-hook 'find-file-hook 'auto-insert)
@@ -849,10 +844,6 @@ _q_uit
               (unless (eq ibuffer-sorting-mode 'alphabetic)
                 (ibuffer-do-sort-by-alphabetic)))))
 
-;; Hyperbole
-
-(use-package hyperbole)
-
 ;; which key
 
 (use-package which-key
@@ -1009,10 +1000,6 @@ _q_uit
 
 (setq dired-listing-switches "-alhv"
       dired-recursive-copies 'always)
-
-(use-package dired-k
-  :bind (:map dired-mode-map
-              ("K" . dired-k)))
 
 (use-package dired-icon
   :config
