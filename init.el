@@ -34,7 +34,7 @@
 
 (use-package linum)
 
-;; Modes
+;; Global Modes
 
 (define-global-minor-mode my-global-linum-mode linum-mode
   (lambda ()
@@ -103,6 +103,9 @@
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'doc-view-mode-hook 'auto-revert-mode)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+(add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -815,7 +818,36 @@ _q_uit
 ;; ibuffer
 
 (use-package ibuffer
-  :bind (("C-x C-b" . ibuffer-other-window)))
+  :bind (("C-x C-b" . ibuffer-other-window))
+  :config
+  (add-hook 'ibuffer-mode-hook
+            (lambda ()
+              (ibuffer-auto-mode 1)
+              (ibuffer-switch-to-saved-filter-groups "default")))
+  (setq ibuffer-show-empty-filter-groups nil)
+  (setq ibuffer-saved-filter-groups
+	(quote (("default"
+		 ("dired" (mode . dired-mode))
+		 ("org" (mode . org-mode))
+         ("IRC" (mode . erc-mode))
+		 ("shell" (or (mode . term-mode)
+                      (mode . shell-mode)
+                      (mode . eshell-mode)))
+		 ("mu4e" (or (mode . mu4e-compose-mode)
+                     (name . "\*mu4e\*")))
+		 ("Emacs" (or (name . "^\\*scratch\\*$")
+                      (name . "^\\*Messages\\*$")
+                      (name . "^\\*Packages\\*$")
+                      (name . "^\\*Help\\*$"))))))))
+
+(use-package ibuffer-projectile
+  :ensure t
+  :config
+  (add-hook 'ibuffer-hook
+            (lambda ()
+              (ibuffer-projectile-set-filter-groups)
+              (unless (eq ibuffer-sorting-mode 'alphabetic)
+                (ibuffer-do-sort-by-alphabetic)))))
 
 ;; Hyperbole
 
@@ -965,26 +997,6 @@ _q_uit
           (keyword . all)
           (query-buffer . all)))
   (add-hook 'ercn-notify-hook 'do-notify))
-
-(defun erc-irc ()
-  (interactive)
-  (erc
-   :server "endoffile.org"
-   :port 2000
-   :nick "e0f"
-   :password my-freenode-znc-password)
-  ;;(erc
-  ;; :server "endoffile.org"
-  ;; :port 2000
-  ;; :nick "e0f"
-  ;; :password my-unix-znc-password)
-  (erc
-   :server "endoffile.org"
-   :port 2000
-   :nick "e0f"
-   :password my-rizon-znc-password))
-
-(global-set-key (kbd "C-c i") 'erc-irc)
 
 ;; Keybindings
 
