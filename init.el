@@ -205,6 +205,7 @@
   (evil-leader/set-leader ",")
   (global-evil-leader-mode)
   (evil-leader/set-key
+    "b"  'switch-to-buffer
     "k"  'kill-this-buffer
     "pf" 'helm-projectile
     "pb" 'helm-projectile-switch-to-buffer
