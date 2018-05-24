@@ -804,22 +804,6 @@ _q_uit
   :config
   (editorconfig-mode 1))
 
-;; Mingus
-
-(use-package mingus-stays-home
-  :config
-  (defhydra hydra-mingus ()
-    "Mingus"
-    ("t" mingus-toggle "toggle" :exit t)
-    ("i" mingus-insert "insert")
-    ("p" mingus-prev "prev")
-    ("n" mingus-next "next")
-    ("u" mingus-vol-up "up")
-    ("d" mingus-vol-down "down")
-    ("s" mingus-search "search" :exit t)
-    ("q" nil "quit"))
-  (global-set-key (kbd "C-c m") 'hydra-mingus/body))
-
 ;; ibuffer
 
 (use-package ibuffer
