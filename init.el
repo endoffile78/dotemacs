@@ -50,7 +50,6 @@
 (blink-cursor-mode 1)
 (toggle-save-place-globally)
 (show-paren-mode 1)
-(electric-pair-mode 1)
 (delete-selection-mode)
 
 (if (fboundp 'scroll-bar-mode)
@@ -534,6 +533,18 @@
 
 (add-hook 'prog-mode-hook 'trailing-whitespace)
 
+(use-package smartparens-config
+  :config
+  (setq sp-base-key-bindings 'paredit)
+  (setq sp-autoskip-closing-pair 'always)
+  (sp-use-paredit-bindings)
+  (add-hook 'prog-mode-hook 'smartparens-mode))
+
+(use-package evil-smartparens
+  :diminish evil-smartparens-mode
+  :config
+  (add-hook 'smartparens-mode-hook 'evil-smartparens-mode))
+
 ;; Uniquify
 
 (setq uniquify-buffer-name-style 'forward
@@ -595,8 +606,6 @@
   :config
   (defun my-web-mode-hook ()
     (setq-local indent-tabs-mode nil)
-    (setq-local electric-pair-pairs '((?\< . ?\>)
-                                      (?\' . ?\')))
     (setq web-mode-markup-indent-offset 2
           web-mode-css-indent-offset 4
           web-mode-code-indent-offset 4
