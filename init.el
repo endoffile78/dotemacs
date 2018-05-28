@@ -538,7 +538,7 @@
   (setq sp-base-key-bindings 'paredit)
   (setq sp-autoskip-closing-pair 'always)
   (sp-use-paredit-bindings)
-  (add-hook 'prog-mode-hook 'smartparens-mode))
+  (smartparens-global-mode))
 
 (use-package evil-smartparens
   :diminish evil-smartparens-mode
