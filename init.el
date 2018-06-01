@@ -5,7 +5,7 @@
 
 ;;; Code:
 
-(when (version< emacs-version "24.4")
+(when (version< emacs-version "26.1")
   (error (concat "This config requires Emacs 24.4+. Current version: " emacs-version)))
 
 (require 'package)
@@ -213,6 +213,7 @@
     "pk" 'projectile-kill-buffers
     "pg" 'helm-projectile-grep
     "pt" 'projectile-run-term
+    "lp" 'list-packages
     "gc" 'ggtags-create-tags
     "gu" 'ggtags-update-tags
     "gf" 'ggtags-find-file
@@ -225,11 +226,8 @@
     "mr" 'magit-branch-popup
     "mm" 'magit-merge-popup
     "t"  'elscreen-create
-    "fp" 'flyspell-prog-mode
     "hg" 'helm-grep-do-git-grep
-    "ha" 'helm-do-grep-ag
     "hr" 'helm-recentf
-    "ir" 'indent-region
     "x"  'helm-M-x))
 
 (use-package evil-org
@@ -617,6 +615,10 @@
           web-mode-enable-current-element-highlight t
           web-mode-enable-block-face t))
   (add-hook 'web-mode-hook 'my-web-mode-hook))
+
+;; PHP
+
+(use-package php-mode)
 
 ;; Javascript
 
