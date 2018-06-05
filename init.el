@@ -6,7 +6,7 @@
 ;;; Code:
 
 (when (version< emacs-version "26.1")
-  (error (concat "This config requires Emacs 24.4+. Current version: " emacs-version)))
+  (error (concat "This config requires Emacs 26.1+. Current version: " emacs-version)))
 
 (require 'package)
 
@@ -289,7 +289,8 @@
   :demand t
   :diminish helm-mode
   :bind (("M-x" . helm-M-x)
-         ("C-c w" . helm-man-woman))
+         ("C-c w" . helm-man-woman)
+         ("C-x C-f" . helm-find-files))
   :config
   (setq helm-quick-update t
         helm-bookmark-show-location t
@@ -313,6 +314,10 @@
 (use-package company
   :ensure
   :diminish company-mode
+  :bind (:map company-active-map
+              ("<tab>" . company-select-next)
+              ("TAB" . company-select-next)
+              ("<backtab>" . company-select-previous))
   :config
   (setq company-idle-delay 0.1
         company-minimum-prefix-length 2
