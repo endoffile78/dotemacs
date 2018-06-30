@@ -65,6 +65,8 @@
 
 (defvar private-file (concat user-emacs-directory "private.el")
   "Private file that is not tracked.")
+(defvar local-file (concat user-emacs-directory "local.el")
+  "Local file specific to each computer.")
 (defvar normal-state-color '("#35393B" . "#FFFFFF")
   "Default color for the modeline when in normal mode")
 (defvar visual-state-color '("#AB7EFF" . "#000000")
@@ -76,6 +78,9 @@
 
 (if (file-exists-p private-file)
     (load private-file))
+
+(if (file-exists-p local-file)
+    (load local-file))
 
 ;; Settings
 
@@ -267,6 +272,12 @@
     ("q" nil "quit"))
   (global-set-key (kbd "C-c f") 'hydra-flycheck/body))
 
+(use-package flycheck-pos-tip
+  :after flycheck
+  :config
+  (setq flycheck-pos-tip-timeout 30)
+  (flycheck-pos-tip-mode))
+
 ;; Git
 
 (use-package git-gutter-fringe+
@@ -416,9 +427,12 @@
       'irony-completion-at-point-async)
     (define-key irony-mode-map [remap complete-symbol]
       'irony-completion-at-point-async))
+  (defun my-irony-enable ()
+    (when (memq major-mode irony-supported-major-modes)
+      (irony-mode 1)))
   :init
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'c++-mode-hook 'my-irony-enable)
+  (add-hook 'c-mode-hook 'my-irony-enable)
   (add-hook 'irony-mode-hook #'my-irony-mode-hook)
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
@@ -537,6 +551,7 @@
 (add-hook 'prog-mode-hook 'trailing-whitespace)
 
 (use-package smartparens-config
+  :ensure smartparens
   :config
   (setq sp-base-key-bindings 'paredit)
   (setq sp-autoskip-closing-pair 'always)
@@ -544,6 +559,7 @@
   (smartparens-global-mode))
 
 (use-package evil-smartparens
+  :ensure
   :diminish evil-smartparens-mode
   :config
   (add-hook 'smartparens-mode-hook 'evil-smartparens-mode))
@@ -934,6 +950,7 @@ _q_uit
     :ensure)
 
   (use-package erc-image
+    :ensure
     :config
     (add-to-list 'erc-modules 'image))
 
@@ -1010,31 +1027,32 @@ _q_uit
 
 ;; mu4e
 
-(use-package mu4e
-  :load-path "/usr/share/emacs/site-lisp/mu4e"
-  :config
-  (setq mu4e-maildir "~/mail"
-        mu4e-get-mail-command "offlineimap"
-        message-send-mail-function 'message-send-mail-with-sendmail
-        sendmail-program "/usr/bin/msmtp"
-        mu4e-decryption-policy t
-        mu4e-headers-skip-duplicates t
-        message-kill-buffer-on-exit t
-        mu4e-use-fancy-chars t
-        mu4e-sent-messages-behavior 'delete
-        mu4e-mu-binary "/usr/bin/mu"))
-
-(use-package mu4e-alert
-  :config
-  (mu4e-alert-set-default-style 'libnotify)
-  (add-hook 'after-init-hook 'mu4e-alert-enable-notifications)
-  (add-hook 'after-init-hook 'mu4e-alert-enable-mode-line-display))
+(if (eq (system-name) 'gnu/linux)
+    (use-package mu4e
+      :load-path "/usr/share/emacs/site-lisp/mu4e"
+      :config
+      (setq mu4e-maildir "~/mail"
+            mu4e-get-mail-command "offlineimap"
+            message-send-mail-function 'message-send-mail-with-sendmail
+            sendmail-program "/usr/bin/msmtp"
+            mu4e-decryption-policy t
+            mu4e-headers-skip-duplicates t
+            message-kill-buffer-on-exit t
+            mu4e-use-fancy-chars t
+            mu4e-sent-messages-behavior 'delete
+            mu4e-mu-binary "/usr/bin/mu"))
+  (use-package mu4e-alert
+    :config
+    (mu4e-alert-set-default-style 'libnotify)
+    (add-hook 'after-init-hook 'mu4e-alert-enable-notifications)
+    (add-hook 'after-init-hook 'mu4e-alert-enable-mode-line-display)))
 
 ;; Misc
 
-(use-package fancy-battery
-  :init
-  (add-hook 'after-init-hook 'fancy-battery-mode))
+(if laptop ;;only show the battery in the modeline if its a laptop
+    (use-package fancy-battery
+      :init
+      (add-hook 'after-init-hook 'fancy-battery-mode)))
 
 (use-package immortal-scratch
   :ensure

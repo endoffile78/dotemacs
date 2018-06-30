@@ -21,6 +21,7 @@ eshell/lastdir
 *.dat
 
 private.el
+local.el
 projectile-bookmarks.eld
 projectile.cache
 recentf
