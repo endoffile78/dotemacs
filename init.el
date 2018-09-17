@@ -171,20 +171,14 @@
         evil-insert-state-cursor '("red" bar)
         evil-operator-state-cursor '("red" hollow))
 
-  (evil-set-initial-state 'eshell-mode 'emacs)
-  (evil-set-initial-state 'calendar-mode 'emacs)
-  (evil-set-initial-state 'term-mode 'emacs)
-  (evil-set-initial-state 'calculator-mode 'emacs)
-  (evil-set-initial-state 'eww-mode 'emacs)
-  (evil-set-initial-state 'shell-mode 'emacs)
   (evil-set-initial-state 'snake-mode 'emacs)
-  (evil-set-initial-state 'mu4e-headers-mode 'emacs)
-  (evil-set-initial-state 'mu4e-compose-mode 'emacs)
   (evil-set-initial-state 'cider-repl-mode 'emacs)
   (evil-set-initial-state 'stacktrace-mode 'emacs)
   (evil-set-initial-state 'erc-mode 'emacs)
-  (evil-set-initial-state 'gnus-summary-mode 'emacs)
-  (evil-set-initial-state 'gnus-article-mode 'emacs)
+
+  (evil-set-initial-state 'term-mode 'insert)
+  (evil-set-initial-state 'shell-mode 'insert)
+  (evil-set-initial-state 'eshell-mode 'insert)
 
   ;; Vim-like window movement
   (global-unset-key (kbd "C-w"))
@@ -196,7 +190,15 @@
   (evil-ex-define-cmd "W" 'evil-write)
   (evil-ex-define-cmd "Q" 'evil-tab-sensitive-quit)
 
+  (setq evil-want-keybinding nil)
+
   (evil-mode 1))
+
+(use-package evil-collection
+  :after evil
+  :ensure
+  :config
+  (evil-collection-init))
 
 (use-package evil-tabs
   :ensure
@@ -211,19 +213,11 @@
   (evil-leader/set-key
     "b"  'switch-to-buffer
     "k"  'kill-this-buffer
-    "pf" 'helm-projectile
-    "pb" 'helm-projectile-switch-to-buffer
     "pi" 'projectile-invalidate-cache
     "po" 'projectile-find-other-file
     "pk" 'projectile-kill-buffers
-    "pg" 'helm-projectile-grep
     "pt" 'projectile-run-term
     "lp" 'list-packages
-    "gc" 'ggtags-create-tags
-    "gu" 'ggtags-update-tags
-    "gf" 'ggtags-find-file
-    "gs" 'ggtags-find-other-symbol
-    "gt" 'ggtags-find-tag-dwim
     "ms" 'magit-status
     "md" 'magit-diff
     "mb" 'magit-blame
@@ -255,6 +249,19 @@
   :diminish evil-mc-mode
   :config
   (global-evil-mc-mode 1))
+
+(use-package evil-avy
+  :ensure
+  :config
+  (evil-avy-mode))
+
+(use-package evil-smartparens
+  :after smartparens
+  :ensure
+  :diminish evil-smartparens-mode
+  :config
+  (add-hook 'smartparens-mode-hook 'evil-smartparens-mode))
+
 
 ;; Flycheck
 
@@ -320,6 +327,16 @@
   (setq helm-descbinds-window-style 'split-window)
   (helm-descbinds-mode))
 
+(use-package helm-projectile
+  :after projectile
+  :ensure
+  :config
+  (evil-leader/set-key
+    "pf" 'helm-projectile
+    "pb" 'helm-projectile-switch-to-buffer
+    "pg" 'helm-projectile-grep)
+  (helm-projectile-on))
+
 ;; Company
 
 (use-package company
@@ -336,6 +353,7 @@
 
   (use-package company-irony
     :config
+    (setq company-irony-ignore-case t)
     (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
 
   (use-package company-irony-c-headers)
@@ -409,9 +427,15 @@
   :ensure
   :diminish ggtags-mode
   :commands ggtags-mode
-  :init
+  :config
   (add-hook 'c-mode-common-hook 'ggtags-mode)
-  (add-hook 'php-mode-hook 'ggtags-mode))
+  (add-hook 'php-mode-hook 'ggtags-mode)
+  (evil-leader/set-key-for-mode 'ggtags-mode
+    "gc" 'ggtags-create-tags
+    "gu" 'ggtags-update-tags
+    "gf" 'ggtags-find-file
+    "gs" 'ggtags-find-other-symbol
+    "gt" 'ggtags-find-tag-dwim))
 
 ;; Irony
 
@@ -553,16 +577,22 @@
 (use-package smartparens-config
   :ensure smartparens
   :config
-  (setq sp-base-key-bindings 'paredit)
-  (setq sp-autoskip-closing-pair 'always)
+  (sp-with-modes
+      '(c++-mode objc-mode c-mode)
+    (sp-local-pair "/*" "*/" :post-handlers
+                   '(:add
+                     ("* [i]|\n[i]" newline evil-ret)
+                     (" " c-context-line-break c-indent-new-comment-line))))
+  (sp-with-modes
+      '(c++-mode objc-mode c-mode css-mode js2-mode web-mode)
+    (sp-local-pair "{" nil :post-handlers
+                   '(:add
+                     ("||\n[i]" "RET")
+                     ("| " "SPC"))))
+  (setq sp-base-key-bindings 'paredit
+        sp-autoskip-closing-pair 'always)
   (sp-use-paredit-bindings)
   (smartparens-global-mode))
-
-(use-package evil-smartparens
-  :ensure
-  :diminish evil-smartparens-mode
-  :config
-  (add-hook 'smartparens-mode-hook 'evil-smartparens-mode))
 
 ;; Uniquify
 
@@ -577,11 +607,6 @@
   :ensure
   :config
   (projectile-mode))
-
-(use-package helm-projectile
-  :ensure
-  :config
-  (helm-projectile-on))
 
 ;; Visual
 
@@ -621,7 +646,8 @@
 
 (use-package web-mode
   :ensure
-  :mode ("\\.html?\\'" . web-mode)
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.php?\\'" . web-mode))
   :config
   (defun my-web-mode-hook ()
     (setq-local indent-tabs-mode nil)
@@ -636,10 +662,6 @@
           web-mode-enable-current-element-highlight t
           web-mode-enable-block-face t))
   (add-hook 'web-mode-hook 'my-web-mode-hook))
-
-;; PHP
-
-(use-package php-mode)
 
 ;; Javascript
 
@@ -656,12 +678,9 @@
   (yas-global-mode 1)
   (defhydra hydra-yasnippet (:exit t)
     "Yasnippet"
-    ("g" yas-global-mode "global mode")
-    ("m" yas-minor-mode "minor mode")
-    ("e" yas-activate-extra-mode "extra mode")
+    ("i" yas-insert-snippet "insert snippet")
     ("n" yas-new-snippet "new snippet")
     ("r" yas-reload-all "reload")
-    ("d" yas-load-directory "load directory")
     ("q" nil "quit"))
   (global-set-key (kbd "C-c y") 'hydra-yasnippet/body))
 
@@ -1007,12 +1026,25 @@ _q_uit
           (query-buffer . all)))
   (add-hook 'ercn-notify-hook 'do-notify))
 
+(defun sudo-edit (&optional arg)
+  "Edit currently visited file as root.
+
+With a prefix ARG prompt for a file to visit.
+Will also prompt for a file to visit if current
+buffer is not visiting a file."
+  (interactive "P")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:"
+                         (ido-read-file-name "Find file (as root): ")))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
 ;; Keybindings
 
 (define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
 
 (global-set-key (kbd "C-c u") 'insert-char)
 (global-set-key (kbd "C-c s") 'term)
+(global-set-key (kbd "C-x C-r") 'sudo-edit)
 
 ;; dired
 
@@ -1022,8 +1054,6 @@ _q_uit
 (use-package dired-icon
   :config
   (add-hook 'dired-mode-hook 'dired-icon-mode))
-
-(use-package dired-details+)
 
 ;; mu4e
 
@@ -1049,7 +1079,7 @@ _q_uit
 
 ;; Misc
 
-(if laptop ;;only show the battery in the modeline if its a laptop
+(if local/laptop ;;only show the battery in the modeline if its a laptop
     (use-package fancy-battery
       :init
       (add-hook 'after-init-hook 'fancy-battery-mode)))
