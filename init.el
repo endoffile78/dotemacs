@@ -474,24 +474,6 @@
 (use-package rust-mode
   :mode ("\\.rs\\'" . rust-mode))
 
-(use-package racer
-  :demand t
-  :diminish racer-mode
-  :bind (:map rust-mode-map
-              ("M-." . racer-find-definition))
-  :config
-  (setq racer-rust-src-path "~/.rust/src/")
-  (add-hook 'rust-mode-hook 'racer-mode)
-  (add-hook 'racer-mode-hook 'eldoc-mode))
-
-(use-package company-racer
-  :config
-  (add-to-list 'company-backends 'company-racer))
-
-(use-package flycheck-rust
-  :config
-  (add-hook 'rust-mode-hook 'flycheck-rust-setup))
-
 ;; Python
 
 (defun python-f5 ()
@@ -582,7 +564,8 @@
     (sp-local-pair "/*" "*/" :post-handlers
                    '(:add
                      ("* [i]|\n[i]" newline evil-ret)
-                     (" " c-context-line-break c-indent-new-comment-line))))
+                     (" " c-context-line-break c-indent-new-comment-line)))
+    (sp-local-pair "<" ">"))
   (sp-with-modes
       '(c++-mode objc-mode c-mode css-mode js2-mode web-mode)
     (sp-local-pair "{" nil :post-handlers
@@ -933,18 +916,6 @@ _q_uit
 (use-package clojure-mode)
 
 (use-package clojure-mode-extra-font-locking)
-
-(use-package cider)
-
-(use-package elein
-  :bind (:map clojure-mode-map
-              ("C-c c" . elein-compile))
-  :config
-  (evil-leader/set-key-for-mode 'clojure-mode "c" 'elein-compile))
-
-(use-package flycheck-clojure
-  :config
-  (flycheck-clojure-setup))
 
 ;; IRC
 
