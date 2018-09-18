@@ -670,8 +670,6 @@
 ;; Org
 
 (use-package org
-  :bind (:map org-mode-map
-              ("C-c o h" . hydra-org/body))
   :config
   (setq org-directory "~/docs/org/")
   (setq org-default-notes-file "~/docs/org/notes.org")
@@ -688,30 +686,6 @@
           ("WAITING" ("WAITING" . t))
           ("TODO" ("WAITING") ("CANCELLED"))
           ("DONE" ("WAITING") ("CANCELLED"))))
-
-  (defhydra hydra-org (:hint nil)
-    "
-^Export^               ^Tables^           ^Movement^
-------------------------------------------------------------------
-export to _h_tml       create _t_able     _g_oto
-export to _l_atex      _d_elete column
-export to _p_df        _k_ill row
-export to _m_arkdown   insert _c_olumn
-                     insert _r_ow
-
-_q_uit
-"
-    ("h" org-html-export-to-html :exit t)
-    ("l" org-latex-export-to-latex :exit t)
-    ("p" org-latex-export-to-pdf :exit t)
-    ("m" org-md-export-to-markdown :exit t)
-    ("t" org-table-create-or-convert-from-region :exit t)
-    ("d" org-table-delete-column)
-    ("k" org-table-kill-row)
-    ("c" org-table-insert-column)
-    ("r" org-table-insert-row)
-    ("g" org-goto :exit t)
-    ("q" nil))
 
   (global-set-key (kbd "C-c o a") 'org-agenda)
   (global-set-key (kbd "C-c o c") 'org-capture))
@@ -740,9 +714,6 @@ _q_uit
 ;; elscreen
 
 (use-package elscreen
-  :bind (("C-c e t" . elscreen-create)
-         ("C-c e n" . elscreen-next)
-         ("C-c e p" . elscreen-previous))
   :ensure
   :demand t)
 
@@ -1013,7 +984,6 @@ buffer is not visiting a file."
 
 (define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
 
-(global-set-key (kbd "C-c u") 'insert-char)
 (global-set-key (kbd "C-c s") 'term)
 (global-set-key (kbd "C-x C-r") 'sudo-edit)
 
