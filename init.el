@@ -101,7 +101,7 @@
 
 (setq-default truncate-lines 1
               backward-delete-function nil
-              indent-tabs-mode t
+              indent-tabs-mode nil
               tab-width 4
               require-final-newline t)
 
@@ -125,6 +125,51 @@
   :config
   (setq darkokai-mode-line-padding 1)
   (load-theme 'darkokai t))
+
+;; General
+
+(use-package general
+  :ensure
+  :config
+  (general-create-definer leader-define
+    :prefix ",")
+  (leader-define
+   :states 'normal
+   ;; buffer managment
+   "b" '(:ignore t :which-key "Buffers")
+   "bb"  'switch-to-buffer
+   "bk"  'kill-this-buffer
+
+   ;; projectile
+   "p" '(:ignore t :which-key "Projectile")
+   "pf" 'helm-projectile
+   "pb" 'helm-projectile-switch-to-buffer
+   "po" 'projectile-find-other-file
+   "pk" 'projectile-kill-buffers
+   "pt" 'projectile-run-term
+   "lp" 'list-packages
+
+   ;; magit
+   "m" '(:ignore t :which-key "Magit")
+   "ms" 'magit-status
+   "md" 'magit-diff
+   "mb" 'magit-blame
+   "ml" 'magit-log-popup
+   "mr" 'magit-branch-popup
+   "mm" 'magit-merge-popup
+
+   ;; org
+   "o" '(:ignore t :which-key "Org")
+   "oa" 'org-agenda
+   "oc" 'org-capture
+
+   "hg" 'helm-grep-do-git-grep
+   "hr" 'helm-recentf
+   "x"  'helm-M-x)
+  (general-define-key
+   :states '(normal insert emacs)
+   "C-a" 'beginning-of-line
+   "C-e" 'end-of-line))
 
 ;; Evil
 
@@ -159,9 +204,8 @@
 (use-package evil
   :ensure
   :demand t
-  :bind (:map evil-insert-state-map
-              ("C-e" . end-of-line)
-              ("C-a" . beginning-of-line))
+  :init
+  (setq evil-want-keybinding nil) ;; disable for evil-collection
   :config
   (lexical-let ((default-color (cons (face-background 'mode-line)
                                      (face-foreground 'mode-line))))
@@ -182,15 +226,14 @@
 
   ;; Vim-like window movement
   (global-unset-key (kbd "C-w"))
-  (global-set-key (kbd "C-w <right>") 'evil-window-right)
-  (global-set-key (kbd "C-w <left>")  'evil-window-left)
-  (global-set-key (kbd "C-w <down>")  'evil-window-down)
-  (global-set-key (kbd "C-w <up>")    'evil-window-up)
+  (general-define-key
+   "C-w <right>" 'evil-window-right
+   "C-w <left>"  'evil-window-left
+   "C-w <down>"  'evil-window-bottom
+   "C-w <up>"    'evil-window-up)
 
   (evil-ex-define-cmd "W" 'evil-write)
   (evil-ex-define-cmd "Q" 'evil-tab-sensitive-quit)
-
-  (setq evil-want-keybinding nil)
 
   (evil-mode 1))
 
@@ -204,30 +247,6 @@
   :ensure
   :config
   (global-evil-tabs-mode t))
-
-(use-package evil-leader
-  :ensure
-  :config
-  (evil-leader/set-leader ",")
-  (global-evil-leader-mode)
-  (evil-leader/set-key
-    "b"  'switch-to-buffer
-    "k"  'kill-this-buffer
-    "pi" 'projectile-invalidate-cache
-    "po" 'projectile-find-other-file
-    "pk" 'projectile-kill-buffers
-    "pt" 'projectile-run-term
-    "lp" 'list-packages
-    "ms" 'magit-status
-    "md" 'magit-diff
-    "mb" 'magit-blame
-    "ml" 'magit-log-popup
-    "mr" 'magit-branch-popup
-    "mm" 'magit-merge-popup
-    "t"  'elscreen-create
-    "hg" 'helm-grep-do-git-grep
-    "hr" 'helm-recentf
-    "x"  'helm-M-x))
 
 (use-package evil-org
   :diminish evil-org-mode)
@@ -277,7 +296,7 @@
     ("n" flycheck-next-error "next error")
     ("p" flycheck-previous-error "prev error")
     ("q" nil "quit"))
-  (global-set-key (kbd "C-c f") 'hydra-flycheck/body))
+  (general-define-key "C-c f" 'hydra-flycheck/body))
 
 (use-package flycheck-pos-tip
   :after flycheck
@@ -306,9 +325,9 @@
   :ensure
   :demand t
   :diminish helm-mode
-  :bind (("M-x" . helm-M-x)
-         ("C-c w" . helm-man-woman)
-         ("C-x C-f" . helm-find-files))
+  :general ("M-x"     'helm-M-x)
+           ("C-c w"   'helm-man-woman)
+           ("C-x C-f" 'helm-find-files)
   :config
   (setq helm-quick-update t
         helm-bookmark-show-location t
@@ -322,7 +341,7 @@
   (helm-flx-mode +1))
 
 (use-package helm-descbinds
-  :bind (("C-h b" . helm-descbinds))
+  :general ("C-h b" 'helm-descbinds)
   :config
   (setq helm-descbinds-window-style 'split-window)
   (helm-descbinds-mode))
@@ -331,10 +350,6 @@
   :after projectile
   :ensure
   :config
-  (evil-leader/set-key
-    "pf" 'helm-projectile
-    "pb" 'helm-projectile-switch-to-buffer
-    "pg" 'helm-projectile-grep)
   (helm-projectile-on))
 
 ;; Company
@@ -342,10 +357,10 @@
 (use-package company
   :ensure
   :diminish company-mode
-  :bind (:map company-active-map
-              ("<tab>" . company-select-next)
-              ("TAB" . company-select-next)
-              ("<backtab>" . company-select-previous))
+  :general (:keymaps 'company-active-map
+              "<tab>" 'company-select-next
+              "TAB" 'company-select-next
+              "<backtab>" 'company-select-previous)
   :config
   (setq company-idle-delay 0.1
         company-minimum-prefix-length 2
@@ -391,35 +406,30 @@
                              (case-label . +)
                              (access-label . /))))
 
-(use-package disaster
-  :ensure)
+(setq c-default-style
+      (quote
+       ((c-mode . "my-c-style")
+        (c++-mode . "my-c-style")
+        (java-mode . "java")
+        (awk-mode . "awk"))))
 
-(defun my-c-hook ()
-  "Hook for `c-mode'."
-  (local-set-key (kbd "C-c d") 'gud-gdb)
-  (local-set-key (kbd "C-c c") 'compile)
-  (local-set-key (kbd "C-c o") 'disaster)
-  (setq-local indent-tabs-mode nil)
-  (c-set-style "my-c-style"))
+(leader-define
+  :states 'normal
+  :keymaps '(c-mode-map c++-mode-map)
+  "c" 'compile)
 
-(add-hook 'c-mode-hook #'my-c-hook)
-(add-hook 'c++-mode-hook #'my-c-hook)
-
-(evil-leader/set-key-for-mode 'c-mode "c" 'compile)
-(evil-leader/set-key-for-mode 'c-mode "d" 'gud-gdb)
-(evil-leader/set-key-for-mode 'c++-mode "c" 'compile)
-(evil-leader/set-key-for-mode 'c++-mode "d" 'gud-gdb)
+(general-define-key
+ :keymaps '(c-mode-map c++-mode-map)
+ "C-c c" 'compile
+ "C-c d" 'gud-gdb)
 
 ;; Makefile
 
 (defun my-makefile-hook ()
   "Hook for `makefile-mode'."
-  (local-set-key (kbd "C-c c") 'compile)
   (setq-local indent-tabs-mode t))
 
 (add-hook 'makefile-mode-hook 'my-makefile-hook)
-
-(evil-leader/set-key-for-mode 'makefile-mode "c" 'compile)
 
 ;; ggtags
 
@@ -429,8 +439,10 @@
   :commands ggtags-mode
   :config
   (add-hook 'c-mode-common-hook 'ggtags-mode)
-  (add-hook 'php-mode-hook 'ggtags-mode)
-  (evil-leader/set-key-for-mode 'ggtags-mode
+  (leader-define
+    :states 'normal
+    :keymaps '(c-mode-map c++-mode-map)
+    "g" '(:ignore t :which-key "ggtags")
     "gc" 'ggtags-create-tags
     "gu" 'ggtags-update-tags
     "gf" 'ggtags-find-file
@@ -483,9 +495,9 @@
   (python-shell-switch-to-shell))
 
 (use-package python
-  :bind (:map python-mode-map
-              ("<f5>" . python-f5)
-              ("C-c d" . pdb)))
+  :config
+  :general (:keymaps 'python-mode-map
+            "<f5>" 'python-f5))
 
 (use-package elpy
   :ensure
@@ -494,8 +506,11 @@
 
 (use-package virtualenvwrapper
   :config
-  (evil-leader/set-key-for-mode 'python-mode "va" 'venv-workon)
-  (evil-leader/set-key-for-mode 'python-mode "vd" 'venv-deactivate)
+  (leader-define
+    :states 'normal
+    :keymaps 'python-mode-map
+    "va" 'venv-workon
+    "vd" 'venv-deactivate)
   (venv-initialize-interactive-shells)
   (venv-initialize-eshell))
 
@@ -504,10 +519,6 @@
 ;; Java
 
 (use-package java-file-create)
-
-(use-package ensime
-  :config
-  (setq ensime-startup-snapshot-notification nil))
 
 ;; Markdown
 
@@ -615,7 +626,6 @@
 
 (add-hook 'html-mode-hook
           (lambda ()
-            (setq-local indent-tabs-mode nil)
             (set (make-local-variable 'sgml-basic-offset) 2)))
 
 (use-package emmet-mode
@@ -633,7 +643,6 @@
          ("\\.php?\\'" . web-mode))
   :config
   (defun my-web-mode-hook ()
-    (setq-local indent-tabs-mode nil)
     (setq web-mode-markup-indent-offset 2
           web-mode-css-indent-offset 4
           web-mode-code-indent-offset 4
@@ -665,7 +674,7 @@
     ("n" yas-new-snippet "new snippet")
     ("r" yas-reload-all "reload")
     ("q" nil "quit"))
-  (global-set-key (kbd "C-c y") 'hydra-yasnippet/body))
+  (general-define-key "C-c y" 'hydra-yasnippet/body))
 
 ;; Org
 
@@ -685,10 +694,7 @@
         '(("CANCELLED" ("CANCELLED" . t))
           ("WAITING" ("WAITING" . t))
           ("TODO" ("WAITING") ("CANCELLED"))
-          ("DONE" ("WAITING") ("CANCELLED"))))
-
-  (global-set-key (kbd "C-c o a") 'org-agenda)
-  (global-set-key (kbd "C-c o c") 'org-capture))
+          ("DONE" ("WAITING") ("CANCELLED")))))
 
 (use-package org-bullets
   :config
@@ -760,8 +766,8 @@
   (add-hook 'tex-mode-hook 'flyspell-mode))
 
 (use-package flyspell-popup
-  :bind (:map flyspell-mode-map
-              ("C-;" . flyspell-popup-correct)))
+  :general (:keymaps 'flyspell-mode-map
+              "C-;" 'flyspell-popup-correct))
 
 (add-hook 'text-mode-hook 'visual-line-mode)
 (add-hook 'org-mode-hook 'visual-line-mode)
@@ -775,8 +781,6 @@
   :ensure auctex)
 
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-
-(evil-leader/set-key-for-mode 'latex-mode "c" 'TeX-command-master)
 
 ;; YAML
 
@@ -803,7 +807,7 @@
 ;; ibuffer
 
 (use-package ibuffer
-  :bind (("C-x C-b" . ibuffer-other-window))
+  :general ("C-x C-b" 'ibuffer-other-window)
   :config
   (add-hook 'ibuffer-mode-hook
             (lambda ()
@@ -839,6 +843,7 @@
 (use-package which-key
   :diminish which-key-mode
   :config
+  (setq which-key-allow-evil-operators t)
   (which-key-setup-side-window-bottom)
   (which-key-mode))
 
@@ -982,10 +987,20 @@ buffer is not visiting a file."
 
 ;; Keybindings
 
-(define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
+(general-define-key
+ :keymaps 'emacs-lisp-mode-map
+ "C-j" 'eval-region)
 
-(global-set-key (kbd "C-c s") 'term)
-(global-set-key (kbd "C-x C-r") 'sudo-edit)
+(leader-define
+  :states '(normal visual)
+  :keymaps 'emacs-lisp-mode-map
+  "e" '(:ignore t :which-key "Emacs Lisp")
+  "eb" 'eval-buffer
+  "er" 'eval-region)
+
+(general-define-key
+ "C-c s" 'term
+ "C-x C-r" 'sudo-edit)
 
 ;; dired
 
@@ -1038,7 +1053,8 @@ buffer is not visiting a file."
   ("o" text-scale-decrease "out")
   ("0" (text-scale-adjust 0) "reset" :exit t)
   ("q" nil "quit"))
-(global-set-key (kbd "C-c z") 'hydra-scale/body)
+(general-define-key "C-c z" 'hydra-scale/body)
+
 
 (load custom-file)
 
