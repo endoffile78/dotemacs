@@ -134,38 +134,38 @@
   (general-create-definer leader-define
     :prefix ",")
   (leader-define
-   :states 'normal
-   ;; buffer managment
-   "b" '(:ignore t :which-key "Buffers")
-   "bb"  'switch-to-buffer
-   "bk"  'kill-this-buffer
+    :states 'normal
+    ;; buffer managment
+    "b" '(:ignore t :which-key "Buffers")
+    "bb"  'switch-to-buffer
+    "bk"  'kill-this-buffer
 
-   ;; projectile
-   "p" '(:ignore t :which-key "Projectile")
-   "pf" 'helm-projectile
-   "pb" 'helm-projectile-switch-to-buffer
-   "po" 'projectile-find-other-file
-   "pk" 'projectile-kill-buffers
-   "pt" 'projectile-run-term
-   "lp" 'list-packages
+    ;; projectile
+    "p" '(:ignore t :which-key "Projectile")
+    "pf" 'helm-projectile
+    "pb" 'helm-projectile-switch-to-buffer
+    "po" 'projectile-find-other-file
+    "pk" 'projectile-kill-buffers
+    "pt" 'projectile-run-term
+    "lp" 'list-packages
 
-   ;; magit
-   "m" '(:ignore t :which-key "Magit")
-   "ms" 'magit-status
-   "md" 'magit-diff
-   "mb" 'magit-blame
-   "ml" 'magit-log-popup
-   "mr" 'magit-branch-popup
-   "mm" 'magit-merge-popup
+    ;; magit
+    "m" '(:ignore t :which-key "Magit")
+    "ms" 'magit-status
+    "md" 'magit-diff
+    "mb" 'magit-blame
+    "ml" 'magit-log-popup
+    "mr" 'magit-branch-popup
+    "mm" 'magit-merge-popup
 
-   ;; org
-   "o" '(:ignore t :which-key "Org")
-   "oa" 'org-agenda
-   "oc" 'org-capture
+    ;; org
+    "o" '(:ignore t :which-key "Org")
+    "oa" 'org-agenda
+    "oc" 'org-capture
 
-   "hg" 'helm-grep-do-git-grep
-   "hr" 'helm-recentf
-   "x"  'helm-M-x)
+    "hg" 'helm-grep-do-git-grep
+    "hr" 'helm-recentf
+    "x"  'helm-M-x)
   (general-define-key
    :states '(normal insert emacs)
    "C-a" 'beginning-of-line
@@ -326,8 +326,8 @@
   :demand t
   :diminish helm-mode
   :general ("M-x"     'helm-M-x)
-           ("C-c w"   'helm-man-woman)
-           ("C-x C-f" 'helm-find-files)
+  ("C-c w"   'helm-man-woman)
+  ("C-x C-f" 'helm-find-files)
   :config
   (setq helm-quick-update t
         helm-bookmark-show-location t
@@ -358,9 +358,9 @@
   :ensure
   :diminish company-mode
   :general (:keymaps 'company-active-map
-              "<tab>" 'company-select-next
-              "TAB" 'company-select-next
-              "<backtab>" 'company-select-previous)
+                     "<tab>" 'company-select-next
+                     "TAB" 'company-select-next
+                     "<backtab>" 'company-select-previous)
   :config
   (setq company-idle-delay 0.1
         company-minimum-prefix-length 2
@@ -497,7 +497,7 @@
 (use-package python
   :config
   :general (:keymaps 'python-mode-map
-            "<f5>" 'python-f5))
+                     "<f5>" 'python-f5))
 
 (use-package elpy
   :ensure
@@ -767,7 +767,7 @@
 
 (use-package flyspell-popup
   :general (:keymaps 'flyspell-mode-map
-              "C-;" 'flyspell-popup-correct))
+                     "C-;" 'flyspell-popup-correct))
 
 (add-hook 'text-mode-hook 'visual-line-mode)
 (add-hook 'org-mode-hook 'visual-line-mode)
@@ -815,19 +815,19 @@
               (ibuffer-switch-to-saved-filter-groups "default")))
   (setq ibuffer-show-empty-filter-groups nil)
   (setq ibuffer-saved-filter-groups
-	(quote (("default"
-		 ("dired" (mode . dired-mode))
-		 ("org" (mode . org-mode))
-         ("IRC" (mode . erc-mode))
-		 ("shell" (or (mode . term-mode)
-                      (mode . shell-mode)
-                      (mode . eshell-mode)))
-		 ("mu4e" (or (mode . mu4e-compose-mode)
-                     (name . "\*mu4e\*")))
-		 ("Emacs" (or (name . "^\\*scratch\\*$")
-                      (name . "^\\*Messages\\*$")
-                      (name . "^\\*Packages\\*$")
-                      (name . "^\\*Help\\*$"))))))))
+        (quote (("default"
+                 ("dired" (mode . dired-mode))
+                 ("org" (mode . org-mode))
+                 ("IRC" (mode . erc-mode))
+                 ("shell" (or (mode . term-mode)
+                              (mode . shell-mode)
+                              (mode . eshell-mode)))
+                 ("mu4e" (or (mode . mu4e-compose-mode)
+                             (name . "\*mu4e\*")))
+                 ("Emacs" (or (name . "^\\*scratch\\*$")
+                              (name . "^\\*Messages\\*$")
+                              (name . "^\\*Packages\\*$")
+                              (name . "^\\*Help\\*$"))))))))
 
 (use-package ibuffer-projectile
   :ensure t
