@@ -241,6 +241,7 @@
   :after evil
   :ensure
   :config
+  (setq evil-collection-company-use-tng nil)
   (evil-collection-init))
 
 (use-package evil-tabs
@@ -280,7 +281,6 @@
   :diminish evil-smartparens-mode
   :config
   (add-hook 'smartparens-mode-hook 'evil-smartparens-mode))
-
 
 ;; Flycheck
 
@@ -374,8 +374,6 @@
   (use-package company-irony-c-headers)
   (use-package company-shell)
   (use-package company-cmake)
-  (use-package company-jedi)
-  (use-package company-racer)
   (use-package company-ghc)
 
   (add-hook 'prog-mode-hook 'company-mode)
@@ -385,7 +383,7 @@
       'company-backends '(company-irony company-irony-c-headers company-yasnippet
                                         company-css company-elisp company-semantic
                                         company-files company-shell company-cmake
-                                        company-jedi company-racer company-ghc))))
+                                        company-ghc))))
 
 (use-package company-quickhelp
   :config
@@ -486,6 +484,12 @@
 (use-package rust-mode
   :mode ("\\.rs\\'" . rust-mode))
 
+;; eglot
+
+(use-package eglot
+  :config
+  (add-hook 'python-mode-hook 'eglot-ensure))
+
 ;; Python
 
 (defun python-f5 ()
@@ -498,11 +502,6 @@
   :config
   :general (:keymaps 'python-mode-map
                      "<f5>" 'python-f5))
-
-(use-package elpy
-  :ensure
-  :config
-  (elpy-enable))
 
 (use-package virtualenvwrapper
   :config
@@ -1026,7 +1025,9 @@ buffer is not visiting a file."
             message-kill-buffer-on-exit t
             mu4e-use-fancy-chars t
             mu4e-sent-messages-behavior 'delete
-            mu4e-mu-binary "/usr/bin/mu"))
+            mu4e-mu-binary "/usr/bin/mu"
+            mu4e-view-show-addresses t
+            message-kill-buffer-on-exit t))
   (use-package mu4e-alert
     :config
     (mu4e-alert-set-default-style 'libnotify)
