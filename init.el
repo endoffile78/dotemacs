@@ -137,8 +137,8 @@
     :states 'normal
     ;; buffer managment
     "b" '(:ignore t :which-key "Buffers")
-    "bb"  'switch-to-buffer
-    "bk"  'kill-this-buffer
+    "bb" 'switch-to-buffer
+    "bk" 'kill-this-buffer
 
     ;; projectile
     "p" '(:ignore t :which-key "Projectile")
@@ -147,7 +147,6 @@
     "po" 'projectile-find-other-file
     "pk" 'projectile-kill-buffers
     "pt" 'projectile-run-term
-    "lp" 'list-packages
 
     ;; magit
     "m" '(:ignore t :which-key "Magit")
@@ -623,15 +622,10 @@
 
 ;; HTML
 
-(add-hook 'html-mode-hook
-          (lambda ()
-            (set (make-local-variable 'sgml-basic-offset) 2)))
-
 (use-package emmet-mode
   :commands emmet-mode
   :diminish emmet-mode
   :init
-  (add-hook 'sgml-mode-hook 'emmet-mode)
   (add-hook 'web-mode-hook 'emmet-mode))
 
 ;; Web-mode
@@ -1006,10 +1000,6 @@ buffer is not visiting a file."
 (setq dired-listing-switches "-alhv"
       dired-recursive-copies 'always)
 
-(use-package dired-icon
-  :config
-  (add-hook 'dired-mode-hook 'dired-icon-mode))
-
 ;; mu4e
 
 (if (eq (system-name) 'gnu/linux)
@@ -1055,7 +1045,6 @@ buffer is not visiting a file."
   ("0" (text-scale-adjust 0) "reset" :exit t)
   ("q" nil "quit"))
 (general-define-key "C-c z" 'hydra-scale/body)
-
 
 (load custom-file)
 
