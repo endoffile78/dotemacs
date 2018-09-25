@@ -265,11 +265,6 @@
   :config
   (evil-commentary-mode))
 
-(use-package evil-mc
-  :diminish evil-mc-mode
-  :config
-  (global-evil-mc-mode 1))
-
 (use-package evil-avy
   :ensure
   :config
