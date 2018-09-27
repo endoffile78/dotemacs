@@ -51,6 +51,7 @@
 (toggle-save-place-globally)
 (show-paren-mode 1)
 (delete-selection-mode)
+(winner-mode)
 
 (if (fboundp 'scroll-bar-mode)
     (scroll-bar-mode -1))
@@ -161,6 +162,21 @@
     "o" '(:ignore t :which-key "Org")
     "oa" 'org-agenda
     "oc" 'org-capture
+
+    ;; files
+    "f" '(:ignore t :which-key "Files")
+    "ff" 'find-file
+    "fi" '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
+    "fp" '(lambda () (interactive) (find-file "~/.emacs.d/private.el"))
+
+    ;; windows
+    "w" '(:ignore t :which-key "Windows")
+    "wu" 'winner-undo
+    "wr" 'winner-redo
+    "wh" 'evil-window-left
+    "wj" 'evil-window-down
+    "wk" 'evil-window-up
+    "wl" 'evil-window-right
 
     "hg" 'helm-grep-do-git-grep
     "hr" 'helm-recentf
