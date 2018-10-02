@@ -169,7 +169,7 @@
     "fi" '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
     "fp" '(lambda () (interactive) (find-file "~/.emacs.d/private.el"))
 
-    ;; windows
+    ;; window management
     "w" '(:ignore t :which-key "Windows")
     "wu" 'winner-undo
     "wr" 'winner-redo
@@ -177,6 +177,8 @@
     "wj" 'evil-window-down
     "wk" 'evil-window-up
     "wl" 'evil-window-right
+    "ws" 'evil-window-split
+    "wv" 'evil-window-vsplit
 
     "hg" 'helm-grep-do-git-grep
     "hr" 'helm-recentf
@@ -1028,7 +1030,8 @@ buffer is not visiting a file."
             mu4e-sent-messages-behavior 'delete
             mu4e-mu-binary "/usr/bin/mu"
             mu4e-view-show-addresses t
-            message-kill-buffer-on-exit t))
+            message-kill-buffer-on-exit t
+            mu4e-get-mail-command "mbsync -a"))
   (use-package mu4e-alert
     :config
     (mu4e-alert-set-default-style 'libnotify)
