@@ -500,6 +500,10 @@
 
 (use-package eglot
   :config
+  (leader-define
+    :state 'normal
+    :keymaps 'eglot-mode-map
+    "er" 'eglot-rename)
   (add-hook 'python-mode-hook 'eglot-ensure))
 
 ;; Python
@@ -1018,11 +1022,9 @@ buffer is not visiting a file."
 (if (eq (system-name) 'gnu/linux)
     (use-package mu4e
       :load-path "/usr/share/emacs/site-lisp/mu4e"
-      :config
+      :init
       (setq mu4e-maildir "~/mail"
-            mu4e-get-mail-command "offlineimap"
             message-send-mail-function 'message-send-mail-with-sendmail
-            sendmail-program "/usr/bin/msmtp"
             mu4e-decryption-policy t
             mu4e-headers-skip-duplicates t
             message-kill-buffer-on-exit t
