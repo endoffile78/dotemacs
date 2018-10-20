@@ -501,7 +501,7 @@
 (use-package eglot
   :config
   (leader-define
-    :state 'normal
+    :states 'normal
     :keymaps 'eglot-mode-map
     "er" 'eglot-rename)
   (add-hook 'python-mode-hook 'eglot-ensure))
