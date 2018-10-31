@@ -137,7 +137,7 @@
   (leader-define
     :states 'normal
     ;; buffer managment
-    "b" '(:ignore t :which-key "Buffers")
+    "b" '(:ignore t :which-key "Buffer Management")
     "bb" 'switch-to-buffer
     "bk" 'kill-this-buffer
 
@@ -170,7 +170,7 @@
     "fp" '(lambda () (interactive) (find-file "~/.emacs.d/private.el"))
 
     ;; window management
-    "w" '(:ignore t :which-key "Windows")
+    "w" '(:ignore t :which-key "Window Management")
     "wu" 'winner-undo
     "wr" 'winner-redo
     "wh" 'evil-window-left
@@ -593,7 +593,7 @@
                      (" " c-context-line-break c-indent-new-comment-line)))
     (sp-local-pair "<" ">"))
   (sp-with-modes
-      '(c++-mode objc-mode c-mode css-mode js2-mode web-mode)
+      '(c++-mode objc-mode c-mode css-mode js2-mode web-mode java-mode)
     (sp-local-pair "{" nil :post-handlers
                    '(:add
                      ("||\n[i]" "RET")
