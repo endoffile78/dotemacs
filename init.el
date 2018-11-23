@@ -426,7 +426,8 @@
 (leader-define
   :states 'normal
   :keymaps '(c-mode-map c++-mode-map)
-  "c" 'compile)
+  "c" 'compile
+  "d" 'gud-gdb)
 
 (general-define-key
  :keymaps '(c-mode-map c++-mode-map)
@@ -446,9 +447,11 @@
 (use-package ggtags
   :ensure
   :diminish ggtags-mode
-  :commands ggtags-mode
   :config
-  (add-hook 'c-mode-common-hook 'ggtags-mode)
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+                (ggtags-mode 1))))
   (leader-define
     :states 'normal
     :keymaps '(c-mode-map c++-mode-map)
