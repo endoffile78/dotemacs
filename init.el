@@ -122,7 +122,6 @@
 ;; Theme
 
 (use-package darkokai-theme
-  :load-path "themes/darkokai"
   :config
   (setq darkokai-mode-line-padding 1)
   (load-theme 'darkokai t))
@@ -602,7 +601,8 @@
                      ("||\n[i]" "RET")
                      ("| " "SPC"))))
   (setq sp-base-key-bindings 'paredit
-        sp-autoskip-closing-pair 'always)
+        sp-autoskip-closing-pair 'always
+        sp-escape-quotes-after-insert nil)
   (sp-use-paredit-bindings)
   (smartparens-global-mode))
 
