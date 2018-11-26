@@ -126,6 +126,14 @@
   (setq darkokai-mode-line-padding 1)
   (load-theme 'darkokai t))
 
+(use-package doom-modeline
+  :config
+  (add-hook 'after-init-hook 'doom-modeline-init))
+
+;; ace-window
+
+(use-package ace-window)
+
 ;; General
 
 (use-package general
@@ -172,12 +180,14 @@
     "w" '(:ignore t :which-key "Window Management")
     "wu" 'winner-undo
     "wr" 'winner-redo
-    "wh" 'evil-window-left
-    "wj" 'evil-window-down
-    "wk" 'evil-window-up
-    "wl" 'evil-window-right
+    "wh" 'windmove-left
+    "wj" 'windmove-down
+    "wk" 'windmove-up
+    "wl" 'windmove-right
+    "wd" 'ace-delete-window
     "ws" 'evil-window-split
     "wv" 'evil-window-vsplit
+    "ww" 'ace-select-window
 
     "hg" 'helm-grep-do-git-grep
     "hr" 'helm-recentf
