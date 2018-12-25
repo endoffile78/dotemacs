@@ -590,9 +590,12 @@
   (add-hook 'prog-mode-hook 'comment-tags-mode))
 
 (defun trailing-whitespace ()
-  (setq show-trailing-whitespace t))
+  (setq-local show-trailing-whitespace t))
 
 (add-hook 'prog-mode-hook 'trailing-whitespace)
+(add-hook 'prog-mode-hook 'hs-minor-mode)
+
+;; smartparens
 
 (use-package smartparens-config
   :ensure smartparens
@@ -1019,7 +1022,9 @@ buffer is not visiting a file."
   :keymaps 'emacs-lisp-mode-map
   "e" '(:ignore t :which-key "Emacs Lisp")
   "eb" 'eval-buffer
-  "er" 'eval-region)
+  "er" 'eval-region
+  "ee" 'eval-expression
+  "ed" 'eval-defun)
 
 (general-define-key
  "C-c s" 'term
