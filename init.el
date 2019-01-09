@@ -289,7 +289,7 @@
 (use-package evil-commentary
   :diminish evil-commentary-mode
   :config
-  (evil-commentary-mode))
+  (add-hook 'prog-mode-hook 'evil-commentary-mode))
 
 (use-package evil-avy
   :ensure
@@ -618,6 +618,8 @@
         sp-escape-quotes-after-insert nil)
   (sp-use-paredit-bindings)
   (smartparens-global-mode))
+
+(use-package iaglign)
 
 ;; Uniquify
 
