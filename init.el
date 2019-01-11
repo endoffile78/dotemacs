@@ -122,11 +122,13 @@
 ;; Theme
 
 (use-package darkokai-theme
+  :ensure
   :config
   (setq darkokai-mode-line-padding 1)
   (load-theme 'darkokai t))
 
 (use-package doom-modeline
+  :ensure
   :config
   (add-hook 'after-init-hook 'doom-modeline-init))
 
@@ -175,6 +177,7 @@
     "ff" 'find-file
     "fi" '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
     "fp" '(lambda () (interactive) (find-file "~/.emacs.d/private.el"))
+    "fl" '(lambda () (interactive) (find-file "~/.emacs.d/local.el"))
 
     ;; window management
     "w" '(:ignore t :which-key "Window Management")
@@ -619,7 +622,7 @@
   (sp-use-paredit-bindings)
   (smartparens-global-mode))
 
-(use-package iaglign)
+(use-package ialign)
 
 ;; Uniquify
 
@@ -806,7 +809,7 @@
 ;; LaTeX
 
 (use-package tex
-  :ensure auctex)
+  :ensure nil)
 
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 
