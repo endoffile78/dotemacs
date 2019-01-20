@@ -253,14 +253,6 @@
   (evil-set-initial-state 'shell-mode 'insert)
   (evil-set-initial-state 'eshell-mode 'insert)
 
-  ;; Vim-like window movement
-  (global-unset-key (kbd "C-w"))
-  (general-define-key
-   "C-w <right>" 'evil-window-right
-   "C-w <left>"  'evil-window-left
-   "C-w <down>"  'evil-window-bottom
-   "C-w <up>"    'evil-window-up)
-
   (evil-ex-define-cmd "W" 'evil-write)
   (evil-ex-define-cmd "Q" 'evil-tab-sensitive-quit)
 
@@ -398,7 +390,6 @@
   (use-package company-irony-c-headers)
   (use-package company-shell)
   (use-package company-cmake)
-  (use-package company-ghc)
 
   (add-hook 'prog-mode-hook 'company-mode)
 
@@ -407,7 +398,7 @@
       'company-backends '(company-irony company-irony-c-headers company-yasnippet
                                         company-css company-elisp company-semantic
                                         company-files company-shell company-cmake
-                                        company-ghc))))
+                                        company-capf))))
 
 (use-package company-quickhelp
   :config
@@ -546,19 +537,10 @@
 
 (use-package pip-requirements)
 
-;; Java
-
-(use-package java-file-create)
-
 ;; Markdown
 
 (use-package markdown-mode
   :mode ("\\.\\(md\\|markdown\\)\\'" . markdown-mode))
-
-;; Vim
-
-(use-package vimrc-mode
-  :mode (".vim\\(rc\\)?$" . vimrc-mode))
 
 ;; Programming Utilities
 
@@ -727,10 +709,6 @@
           ("TODO" ("WAITING") ("CANCELLED"))
           ("DONE" ("WAITING") ("CANCELLED")))))
 
-(use-package org-bullets
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-
 ;; Eldoc
 
 (use-package eldoc
@@ -747,17 +725,6 @@
 
 (use-package abbrev
   :diminish abbrev-mode)
-
-;; elscreen
-
-(use-package elscreen
-  :ensure
-  :demand t)
-
-;; Lua
-
-(use-package lua-mode
-  :mode ("\\.lua$" . lua-mode))
 
 ;; C#
 
@@ -817,16 +784,6 @@
 
 (use-package yaml-mode
   :mode ("\\.yml$" . yaml-mode))
-
-;; Haskell
-
-(use-package haskell-mode
-  :config
-  (add-hook 'haskell-mode-hook (lambda () (ghc-init))))
-
-(use-package flycheck-ghcmod)
-
-(use-package ebal)
 
 ;; editorconfig
 
@@ -917,12 +874,6 @@
 (use-package nginx-mode
   :config
   (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)))
-
-;; clojure
-
-(use-package clojure-mode)
-
-(use-package clojure-mode-extra-font-locking)
 
 ;; IRC
 
@@ -1040,35 +991,7 @@ buffer is not visiting a file."
 (setq dired-listing-switches "-alhv"
       dired-recursive-copies 'always)
 
-;; mu4e
-
-(if (eq (system-name) 'gnu/linux)
-    (use-package mu4e
-      :load-path "/usr/share/emacs/site-lisp/mu4e"
-      :init
-      (setq mu4e-maildir "~/mail"
-            message-send-mail-function 'message-send-mail-with-sendmail
-            mu4e-decryption-policy t
-            mu4e-headers-skip-duplicates t
-            message-kill-buffer-on-exit t
-            mu4e-use-fancy-chars t
-            mu4e-sent-messages-behavior 'delete
-            mu4e-mu-binary "/usr/bin/mu"
-            mu4e-view-show-addresses t
-            message-kill-buffer-on-exit t
-            mu4e-get-mail-command "mbsync -a"))
-  (use-package mu4e-alert
-    :config
-    (mu4e-alert-set-default-style 'libnotify)
-    (add-hook 'after-init-hook 'mu4e-alert-enable-notifications)
-    (add-hook 'after-init-hook 'mu4e-alert-enable-mode-line-display)))
-
 ;; Misc
-
-(if local/laptop ;;only show the battery in the modeline if its a laptop
-    (use-package fancy-battery
-      :init
-      (add-hook 'after-init-hook 'fancy-battery-mode)))
 
 (use-package immortal-scratch
   :ensure
