@@ -22,7 +22,7 @@
 (if (eq (system-name) 'gnu/linux)
     (add-to-list 'exec-path "/usr/local/bin"))
 
-(unless '(packge-installed-p 'use-package) ;; Make sure use-package is installed
+(unless (package-installed-p 'use-package) ;; Make sure use-package is installed
   (package-refresh-contents)
   (package-install 'use-package))
 
@@ -382,12 +382,6 @@
         company-minimum-prefix-length 2
         company-tooltip-limit 20)
 
-  (use-package company-irony
-    :config
-    (setq company-irony-ignore-case t)
-    (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands))
-
-  (use-package company-irony-c-headers)
   (use-package company-shell)
   (use-package company-cmake)
 
@@ -395,10 +389,10 @@
 
   (eval-after-load 'company
     '(add-to-list
-      'company-backends '(company-irony company-irony-c-headers company-yasnippet
-                                        company-css company-elisp company-semantic
-                                        company-files company-shell company-cmake
-                                        company-capf))))
+      'company-backends '(company-yasnippet
+                          company-css company-elisp company-semantic
+                          company-files company-shell company-cmake
+                          company-capf))))
 
 (use-package company-quickhelp
   :config
@@ -465,38 +459,6 @@
     "gs" 'ggtags-find-other-symbol
     "gt" 'ggtags-find-tag-dwim))
 
-;; Irony
-
-(use-package irony
-  :ensure
-  :commands irony-mode
-  :diminish irony-mode
-  :preface
-  ;; replace the `completion-at-point' and `complete-symbol' bindings in
-  ;; irony-mode's buffers by irony-mode's asynchronous function
-  (defun my-irony-mode-hook ()
-    (define-key irony-mode-map [remap completion-at-point]
-      'irony-completion-at-point-async)
-    (define-key irony-mode-map [remap complete-symbol]
-      'irony-completion-at-point-async))
-  (defun my-irony-enable ()
-    (when (memq major-mode irony-supported-major-modes)
-      (irony-mode 1)))
-  :init
-  (add-hook 'c++-mode-hook 'my-irony-enable)
-  (add-hook 'c-mode-hook 'my-irony-enable)
-  (add-hook 'irony-mode-hook #'my-irony-mode-hook)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-
-(use-package irony-eldoc
-  :config
-  (add-hook 'irony-mode-hook 'irony-eldoc))
-
-(use-package flycheck-irony
-  :ensure
-  :config
-  (add-hook 'flycheck-mode-hook 'flycheck-irony-setup))
-
 ;; Rust
 
 (use-package rust-mode
@@ -510,7 +472,9 @@
     :states 'normal
     :keymaps 'eglot-mode-map
     "er" 'eglot-rename)
-  (add-hook 'python-mode-hook 'eglot-ensure))
+  (add-hook 'python-mode-hook 'eglot-ensure)
+  (add-hook 'c-mode-hook 'eglot-ensure)
+  (add-hook 'c++-mode-hook 'eglot-ensure))
 
 ;; Python
 
