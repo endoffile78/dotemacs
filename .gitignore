@@ -10,6 +10,7 @@ semanticdb
 abbrev_defs
 games
 ensime
+.cache
 
 #files
 eshell/history

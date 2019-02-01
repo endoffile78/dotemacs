@@ -98,7 +98,8 @@
       initial-major-mode 'text-mode
       custom-file (concat user-emacs-directory "custom.el")
       ad-redefinition-action 'accept
-      custom-safe-themes t)
+      custom-safe-themes t
+      find-file-visit-truename t)
 
 (setq-default truncate-lines 1
               backward-delete-function nil
@@ -149,6 +150,7 @@
     "b" '(:ignore t :which-key "Buffer Management")
     "bb" 'switch-to-buffer
     "bk" 'kill-this-buffer
+    "bl" 'ibuffer-other-window
 
     ;; projectile
     "p" '(:ignore t :which-key "Projectile")
@@ -389,10 +391,9 @@
 
   (eval-after-load 'company
     '(add-to-list
-      'company-backends '(company-yasnippet
-                          company-css company-elisp company-semantic
-                          company-files company-shell company-cmake
-                          company-capf))))
+      'company-backends '(company-capf company-yasnippet
+                                       company-elisp company-files
+                                       company-shell company-cmake))))
 
 (use-package company-quickhelp
   :config
@@ -471,7 +472,8 @@
   (leader-define
     :states 'normal
     :keymaps 'eglot-mode-map
-    "er" 'eglot-rename)
+    "er" 'eglot-rename
+    "ef" 'eglot-format-buffer)
   (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'c-mode-hook 'eglot-ensure)
   (add-hook 'c++-mode-hook 'eglot-ensure))
@@ -695,6 +697,13 @@
 (use-package csharp-mode
   :mode ("\\.cs$" . csharp-mode))
 
+(use-package omnisharp
+  :general (:keymaps 'omnisharp-mode-map
+                     "." 'omnisharp-add-dot-and-auto-complete)
+  :config
+  (add-hook 'csharp-mode 'omnisharp-mode)
+  (add-to-list 'company-backends 'company-omnisharp))
+
 ;; Font
 
 (set-language-environment "UTF-8")
@@ -752,6 +761,7 @@
 ;; editorconfig
 
 (use-package editorconfig
+  :ensure
   :diminish editorconfig-mode
   :config
   (editorconfig-mode 1))
