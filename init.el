@@ -24,6 +24,7 @@
 
 (unless (package-installed-p 'use-package) ;; Make sure use-package is installed
   (package-refresh-contents)
+  (package-install 'diminish)
   (package-install 'use-package))
 
 (eval-when-compile
