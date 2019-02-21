@@ -11,6 +11,7 @@ abbrev_defs
 games
 ensime
 .cache
+transient
 
 #files
 eshell/history

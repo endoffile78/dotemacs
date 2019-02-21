@@ -164,11 +164,11 @@
     ;; magit
     "m" '(:ignore t :which-key "Magit")
     "ms" 'magit-status
-    "md" 'magit-diff
+    "md" 'magit-diff-dwim
     "mb" 'magit-blame
-    "ml" 'magit-log-popup
-    "mr" 'magit-branch-popup
-    "mm" 'magit-merge-popup
+    "ml" 'magit-log
+    "mr" 'magit-branch
+    "mm" 'magit-merge
 
     ;; org
     "o" '(:ignore t :which-key "Org")
@@ -749,8 +749,7 @@
 
 ;; LaTeX
 
-(use-package tex
-  :ensure nil)
+(use-package tex)
 
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 
