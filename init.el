@@ -157,8 +157,8 @@
 
     ;; projectile
     "p" '(:ignore t :which-key "Projectile")
-    "pf" 'helm-projectile
-    "pb" 'helm-projectile-switch-to-buffer
+    "pf" 'projectile-find-file
+    "pb" 'projectile-switch-to-buffer
     "po" 'projectile-find-other-file
     "pk" 'projectile-kill-buffers
     "pt" 'projectile-run-term
@@ -180,6 +180,7 @@
     ;; files
     "f" '(:ignore t :which-key "Files")
     "ff" 'find-file
+    "fr" 'counsel-recentf
     "fi" '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
     "fp" '(lambda () (interactive) (find-file "~/.emacs.d/private.el"))
     "fl" '(lambda () (interactive) (find-file "~/.emacs.d/local.el"))
@@ -195,11 +196,7 @@
     "wd" 'ace-delete-window
     "ws" 'evil-window-split
     "wv" 'evil-window-vsplit
-    "ww" 'ace-select-window
-
-    "hg" 'helm-grep-do-git-grep
-    "hr" 'helm-recentf
-    "x"  'helm-M-x)
+    "ww" 'ace-select-window)
   (general-define-key
    :states '(normal insert emacs)
    "C-a" 'beginning-of-line
@@ -336,42 +333,24 @@
   (global-git-gutter+-mode))
 
 (use-package magit
-  :ensure)
+  :ensure
+  :config
+  (setq magit-completing-read-function 'ivy-completing-read))
 
 (use-package gitignore-mode)
 
-;; Helm
+(use-package swiper
+  :general ("C-s" 'swiper))
 
-(use-package helm
-  :ensure
-  :demand t
-  :diminish helm-mode
-  :general ("M-x"     'helm-M-x)
-  ("C-c w"   'helm-man-woman)
-  ("C-x C-f" 'helm-find-files)
+(use-package ivy
+  :general ("C-c C-r" 'ivy-resume)
   :config
-  (setq helm-quick-update t
-        helm-bookmark-show-location t
-        helm-M-x-fuzzy-match t
-        helm-buffers-fuzzy-matching t
-        helm-ff-file-name-history-use-recentf t)
-  (helm-mode 1))
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (ivy-mode 1))
 
-(use-package helm-flx
-  :config
-  (helm-flx-mode +1))
-
-(use-package helm-descbinds
-  :general ("C-h b" 'helm-descbinds)
-  :config
-  (setq helm-descbinds-window-style 'split-window)
-  (helm-descbinds-mode))
-
-(use-package helm-projectile
-  :after projectile
-  :ensure
-  :config
-  (helm-projectile-on))
+(use-package counsel
+  :general ("M-x" 'counsel-M-x))
 
 ;; Company
 
@@ -587,6 +566,7 @@
 (use-package projectile
   :ensure
   :config
+  (setq projectile-completion-system 'ivy)
   (projectile-mode))
 
 ;; Visual
