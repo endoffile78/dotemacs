@@ -340,9 +340,11 @@
 (use-package gitignore-mode)
 
 (use-package swiper
+  :ensure
   :general ("C-s" 'swiper))
 
 (use-package ivy
+  :ensure
   :general ("C-c C-r" 'ivy-resume)
   :config
   (setq ivy-use-virtual-buffers t)
@@ -350,6 +352,7 @@
   (ivy-mode 1))
 
 (use-package counsel
+  :ensure
   :general ("M-x" 'counsel-M-x))
 
 ;; Company
