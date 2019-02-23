@@ -132,6 +132,8 @@
 (use-package doom-modeline
   :ensure
   :config
+  (setq doom-modeline-icon t)
+  (setq doom-modeline-major-mode-icon t)
   (add-hook 'after-init-hook 'doom-modeline-init))
 
 ;; ace-window
