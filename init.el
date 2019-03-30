@@ -164,13 +164,14 @@
     "pt" 'projectile-run-term
 
     ;; magit
-    "m" '(:ignore t :which-key "Magit")
-    "ms" 'magit-status
-    "md" 'magit-diff-dwim
-    "mb" 'magit-blame
-    "ml" 'magit-log
-    "mr" 'magit-branch
-    "mm" 'magit-merge
+    "g" '(:ignore t :which-key "Git")
+    "gs" 'magit-status
+    "gd" 'magit-diff-dwim
+    "gb" 'magit-blame
+    "gl" 'magit-log
+    "gr" 'magit-branch
+    "gm" 'magit-merge
+    "gg" 'counsel-git-grep
 
     ;; org
     "o" '(:ignore t :which-key "Org")
@@ -196,7 +197,9 @@
     "wd" 'ace-delete-window
     "ws" 'evil-window-split
     "wv" 'evil-window-vsplit
-    "ww" 'ace-select-window)
+    "ww" 'ace-select-window
+
+    "x" 'counsel-M-x)
   (general-define-key
    :states '(normal insert emacs)
    "C-a" 'beginning-of-line

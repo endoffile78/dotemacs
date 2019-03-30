@@ -12,6 +12,7 @@ games
 ensime
 .cache
 transient
+request
 
 #files
 eshell/history
