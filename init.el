@@ -950,7 +950,7 @@ buffer is not visiting a file."
 
 ;; dired
 
-(setq dired-listing-switches "-alhv"
+(setq dired-listing-switches "-alh"
       dired-recursive-copies 'always)
 
 ;; Misc
