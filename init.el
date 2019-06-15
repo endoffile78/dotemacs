@@ -20,6 +20,7 @@
 (add-to-list 'default-frame-alist '(font . "Monaco-11"))
 
 (if (eq (system-name) 'gnu/linux)
+    (add-to-list 'exec-path "~/bin")
     (add-to-list 'exec-path "/usr/local/bin"))
 
 (unless (package-installed-p 'use-package) ;; Make sure use-package is installed
@@ -464,7 +465,8 @@
     "ef" 'eglot-format-buffer)
   (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'c-mode-hook 'eglot-ensure)
-  (add-hook 'c++-mode-hook 'eglot-ensure))
+  (add-hook 'c++-mode-hook 'eglot-ensure)
+  (add-hook 'kotlin-mode-hook 'eglot-ensure))
 
 ;; Python
 
@@ -628,6 +630,17 @@
 (use-package js2-mode
   :ensure
   :mode ("\\.js$" . js2-mode))
+
+;; typescript
+
+(use-package typescript-mode)
+
+(use-package tide
+  :config
+  (defun my-tide-hook ()
+    (tide-setup)
+    (tide-hl-identifier-mode))
+  (add-hook 'typescript-mode-hook #'my-tide-hook))
 
 ;; Yasnippet
 
@@ -952,6 +965,16 @@ buffer is not visiting a file."
 
 (setq dired-listing-switches "-alh"
       dired-recursive-copies 'always)
+
+;; kotlin
+
+(use-package kotlin-mode)
+
+(use-package gradle-mode)
+
+(use-package flycheck-kotlin
+  :config
+  (flycheck-kotlin-setup))
 
 ;; Misc
 
