@@ -165,14 +165,14 @@
     "pt" 'projectile-run-term
 
     ;; magit
-    "g" '(:ignore t :which-key "Git")
-    "gs" 'magit-status
-    "gd" 'magit-diff-dwim
-    "gb" 'magit-blame
-    "gl" 'magit-log
-    "gr" 'magit-branch
-    "gm" 'magit-merge
-    "gg" 'counsel-git-grep
+    "m" '(:ignore t :which-key "Git")
+    "ms" 'magit-status
+    "md" 'magit-diff-dwim
+    "mb" 'magit-blame
+    "ml" 'magit-log
+    "mr" 'magit-branch
+    "mm" 'magit-merge
+    "mg" 'counsel-git-grep
 
     ;; org
     "o" '(:ignore t :which-key "Org")
