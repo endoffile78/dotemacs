@@ -16,12 +16,9 @@
 
 (package-initialize)
 
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-(add-to-list 'default-frame-alist '(font . "Monaco-11"))
-
 (if (eq (system-name) 'gnu/linux)
     (add-to-list 'exec-path "~/bin")
-    (add-to-list 'exec-path "/usr/local/bin"))
+  (add-to-list 'exec-path "/usr/local/bin"))
 
 (unless (package-installed-p 'use-package) ;; Make sure use-package is installed
   (package-refresh-contents)
@@ -34,9 +31,43 @@
 (require 'diminish)
 (require 'bind-key)
 
-(use-package linum)
+;; general config
 
-;; Global Modes
+(setq ring-bell-function 'ignore
+      browse-url-browser-function 'browse-url-xdg-open
+      inhibit-startup-message t
+      initial-scratch-message nil
+      auto-save-default nil
+      make-backup-files t
+      version-control t
+      backup-directory-alist (quote ((".*" . "~/.emacs.d/backups/")))
+      delete-old-versions t
+      vc-follow-symlinks t
+      initial-major-mode 'text-mode
+      custom-file (concat user-emacs-directory "custom.el")
+      ad-redefinition-action 'accept
+      custom-safe-themes t
+      find-file-visit-truename t
+      uniquify-buffer-name-style 'forward
+      uniquify-separator "/"
+      uniquify-ignore-buffers-re "^\\*"
+      uniquify-after-kill-buffer-p t
+      dired-listing-switches "-alh"
+      dired-recursive-copies 'always
+      tramp-default-method "ssh")
+
+(setq-default truncate-lines 1
+              backward-delete-function nil
+              indent-tabs-mode nil
+              tab-width 4
+              require-final-newline t)
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'doc-view-mode-hook 'auto-revert-mode)
+
+(add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
+
+(fset 'yes-or-no-p 'y-or-n-p)
 
 (define-global-minor-mode my-global-linum-mode linum-mode
   (lambda ()
@@ -64,65 +95,15 @@
 (menu-bar-mode -1)
 (tooltip-mode -1)
 
-;; Variables
+(use-package immortal-scratch
+  :ensure
+  :config
+  (immortal-scratch-mode))
 
-(defvar private-file (concat user-emacs-directory "private.el")
-  "Private file that is not tracked.")
-(defvar local-file (concat user-emacs-directory "local.el")
-  "Local file specific to each computer.")
-(defvar normal-state-color '("#35393B" . "#FFFFFF")
-  "Default color for the modeline when in normal mode")
-(defvar visual-state-color '("#AB7EFF" . "#000000")
-  "Default color for the modeline when in visual mode")
-(defvar insert-state-color '("#555555" . "#FFFFFF")
-  "Default color for the modeline when in insert mode")
-(defvar emacs-state-color '("#FF6159" . "#FFFFFF")
-  "Default color for the modeline when in emacs mode")
+;; appearance
 
-(if (file-exists-p private-file)
-    (load private-file))
-
-(if (file-exists-p local-file)
-    (load local-file))
-
-;; Settings
-
-(setq ring-bell-function 'ignore
-      browse-url-browser-function 'browse-url-xdg-open
-      inhibit-startup-message t
-      initial-scratch-message nil
-      auto-save-default nil
-      make-backup-files t
-      version-control t
-      backup-directory-alist (quote ((".*" . "~/.emacs.d/backups/")))
-      delete-old-versions t
-      vc-follow-symlinks t
-      initial-major-mode 'text-mode
-      custom-file (concat user-emacs-directory "custom.el")
-      ad-redefinition-action 'accept
-      custom-safe-themes t
-      find-file-visit-truename t)
-
-(setq-default truncate-lines 1
-              backward-delete-function nil
-              indent-tabs-mode nil
-              tab-width 4
-              require-final-newline t)
-
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-(add-hook 'doc-view-mode-hook 'auto-revert-mode)
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-
-(add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
-
-(fset 'yes-or-no-p 'y-or-n-p)
-
-;; Hydra
-
-(use-package hydra
-  :ensure)
-
-;; Theme
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(font . "Monaco-11"))
 
 (use-package darkokai-theme
   :ensure
@@ -137,76 +118,26 @@
   (setq doom-modeline-major-mode-icon t)
   (add-hook 'after-init-hook 'doom-modeline-init))
 
-;; ace-window
-
-(use-package ace-window)
-
-;; General
-
-(use-package general
-  :ensure
+(use-package nyan-mode
   :config
-  (general-create-definer leader-define
-    :prefix ",")
-  (leader-define
-    :states 'normal
-    ;; buffer managment
-    "b" '(:ignore t :which-key "Buffer Management")
-    "bb" 'switch-to-buffer
-    "bk" 'kill-this-buffer
-    "bl" 'ibuffer-other-window
+  (nyan-mode 1))
 
-    ;; projectile
-    "p" '(:ignore t :which-key "Projectile")
-    "pf" 'projectile-find-file
-    "pb" 'projectile-switch-to-buffer
-    "po" 'projectile-find-other-file
-    "pk" 'projectile-kill-buffers
-    "pt" 'projectile-run-term
+(use-package rainbow-delimiters
+  :ensure
+  :commands rainbow-delimiters-mode
+  :init
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
-    ;; magit
-    "m" '(:ignore t :which-key "Git")
-    "ms" 'magit-status
-    "md" 'magit-diff-dwim
-    "mb" 'magit-blame
-    "ml" 'magit-log
-    "mr" 'magit-branch
-    "mm" 'magit-merge
-    "mg" 'counsel-git-grep
+;; evil
 
-    ;; org
-    "o" '(:ignore t :which-key "Org")
-    "oa" 'org-agenda
-    "oc" 'org-capture
-
-    ;; files
-    "f" '(:ignore t :which-key "Files")
-    "ff" 'find-file
-    "fr" 'counsel-recentf
-    "fi" '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
-    "fp" '(lambda () (interactive) (find-file "~/.emacs.d/private.el"))
-    "fl" '(lambda () (interactive) (find-file "~/.emacs.d/local.el"))
-
-    ;; window management
-    "w" '(:ignore t :which-key "Window Management")
-    "wu" 'winner-undo
-    "wr" 'winner-redo
-    "wh" 'windmove-left
-    "wj" 'windmove-down
-    "wk" 'windmove-up
-    "wl" 'windmove-right
-    "wd" 'ace-delete-window
-    "ws" 'evil-window-split
-    "wv" 'evil-window-vsplit
-    "ww" 'ace-select-window
-
-    "x" 'counsel-M-x)
-  (general-define-key
-   :states '(normal insert emacs)
-   "C-a" 'beginning-of-line
-   "C-e" 'end-of-line))
-
-;; Evil
+(defvar normal-state-color '("#35393B" . "#FFFFFF")
+  "Default color for the modeline when in normal mode")
+(defvar visual-state-color '("#AB7EFF" . "#000000")
+  "Default color for the modeline when in visual mode")
+(defvar insert-state-color '("#555555" . "#FFFFFF")
+  "Default color for the modeline when in insert mode")
+(defvar emacs-state-color '("#FF6159" . "#FFFFFF")
+  "Default color for the modeline when in emacs mode")
 
 (defgroup dotemacs-evil nil
   "Configuration options for evil-mode."
@@ -251,9 +182,7 @@
         evil-operator-state-cursor '("red" hollow))
 
   (evil-set-initial-state 'snake-mode 'emacs)
-  (evil-set-initial-state 'cider-repl-mode 'emacs)
   (evil-set-initial-state 'stacktrace-mode 'emacs)
-  (evil-set-initial-state 'erc-mode 'emacs)
 
   (evil-set-initial-state 'term-mode 'insert)
   (evil-set-initial-state 'shell-mode 'insert)
@@ -304,44 +233,122 @@
   :config
   (add-hook 'smartparens-mode-hook 'evil-smartparens-mode))
 
-;; Flycheck
+;; keybindings
 
-(use-package flycheck
+(defun sudo-edit (&optional arg)
+  "Edit currently visited file as root.
+
+With a prefix ARG prompt for a file to visit.
+Will also prompt for a file to visit if current
+buffer is not visiting a file."
+  (interactive "P")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:"
+                         (ido-read-file-name "Find file (as root): ")))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+(use-package general
   :ensure
   :config
-  (add-hook 'prog-mode-hook 'flycheck-mode)
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-  (defhydra hydra-flycheck ()
-    "Flycheck"
-    ("l" flycheck-list-errors "list errors" :exit t)
-    ("c" flycheck-buffer "check buffer" :exit t)
-    ("n" flycheck-next-error "next error")
-    ("p" flycheck-previous-error "prev error")
-    ("q" nil "quit"))
-  (general-define-key "C-c f" 'hydra-flycheck/body))
+  (general-override-mode 1)
+  ;; leader keybindings
+  (general-create-definer leader-define
+    :states '(normal visual insert emacs)
+    :prefix ","
+    :non-normal-prefix "C-,")
+  (leader-define
+    :states 'normal
+    "" nil
 
-(use-package flycheck-pos-tip
-  :after flycheck
+    "c" (general-simulate-key "C-c")
+    "x" (general-simulate-key "C-x")
+    "h" (general-simulate-key "C-h")
+    "u" (general-simulate-key "C-u")
+
+    ;; buffer managment
+    "b" '(:ignore t :which-key "Buffer Management")
+    "bb" 'switch-to-buffer
+    "bk" 'kill-this-buffer
+    "bl" 'ibuffer-other-window
+
+    ;; org
+    "o" '(:ignore t :which-key "Org")
+    "oa" 'org-agenda
+    "oc" 'org-capture
+
+    ;; files
+    "f" '(:ignore t :which-key "Files")
+    "ff" 'find-file
+    "fr" 'counsel-recentf
+    "fi" '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
+    "fp" '(lambda () (interactive) (find-file "~/.emacs.d/private.el"))
+    "fl" '(lambda () (interactive) (find-file "~/.emacs.d/local.el"))
+
+    ;; window management
+    "w" '(:ignore t :which-key "Window Management")
+    "wu" 'winner-undo
+    "wr" 'winner-redo
+    "wh" 'windmove-left
+    "wj" 'windmove-down
+    "wk" 'windmove-up
+    "wl" 'windmove-right
+    "ws" 'evil-window-split
+    "wv" 'evil-window-vsplit)
+
+  (general-define-key
+   :states '(normal insert emacs)
+   "C-a" 'beginning-of-line
+   "C-e" 'end-of-line)
+
+  (general-define-key "C-x C-r" 'sudo-edit))
+
+(use-package which-key
+  :diminish which-key-mode
   :config
-  (setq flycheck-pos-tip-timeout 30)
-  (flycheck-pos-tip-mode))
+  (setq which-key-allow-evil-operators t)
+  (which-key-setup-side-window-bottom)
+  (which-key-mode))
 
-;; Git
+;; navigation
 
-(use-package git-gutter-fringe+
-  :diminish git-gutter+-mode
+(use-package ibuffer
+  :general ("C-x C-b" 'ibuffer-other-window)
   :config
-  (set-face-foreground 'git-gutter-fr+-modified "yellow")
-  (set-face-foreground 'git-gutter-fr+-added    "green")
-  (set-face-foreground 'git-gutter-fr+-deleted  "red")
-  (global-git-gutter+-mode))
+  (add-hook 'ibuffer-mode-hook
+            (lambda ()
+              (ibuffer-auto-mode 1)
+              (ibuffer-switch-to-saved-filter-groups "default")))
+  (setq ibuffer-show-empty-filter-groups nil)
+  (setq ibuffer-saved-filter-groups
+        (quote (("default"
+                 ("dired" (mode . dired-mode))
+                 ("org" (mode . org-mode))
+                 ("IRC" (mode . erc-mode))
+                 ("shell" (or (mode . term-mode)
+                              (mode . shell-mode)
+                              (mode . eshell-mode)))
+                 ("mu4e" (or (mode . mu4e-compose-mode)
+                             (name . "\*mu4e\*")))
+                 ("Emacs" (or (name . "^\\*scratch\\*$")
+                              (name . "^\\*Messages\\*$")
+                              (name . "^\\*Packages\\*$")
+                              (name . "^\\*Help\\*$"))))))))
 
-(use-package magit
-  :ensure
+(use-package ibuffer-projectile
+  :ensure t
+  :after projectile
   :config
-  (setq magit-completing-read-function 'ivy-completing-read))
+  (add-hook 'ibuffer-hook
+            (lambda ()
+              (ibuffer-projectile-set-filter-groups)
+              (unless (eq ibuffer-sorting-mode 'alphabetic)
+                (ibuffer-do-sort-by-alphabetic)))))
 
-(use-package gitignore-mode)
+(use-package ace-window
+  :general (leader-define "wd" 'ace-delete-window
+             "ww" 'ace-select-window))
+
+;; ivy
 
 (use-package swiper
   :ensure
@@ -359,7 +366,179 @@
   :ensure
   :general ("M-x" 'counsel-M-x))
 
-;; Company
+;; C/C++
+
+(defvaralias 'c-basic-offset 'tab-width)
+(defvaralias 'cperl-indent-level 'tab-width)
+
+(c-add-style "my-c-style" '((c-continued-statement-offset 4)
+                            (c-tab-always-indent t)
+                            (c-toggle-hungry-state t)
+                            (c-offsets-alist
+                             (inline-open . +)
+                             (block-open . +)
+                             (brace-list-open . +)
+                             (case-label . +)
+                             (access-label . /))))
+
+(setq c-default-style
+      (quote
+       ((c-mode . "my-c-style")
+        (c++-mode . "my-c-style")
+        (java-mode . "java")
+        (awk-mode . "awk"))))
+
+(defun my-makefile-hook ()
+  "Hook for `makefile-mode'."
+  (setq-local indent-tabs-mode t))
+
+(add-hook 'makefile-mode-hook 'my-makefile-hook)
+
+(use-package cmake-mode
+  :ensure
+  :mode (("CMakeLists\\.txt\\'" . cmake-mode)
+         ("\\.cmake\\'" . cmake-mode)))
+
+(leader-define
+  :keymaps '(c-mode-map c++-mode-map)
+  "m"  '(:ignore t :which-key "C/C++")
+  "mc" 'compile
+  "md" 'gud-gdb)
+
+(general-define-key
+ :keymaps '(c-mode-map c++-mode-map)
+ "C-c c" 'compile
+ "C-c d" 'gud-gdb)
+
+;; python
+
+(defun python-f5 ()
+  "Sends the buffer to a python shell."
+  (interactive)
+  (python-shell-send-buffer)
+  (python-shell-switch-to-shell))
+
+(use-package python
+  :config
+  :general
+  (leader-define "ma" 'venv-workon
+    "md" 'venv-deactivate)
+  (:keymaps 'python-mode-map
+            "<f5>" 'python-f5))
+
+(use-package virtualenvwrapper
+  :config
+  (venv-initialize-interactive-shells)
+  (venv-initialize-eshell))
+
+(use-package pip-requirements)
+
+;; shell
+
+(use-package powershell)
+
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+(setq-default shell-file-name "/bin/zsh")
+
+(general-define-key "C-c s" 'term)
+
+;; web
+
+(use-package rainbow-mode
+  :ensure
+  :diminish rainbow-mode
+  :commands rainbow-mode
+  :init
+  (add-hook 'web-mode-hook 'rainbow-mode)
+  (add-hook 'css-mode-hook 'rainbow-mode))
+
+(use-package emmet-mode
+  :commands emmet-mode
+  :diminish emmet-mode
+  :init
+  (add-hook 'web-mode-hook 'emmet-mode))
+
+(use-package web-mode
+  :ensure
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.php?\\'" . web-mode))
+  :config
+  (defun my-web-mode-hook ()
+    (setq web-mode-markup-indent-offset 2
+          web-mode-css-indent-offset 4
+          web-mode-code-indent-offset 4
+          web-mode-enable-auto-pairing nil
+          web-mode-enable-auto-closing t
+          web-mode-enable-auto-quoting t
+          web-mode-style-padding 2
+          web-mode-script-padding 2
+          web-mode-enable-current-element-highlight t
+          web-mode-enable-block-face t))
+  (add-hook 'web-mode-hook 'my-web-mode-hook))
+
+(use-package js2-mode
+  :ensure
+  :mode ("\\.js$" . js2-mode))
+
+(use-package typescript-mode)
+
+(use-package tide
+  :config
+  (defun my-tide-hook ()
+    (tide-setup)
+    (tide-hl-identifier-mode))
+  (add-hook 'typescript-mode-hook #'my-tide-hook))
+
+;; kotlin
+
+(use-package kotlin-mode)
+
+(use-package gradle-mode)
+
+(use-package flycheck-kotlin
+  :config
+  (flycheck-kotlin-setup))
+
+;; emacs lisp
+
+(leader-define
+  :keymaps 'emacs-lisp-mode-map
+  "m" '(:ignore t :which-key "Emacs Lisp")
+  "mb" 'eval-buffer
+  "mr" 'eval-region
+  "me" 'eval-expression
+  "md" 'eval-defun)
+
+(general-define-key
+ :keymaps 'emacs-lisp-mode-map
+ "C-j" 'eval-region)
+
+;; magit
+
+(use-package git-gutter-fringe+
+  :diminish git-gutter+-mode
+  :config
+  (set-face-foreground 'git-gutter-fr+-modified "yellow")
+  (set-face-foreground 'git-gutter-fr+-added    "green")
+  (set-face-foreground 'git-gutter-fr+-deleted  "red")
+  (global-git-gutter+-mode))
+
+(use-package magit
+  :general (leader-define "g" '(:ignore t :which-key "Git")
+             "gs" 'magit-status
+             "gd" 'magit-diff-dwim
+             "gb" 'magit-blame
+             "gl" 'magit-log
+             "gr" 'magit-branch
+             "gm" 'magit-merge)
+  :ensure
+  :config
+  (setq magit-completing-read-function 'ivy-completing-read))
+
+(use-package gitignore-mode)
+
+;; company
 
 (use-package company
   :ensure
@@ -388,117 +567,94 @@
   :config
   (company-quickhelp-mode 1))
 
-;; C
-
-(defvaralias 'c-basic-offset 'tab-width)
-(defvaralias 'cperl-indent-level 'tab-width)
-
-(c-add-style "my-c-style" '((c-continued-statement-offset 4)
-                            (c-tab-always-indent t)
-                            (c-toggle-hungry-state t)
-                            (c-offsets-alist
-                             (inline-open . +)
-                             (block-open . +)
-                             (brace-list-open . +)
-                             (case-label . +)
-                             (access-label . /))))
-
-(setq c-default-style
-      (quote
-       ((c-mode . "my-c-style")
-        (c++-mode . "my-c-style")
-        (java-mode . "java")
-        (awk-mode . "awk"))))
-
-(leader-define
-  :states 'normal
-  :keymaps '(c-mode-map c++-mode-map)
-  "c" 'compile
-  "d" 'gud-gdb)
-
-(general-define-key
- :keymaps '(c-mode-map c++-mode-map)
- "C-c c" 'compile
- "C-c d" 'gud-gdb)
-
-;; Makefile
-
-(defun my-makefile-hook ()
-  "Hook for `makefile-mode'."
-  (setq-local indent-tabs-mode t))
-
-(add-hook 'makefile-mode-hook 'my-makefile-hook)
-
-;; ggtags
-
-(use-package ggtags
-  :ensure
-  :diminish ggtags-mode
-  :config
-  (add-hook 'c-mode-common-hook
-            (lambda ()
-              (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-                (ggtags-mode 1))))
-  (leader-define
-    :states 'normal
-    :keymaps '(c-mode-map c++-mode-map)
-    "g" '(:ignore t :which-key "ggtags")
-    "gc" 'ggtags-create-tags
-    "gu" 'ggtags-update-tags
-    "gf" 'ggtags-find-file
-    "gs" 'ggtags-find-other-symbol
-    "gt" 'ggtags-find-tag-dwim))
-
-;; Rust
-
-(use-package rust-mode
-  :mode ("\\.rs\\'" . rust-mode))
-
 ;; eglot
 
 (use-package eglot
+  :general (leader-define "er" 'eglot-rename
+             "ef" 'eglot-format)
+  :ensure
   :config
-  (leader-define
-    :states 'normal
-    :keymaps 'eglot-mode-map
-    "er" 'eglot-rename
-    "ef" 'eglot-format-buffer)
   (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'c-mode-hook 'eglot-ensure)
-  (add-hook 'c++-mode-hook 'eglot-ensure)
-  (add-hook 'kotlin-mode-hook 'eglot-ensure))
+  (add-hook 'c++-mode-hook 'eglot-ensure))
 
-;; Python
+;; flycheck
 
-(defun python-f5 ()
-  "Sends the buffer to a python shell."
-  (interactive)
-  (python-shell-send-buffer)
-  (python-shell-switch-to-shell))
-
-(use-package python
+(use-package flycheck
+  :ensure
   :config
-  :general (:keymaps 'python-mode-map
-                     "<f5>" 'python-f5))
+  (add-hook 'prog-mode-hook 'flycheck-mode)
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
-(use-package virtualenvwrapper
+(use-package flycheck-pos-tip
+  :after flycheck
   :config
-  (leader-define
-    :states 'normal
-    :keymaps 'python-mode-map
-    "va" 'venv-workon
-    "vd" 'venv-deactivate)
-  (venv-initialize-interactive-shells)
-  (venv-initialize-eshell))
+  (setq flycheck-pos-tip-timeout 30)
+  (flycheck-pos-tip-mode))
 
-(use-package pip-requirements)
+;; projectile
 
-;; Markdown
+(use-package projectile
+  :general (leader-define "p" '(:ignore t :which-key "Projectile")
+             "pf" 'projectile-find-file
+             "pb" 'projectile-switch-to-buffer
+             "po" 'projectile-find-other-file
+             "pk" 'projectile-kill-buffers
+             "pt" 'projectile-run-term)
+  :ensure
+  :config
+  (setq projectile-completion-system 'ivy)
+  (projectile-mode))
 
-(use-package markdown-mode
-  :mode ("\\.\\(md\\|markdown\\)\\'" . markdown-mode))
+;; snippets
 
-;; Programming Utilities
+(use-package yasnippet
+  :ensure
+  :diminish yas-minor-mode
+  :config
+  (yas-global-mode 1))
+
+;; programming
+
+(use-package smartparens-config
+  :ensure smartparens
+  :config
+  (sp-with-modes
+      '(c++-mode objc-mode c-mode)
+    (sp-local-pair "/*" "*/" :post-handlers
+                   '(:add
+                     ("* [i]|\n[i]" newline evil-ret)
+                     (" " c-context-line-break c-indent-new-comment-line)))
+    (sp-local-pair "<" ">"))
+  (sp-with-modes
+      '(c++-mode objc-mode c-mode css-mode js2-mode web-mode java-mode)
+    (sp-local-pair "{" nil :post-handlers
+                   '(:add
+                     ("||\n[i]" "RET")
+                     ("| " "SPC"))))
+  (setq sp-base-key-bindings 'paredit
+        sp-autoskip-closing-pair 'always
+        sp-escape-quotes-after-insert nil)
+  (sp-use-paredit-bindings)
+  (smartparens-global-mode))
+
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :config
+  (setq undo-tree-visualizer-timestamps t))
+
+(use-package abbrev
+  :diminish abbrev-mode)
+
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+
+(use-package editorconfig
+  :ensure
+  :diminish editorconfig-mode
+  :config
+  (editorconfig-mode 1))
 
 (use-package autoinsert
   :config
@@ -530,134 +686,20 @@
         comment-tags-lighter nil)
   (add-hook 'prog-mode-hook 'comment-tags-mode))
 
+(use-package eldoc
+  :diminish eldoc-mode
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
+  (add-hook 'c-mode-hook 'eldoc-mode)
+  (add-hook 'c++-mode-hook 'eldoc-mode))
+
 (defun trailing-whitespace ()
   (setq-local show-trailing-whitespace t))
 
 (add-hook 'prog-mode-hook 'trailing-whitespace)
 (add-hook 'prog-mode-hook 'hs-minor-mode)
 
-;; smartparens
-
-(use-package smartparens-config
-  :ensure smartparens
-  :config
-  (sp-with-modes
-      '(c++-mode objc-mode c-mode)
-    (sp-local-pair "/*" "*/" :post-handlers
-                   '(:add
-                     ("* [i]|\n[i]" newline evil-ret)
-                     (" " c-context-line-break c-indent-new-comment-line)))
-    (sp-local-pair "<" ">"))
-  (sp-with-modes
-      '(c++-mode objc-mode c-mode css-mode js2-mode web-mode java-mode)
-    (sp-local-pair "{" nil :post-handlers
-                   '(:add
-                     ("||\n[i]" "RET")
-                     ("| " "SPC"))))
-  (setq sp-base-key-bindings 'paredit
-        sp-autoskip-closing-pair 'always
-        sp-escape-quotes-after-insert nil)
-  (sp-use-paredit-bindings)
-  (smartparens-global-mode))
-
-(use-package ialign)
-
-;; Uniquify
-
-(setq uniquify-buffer-name-style 'forward
-      uniquify-separator "/"
-      uniquify-ignore-buffers-re "^\\*"
-      uniquify-after-kill-buffer-p t)
-
-;; Projectile
-
-(use-package projectile
-  :ensure
-  :config
-  (setq projectile-completion-system 'ivy)
-  (projectile-mode))
-
-;; Visual
-
-(use-package nyan-mode
-  :config
-  (nyan-mode 1))
-
-(use-package rainbow-delimiters
-  :ensure
-  :commands rainbow-delimiters-mode
-  :init
-  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
-
-(use-package rainbow-mode
-  :ensure
-  :diminish rainbow-mode
-  :commands rainbow-mode
-  :init
-  (add-hook 'web-mode-hook 'rainbow-mode)
-  (add-hook 'css-mode-hook 'rainbow-mode))
-
-;; HTML
-
-(use-package emmet-mode
-  :commands emmet-mode
-  :diminish emmet-mode
-  :init
-  (add-hook 'web-mode-hook 'emmet-mode))
-
-;; Web-mode
-
-(use-package web-mode
-  :ensure
-  :mode (("\\.html?\\'" . web-mode)
-         ("\\.php?\\'" . web-mode))
-  :config
-  (defun my-web-mode-hook ()
-    (setq web-mode-markup-indent-offset 2
-          web-mode-css-indent-offset 4
-          web-mode-code-indent-offset 4
-          web-mode-enable-auto-pairing nil
-          web-mode-enable-auto-closing t
-          web-mode-enable-auto-quoting t
-          web-mode-style-padding 2
-          web-mode-script-padding 2
-          web-mode-enable-current-element-highlight t
-          web-mode-enable-block-face t))
-  (add-hook 'web-mode-hook 'my-web-mode-hook))
-
-;; Javascript
-
-(use-package js2-mode
-  :ensure
-  :mode ("\\.js$" . js2-mode))
-
-;; typescript
-
-(use-package typescript-mode)
-
-(use-package tide
-  :config
-  (defun my-tide-hook ()
-    (tide-setup)
-    (tide-hl-identifier-mode))
-  (add-hook 'typescript-mode-hook #'my-tide-hook))
-
-;; Yasnippet
-
-(use-package yasnippet
-  :ensure
-  :diminish yas-minor-mode
-  :config
-  (yas-global-mode 1)
-  (defhydra hydra-yasnippet (:exit t)
-    "Yasnippet"
-    ("i" yas-insert-snippet "insert snippet")
-    ("n" yas-new-snippet "new snippet")
-    ("r" yas-reload-all "reload")
-    ("q" nil "quit"))
-  (general-define-key "C-c y" 'hydra-yasnippet/body))
-
-;; Org
+;; org
 
 (use-package org
   :config
@@ -677,58 +719,7 @@
           ("TODO" ("WAITING") ("CANCELLED"))
           ("DONE" ("WAITING") ("CANCELLED")))))
 
-;; Eldoc
-
-(use-package eldoc
-  :diminish eldoc-mode
-  :config
-  (add-hook 'emacs-lisp-mode-hook 'eldoc-mode))
-
-;; undo-tree
-
-(use-package undo-tree
-  :diminish undo-tree-mode)
-
-;; Abbrev
-
-(use-package abbrev
-  :diminish abbrev-mode)
-
-;; C#
-
-(use-package csharp-mode
-  :mode ("\\.cs$" . csharp-mode))
-
-(use-package omnisharp
-  :general (:keymaps 'omnisharp-mode-map
-                     "." 'omnisharp-add-dot-and-auto-complete)
-  :config
-  (add-hook 'csharp-mode 'omnisharp-mode)
-  (add-to-list 'company-backends 'company-omnisharp))
-
-;; Font
-
-(set-language-environment "UTF-8")
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-
-;; PKGBUILD
-
-(use-package pkgbuild-mode
-  :mode ("/PKGBUILD$" . pkgbuild-mode))
-
-;; CMake
-
-(use-package cmake-mode
-  :ensure
-  :mode (("CMakeLists\\.txt\\'" . cmake-mode)
-         ("\\.cmake\\'" . cmake-mode)))
-
-;; Bazel
-
-(use-package bazel-mode)
-
-;; flyspell
+;; writing
 
 (use-package flyspell
   :config
@@ -745,253 +736,43 @@
 (add-hook 'text-mode-hook 'visual-line-mode)
 (add-hook 'org-mode-hook 'visual-line-mode)
 (add-hook 'latex-mode-hook 'visual-line-mode)
-(add-hook 'tex-mode-hook 'visual-line-mode)
+(add-hook 'text-mode-hook 'visual-line-mode)
 (add-hook 'markdown-mode-hook 'visual-line-mode)
-
-;; LaTeX
 
 (use-package tex)
 
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 
-;; YAML
+(use-package markdown-mode
+  :mode ("\\.\\(md\\|markdown\\)\\'" . markdown-mode))
+
+;; config files
 
 (use-package yaml-mode
   :mode ("\\.yml$" . yaml-mode))
-
-;; editorconfig
-
-(use-package editorconfig
-  :ensure
-  :diminish editorconfig-mode
-  :config
-  (editorconfig-mode 1))
-
-;; ibuffer
-
-(use-package ibuffer
-  :general ("C-x C-b" 'ibuffer-other-window)
-  :config
-  (add-hook 'ibuffer-mode-hook
-            (lambda ()
-              (ibuffer-auto-mode 1)
-              (ibuffer-switch-to-saved-filter-groups "default")))
-  (setq ibuffer-show-empty-filter-groups nil)
-  (setq ibuffer-saved-filter-groups
-        (quote (("default"
-                 ("dired" (mode . dired-mode))
-                 ("org" (mode . org-mode))
-                 ("IRC" (mode . erc-mode))
-                 ("shell" (or (mode . term-mode)
-                              (mode . shell-mode)
-                              (mode . eshell-mode)))
-                 ("mu4e" (or (mode . mu4e-compose-mode)
-                             (name . "\*mu4e\*")))
-                 ("Emacs" (or (name . "^\\*scratch\\*$")
-                              (name . "^\\*Messages\\*$")
-                              (name . "^\\*Packages\\*$")
-                              (name . "^\\*Help\\*$"))))))))
-
-(use-package ibuffer-projectile
-  :ensure t
-  :config
-  (add-hook 'ibuffer-hook
-            (lambda ()
-              (ibuffer-projectile-set-filter-groups)
-              (unless (eq ibuffer-sorting-mode 'alphabetic)
-                (ibuffer-do-sort-by-alphabetic)))))
-
-;; which key
-
-(use-package which-key
-  :diminish which-key-mode
-  :config
-  (setq which-key-allow-evil-operators t)
-  (which-key-setup-side-window-bottom)
-  (which-key-mode))
-
-;; Emacs Lisp
-
-(defun my-emacs-lisp-mode-hook ()
-  "Hook for `emacs-lisp-mode'."
-  (interactive)
-  (setq-local indent-tabs-mode nil))
-
-(add-hook 'emacs-lisp-mode-hook #'my-emacs-lisp-mode-hook)
-
-(defvar sanityinc/theme-mode-hook nil
-  "Hook triggered when editing a theme file.")
-
-(defun sanityinc/run-theme-mode-hooks-if-theme ()
-  "Run `sanityinc/theme-mode-hook' if this appears to a theme."
-  (when (string-match "\\(color-theme-\\|-theme\\.el\\)" (buffer-name))
-    (run-hooks 'sanityinc/theme-mode-hook)))
-
-(add-hook 'emacs-lisp-mode-hook #'sanityinc/run-theme-mode-hooks-if-theme)
-
-(add-hook 'sanityinc/theme-mode-hook #'rainbow-mode)
-
-;; tramp
-
-(setq tramp-default-method "ssh")
-
-;; Go
-
-(use-package go-mode)
-
-;; arduino
-
-(use-package arduino-mode
-  :mode ("\.ino$" . arduino-mode))
-
-;; nginx
 
 (use-package nginx-mode
   :config
   (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)))
 
-;; IRC
-
-(use-package erc
-  :config
-  (use-package erc-log
-    :config
-    (setq erc-log-channels-directory "~/.erc/logs/")
-    (add-to-list 'erc-modules 'log))
-
-  (use-package erc-autoaway
-    :config
-    (setq erc-auto-discard-away t
-          erc-autoaway-idle-seconds 600
-          erc-autoaway-use-emacs-idle t))
-
-  (use-package erc-spelling
-    :config
-    (erc-spelling-mode 1))
-
-  (use-package erc-hl-nicks
-    :ensure)
-
-  (use-package erc-image
-    :ensure
-    :config
-    (add-to-list 'erc-modules 'image))
-
-  (use-package erc-fill
-    :config
-    (setq erc-fill-static-center 20
-          erc-fill-column 170
-          erc-fill-function 'erc-fill-static)
-    (erc-fill-mode +1))
-
-  (erc-track-mode t)
-  (erc-truncate-mode +1)
-
-  (add-hook 'erc-connect-pre-hook (lambda (x) (erc-update-modules)))
-
-  (setq erc-format-query-as-channel-p t
-        erc-track-priority-faces-only 'all
-        erc-track-faces-priority-list '(erc-error-face
-                                        erc-current-nick-face
-                                        erc-keyword-face
-                                        erc-nick-msg-face
-                                        erc-direct-msg-face
-                                        erc-dangerous-host-face
-                                        erc-notice-face
-                                        erc-prompt-face)
-        erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
-                                  "324" "329" "332" "333" "353" "477")
-        erc-rename-buffers t
-        erc-interpret-mirc-color t
-        erc-kill-buffer-on-part t
-        erc-kill-server-buffer-on-quit t
-        erc-kill-queries-on-quit t
-        erc-nick "e0f"
-        erc-timestamp-format "[%H:%M] "
-        erc-insert-timestamp-function 'erc-insert-timestamp-left))
-
-(defun do-notify (nickname message)
-  (let* ((channel (buffer-name))
-         (nick (erc-hl-nicks-trim-irc-nick nickname))
-         (title (if (string-match-p (concat "^" nickname) channel)
-                    nick
-                  (concat nick " (" channel ")")))
-         (msg (s-trim (s-collapse-whitespace message))))
-    (notifications-notify
-     :title title
-     :body (format "%s said %s" nick msg))))
-
-(use-package ercn
-  :ensure
-  :config
-  (setq ercn-notify-rules
-        '((current-nick . all)
-          (keyword . all)
-          (query-buffer . all)))
-  (add-hook 'ercn-notify-hook 'do-notify))
-
-(defun sudo-edit (&optional arg)
-  "Edit currently visited file as root.
-
-With a prefix ARG prompt for a file to visit.
-Will also prompt for a file to visit if current
-buffer is not visiting a file."
-  (interactive "P")
-  (if (or arg (not buffer-file-name))
-      (find-file (concat "/sudo:root@localhost:"
-                         (ido-read-file-name "Find file (as root): ")))
-    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
-
-;; Keybindings
-
-(general-define-key
- :keymaps 'emacs-lisp-mode-map
- "C-j" 'eval-region)
-
-(leader-define
-  :states '(normal visual)
-  :keymaps 'emacs-lisp-mode-map
-  "e" '(:ignore t :which-key "Emacs Lisp")
-  "eb" 'eval-buffer
-  "er" 'eval-region
-  "ee" 'eval-expression
-  "ed" 'eval-defun)
-
-(general-define-key
- "C-c s" 'term
- "C-x C-r" 'sudo-edit)
-
-;; dired
-
-(setq dired-listing-switches "-alh"
-      dired-recursive-copies 'always)
-
-;; kotlin
-
-(use-package kotlin-mode)
-
-(use-package gradle-mode)
-
-(use-package flycheck-kotlin
-  :config
-  (flycheck-kotlin-setup))
-
-;; Misc
-
-(use-package immortal-scratch
-  :ensure
-  :config
-  (immortal-scratch-mode))
+;; fun
 
 (use-package zone-nyan)
 
-(defhydra hydra-scale ()
-  "Scale"
-  ("i" text-scale-increase "in")
-  ("o" text-scale-decrease "out")
-  ("0" (text-scale-adjust 0) "reset" :exit t)
-  ("q" nil "quit"))
-(general-define-key "C-c z" 'hydra-scale/body)
+(use-package twittering-mode)
+
+;; Variables
+
+(defvar private-file (concat user-emacs-directory "private.el")
+  "Private file that is not tracked.")
+(defvar local-file (concat user-emacs-directory "local.el")
+  "Local file specific to each computer.")
+
+(if (file-exists-p private-file)
+    (load private-file))
+
+(if (file-exists-p local-file)
+    (load local-file))
 
 (load custom-file)
 
