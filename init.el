@@ -729,9 +729,13 @@ buffer is not visiting a file."
   (add-hook 'latex-mode-hook 'flyspell-mode)
   (add-hook 'tex-mode-hook 'flyspell-mode))
 
-(use-package flyspell-popup
-  :general (:keymaps 'flyspell-mode-map
-                     "C-;" 'flyspell-popup-correct))
+(use-package flyspell-correct-ivy
+  :general
+  (:keymaps 'flyspell-mode-map
+            :states '(normal visual)
+            "z=" 'flyspell-correct-word-generic)
+  (:keymaps 'flyspell-mode-map
+            "C-;" 'flyspell-correct-word-generic))
 
 (add-hook 'text-mode-hook 'visual-line-mode)
 (add-hook 'org-mode-hook 'visual-line-mode)
