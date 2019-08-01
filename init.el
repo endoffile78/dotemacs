@@ -48,10 +48,6 @@
       ad-redefinition-action 'accept
       custom-safe-themes t
       find-file-visit-truename t
-      uniquify-buffer-name-style 'forward
-      uniquify-separator "/"
-      uniquify-ignore-buffers-re "^\\*"
-      uniquify-after-kill-buffer-p t
       dired-listing-switches "-alh"
       dired-recursive-copies 'always
       tramp-default-method "ssh")
@@ -311,6 +307,11 @@ buffer is not visiting a file."
 
 ;; navigation
 
+(setq uniquify-buffer-name-style 'forward
+      uniquify-separator "/"
+      uniquify-ignore-buffers-re "^\\*"
+      uniquify-after-kill-buffer-p t)
+
 (use-package ibuffer
   :general ("C-x C-b" 'ibuffer-other-window)
   :config
@@ -345,7 +346,8 @@ buffer is not visiting a file."
                 (ibuffer-do-sort-by-alphabetic)))))
 
 (use-package ace-window
-  :general (leader-define "wd" 'ace-delete-window
+  :general (leader-define
+             "wd" 'ace-delete-window
              "ww" 'ace-select-window))
 
 ;; ivy
@@ -421,7 +423,10 @@ buffer is not visiting a file."
 (use-package python
   :config
   :general
-  (leader-define "ma" 'venv-workon
+  (leader-define
+    :keymaps 'python-mode-map
+    "m" '(:ignore t :which-key "Python")
+    "ma" 'venv-workon
     "md" 'venv-deactivate)
   (:keymaps 'python-mode-map
             "<f5>" 'python-f5))
@@ -514,7 +519,7 @@ buffer is not visiting a file."
  :keymaps 'emacs-lisp-mode-map
  "C-j" 'eval-region)
 
-;; magit
+;; git
 
 (use-package git-gutter-fringe+
   :diminish git-gutter+-mode
@@ -535,6 +540,11 @@ buffer is not visiting a file."
   :ensure
   :config
   (setq magit-completing-read-function 'ivy-completing-read))
+
+(use-package evil-magit
+  :ensure
+  :config
+  (evil-magit-init))
 
 (use-package gitignore-mode)
 
