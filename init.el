@@ -29,7 +29,6 @@
   (require 'use-package)
   (require 'cl))
 (require 'diminish)
-(require 'bind-key)
 
 ;; general config
 
@@ -50,7 +49,8 @@
       find-file-visit-truename t
       dired-listing-switches "-alh"
       dired-recursive-copies 'always
-      tramp-default-method "ssh")
+      tramp-default-method "ssh"
+      default-directory (getenv "HOME"))
 
 (setq-default truncate-lines 1
               backward-delete-function nil
@@ -123,6 +123,82 @@
   :commands rainbow-delimiters-mode
   :init
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+
+;; keybindings
+
+(defun sudo-edit (&optional arg)
+  "Edit currently visited file as root.
+
+With a prefix ARG prompt for a file to visit.
+Will also prompt for a file to visit if current
+buffer is not visiting a file."
+  (interactive "P")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:"
+                         (ido-read-file-name "Find file (as root): ")))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+(use-package general
+  :ensure
+  :config
+  (general-override-mode 1)
+  ;; leader keybindings
+  (general-create-definer leader-define
+    :states '(normal visual insert emacs)
+    :prefix ","
+    :non-normal-prefix "C-,")
+  (leader-define
+    :states 'normal
+    "" nil
+
+    "c" (general-simulate-key "C-c")
+    "x" (general-simulate-key "C-x")
+    "h" (general-simulate-key "C-h")
+    "u" (general-simulate-key "C-u")
+
+    ;; buffer managment
+    "b" '(:ignore t :which-key "Buffer Management")
+    "bb" 'switch-to-buffer
+    "bk" 'kill-this-buffer
+    "bl" 'ibuffer-other-window
+
+    ;; org
+    "o" '(:ignore t :which-key "Org")
+    "oa" 'org-agenda
+    "oc" 'org-capture
+
+    ;; files
+    "f" '(:ignore t :which-key "Files")
+    "ff" 'find-file
+    "fr" 'counsel-recentf
+    "fi" '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
+    "fp" '(lambda () (interactive) (find-file "~/.emacs.d/private.el"))
+    "fl" '(lambda () (interactive) (find-file "~/.emacs.d/local.el"))
+
+    ;; window management
+    "w" '(:ignore t :which-key "Window Management")
+    "wu" 'winner-undo
+    "wr" 'winner-redo
+    "wh" 'windmove-left
+    "wj" 'windmove-down
+    "wk" 'windmove-up
+    "wl" 'windmove-right
+    "ws" 'evil-window-split
+    "wv" 'evil-window-vsplit)
+
+  (general-define-key
+   :states '(normal insert emacs)
+   "C-a" 'beginning-of-line
+   "C-e" 'end-of-line)
+
+  (general-define-key "C-x C-r" 'sudo-edit))
+
+(use-package which-key
+  :diminish which-key-mode
+  :config
+  (setq which-key-allow-evil-operators t)
+  (which-key-setup-side-window-bottom)
+  (which-key-mode))
 
 ;; evil
 
@@ -217,11 +293,6 @@
   :config
   (add-hook 'prog-mode-hook 'evil-commentary-mode))
 
-(use-package evil-avy
-  :ensure
-  :config
-  (evil-avy-mode))
-
 (use-package evil-smartparens
   :after smartparens
   :ensure
@@ -229,81 +300,19 @@
   :config
   (add-hook 'smartparens-mode-hook 'evil-smartparens-mode))
 
-;; keybindings
-
-(defun sudo-edit (&optional arg)
-  "Edit currently visited file as root.
-
-With a prefix ARG prompt for a file to visit.
-Will also prompt for a file to visit if current
-buffer is not visiting a file."
-  (interactive "P")
-  (if (or arg (not buffer-file-name))
-      (find-file (concat "/sudo:root@localhost:"
-                         (ido-read-file-name "Find file (as root): ")))
-    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
-
-(use-package general
-  :ensure
-  :config
-  (general-override-mode 1)
-  ;; leader keybindings
-  (general-create-definer leader-define
-    :states '(normal visual insert emacs)
-    :prefix ","
-    :non-normal-prefix "C-,")
+(use-package evil-easymotion
+  :general
+  (:states 'normal
+           "f" 'evilem-motion-find-char
+           "F" 'evilem-motion-find-char-backward
+           "t" 'evilem-motion-find-char-to
+           "T" 'evilem-motion-find-char-to-backward
+           "(" 'evilem-motion-backward-sentence-begin
+           ")" 'evilem-motion-forward-sentence-begin)
   (leader-define
-    :states 'normal
-    "" nil
-
-    "c" (general-simulate-key "C-c")
-    "x" (general-simulate-key "C-x")
-    "h" (general-simulate-key "C-h")
-    "u" (general-simulate-key "C-u")
-
-    ;; buffer managment
-    "b" '(:ignore t :which-key "Buffer Management")
-    "bb" 'switch-to-buffer
-    "bk" 'kill-this-buffer
-    "bl" 'ibuffer-other-window
-
-    ;; org
-    "o" '(:ignore t :which-key "Org")
-    "oa" 'org-agenda
-    "oc" 'org-capture
-
-    ;; files
-    "f" '(:ignore t :which-key "Files")
-    "ff" 'find-file
-    "fr" 'counsel-recentf
-    "fi" '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
-    "fp" '(lambda () (interactive) (find-file "~/.emacs.d/private.el"))
-    "fl" '(lambda () (interactive) (find-file "~/.emacs.d/local.el"))
-
-    ;; window management
-    "w" '(:ignore t :which-key "Window Management")
-    "wu" 'winner-undo
-    "wr" 'winner-redo
-    "wh" 'windmove-left
-    "wj" 'windmove-down
-    "wk" 'windmove-up
-    "wl" 'windmove-right
-    "ws" 'evil-window-split
-    "wv" 'evil-window-vsplit)
-
-  (general-define-key
-   :states '(normal insert emacs)
-   "C-a" 'beginning-of-line
-   "C-e" 'end-of-line)
-
-  (general-define-key "C-x C-r" 'sudo-edit))
-
-(use-package which-key
-  :diminish which-key-mode
-  :config
-  (setq which-key-allow-evil-operators t)
-  (which-key-setup-side-window-bottom)
-  (which-key-mode))
+    "j" 'evilem-motion-next-line
+    "k" 'evilem-motion-previous-line)
+  :ensure)
 
 ;; navigation
 
