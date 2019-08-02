@@ -7,8 +7,8 @@ My Emacs configuration. Inspired by [[https://github.com/bling/dotemacs][bling/d
    2. Git
 
 ** Installation
-
-Backup your configuration if you have one.
+*** Linux
+1. Backup your configuration if you have one.
 
 #+begin_src sh
   cd ~
@@ -16,11 +16,17 @@ Backup your configuration if you have one.
   mv .emacs .emacs.bak
 #+end_src
 
-Clone the repository.
+2. Clone the repository.
 
 #+begin_src sh
   git clone --recursive https://github.com/endoffile78/dotemacs ~/.emacs.d
 #+end_src
+
+*** Windows
+1. Clone the repository.
+2. Run setup.ps1 (it installs chocolately and emacs)
+3. Add a HOME environment variable, if you don't have one set.
+4. Move the folder to $HOME.
 
 ** Theme
 
