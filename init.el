@@ -588,6 +588,11 @@ buffer is not visiting a file."
   :config
   (company-quickhelp-mode 1))
 
+(use-package company-flx
+  :ensure
+  :config
+  (company-flx-mode))
+
 ;; eglot
 
 (use-package eglot
