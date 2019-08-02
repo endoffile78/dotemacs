@@ -160,7 +160,6 @@ buffer is not visiting a file."
     "b" '(:ignore t :which-key "Buffer Management")
     "bb" 'switch-to-buffer
     "bk" 'kill-this-buffer
-    "bl" 'ibuffer-other-window
 
     ;; org
     "o" '(:ignore t :which-key "Org")
@@ -170,7 +169,6 @@ buffer is not visiting a file."
     ;; files
     "f" '(:ignore t :which-key "Files")
     "ff" 'find-file
-    "fr" 'counsel-recentf
     "fi" '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
     "fp" '(lambda () (interactive) (find-file "~/.emacs.d/private.el"))
     "fl" '(lambda () (interactive) (find-file "~/.emacs.d/local.el"))
@@ -182,9 +180,7 @@ buffer is not visiting a file."
     "wh" 'windmove-left
     "wj" 'windmove-down
     "wk" 'windmove-up
-    "wl" 'windmove-right
-    "ws" 'evil-window-split
-    "wv" 'evil-window-vsplit)
+    "wl" 'windmove-right)
 
   (general-define-key
    :states '(normal insert emacs)
@@ -240,6 +236,10 @@ buffer is not visiting a file."
     (set-face-foreground 'mode-line (cdr color))))
 
 (use-package evil
+  :general
+  (leader-define
+    "ws" 'evil-window-split
+    "wv" 'evil-window-vsplit)
   :ensure
   :demand t
   :init
@@ -322,7 +322,9 @@ buffer is not visiting a file."
       uniquify-after-kill-buffer-p t)
 
 (use-package ibuffer
-  :general ("C-x C-b" 'ibuffer-other-window)
+  :general
+  (leader-define "bl" 'ibuffer-other-window)
+  ("C-x C-b" 'ibuffer-other-window)
   :config
   (add-hook 'ibuffer-mode-hook
             (lambda ()
