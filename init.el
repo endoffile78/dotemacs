@@ -665,6 +665,7 @@ buffer is not visiting a file."
   (setq undo-tree-visualizer-timestamps t))
 
 (use-package abbrev
+  :ensure nil
   :diminish abbrev-mode)
 
 (set-language-environment "UTF-8")
@@ -710,9 +711,7 @@ buffer is not visiting a file."
 (use-package eldoc
   :diminish eldoc-mode
   :config
-  (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
-  (add-hook 'c-mode-hook 'eldoc-mode)
-  (add-hook 'c++-mode-hook 'eldoc-mode))
+  (add-hook 'prog-mode-hook 'eldoc-mode))
 
 (defun trailing-whitespace ()
   (setq-local show-trailing-whitespace t))
@@ -764,7 +763,8 @@ buffer is not visiting a file."
 (add-hook 'text-mode-hook 'visual-line-mode)
 (add-hook 'markdown-mode-hook 'visual-line-mode)
 
-(use-package tex)
+(use-package tex
+  :ensure nil)
 
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 
