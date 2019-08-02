@@ -696,6 +696,7 @@ buffer is not visiting a file."
                             ("^.*php.*$" . "template.php"))))
 
 (use-package comment-tags
+  :commands comment-tags-mode
   :init
   (setq comment-tags-keymap-prefix (kbd "C-c t"))
   :config
@@ -715,6 +716,7 @@ buffer is not visiting a file."
 
 (use-package eldoc
   :diminish eldoc-mode
+  :commands eldoc-mode
   :config
   (add-hook 'prog-mode-hook 'eldoc-mode))
 
