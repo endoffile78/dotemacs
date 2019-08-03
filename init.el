@@ -107,6 +107,29 @@
   (setq darkokai-mode-line-padding 1)
   (load-theme 'darkokai t))
 
+(setq my-dark-theme 'darkokai)
+(setq my-light-theme 'hydandata-light)
+(setq my-current-theme my-dark-theme)
+
+(defun my/switch-theme (theme)
+  (disable-theme my-current-theme)
+  (setq my-current-theme theme)
+  (load-theme theme t))
+
+(defun my/cycle-theme()
+  (interactive)
+  (cond
+   ((eq my-current-theme my-dark-theme)
+    (my/switch-theme my-light-theme))
+   ((eq my-current-theme my-light-theme)
+    (my/switch-theme my-dark-theme))))
+
+(defvar after-load-theme-hook nil
+  "Hook run after a color theme is loaded using `load-theme'.")
+(defadvice load-theme (after run-after-load-theme-hook activate)
+  "Run `after-load-theme-hook'."
+  (run-hooks 'after-load-theme-hook))
+
 (use-package doom-modeline
   :ensure
   :config
@@ -173,6 +196,9 @@ buffer is not visiting a file."
     "fp" '(lambda () (interactive) (find-file "~/.emacs.d/private.el"))
     "fl" '(lambda () (interactive) (find-file "~/.emacs.d/local.el"))
 
+    "t" '(:ignore t :which-key "Themes")
+    "tc" 'my/cycle-theme
+
     ;; window management
     "w" '(:ignore t :which-key "Window Management")
     "wu" 'winner-undo
@@ -235,6 +261,27 @@ buffer is not visiting a file."
     (set-face-background 'mode-line (car color))
     (set-face-foreground 'mode-line (cdr color))))
 
+(defun my-evil-theme-change ()
+  (cond
+   ((eq my-current-theme my-dark-theme)
+    (setq evil-normal-state-cursor '("white" box)
+          evil-insert-state-cursor '("red" bar)
+          evil-operator-state-cursor '("red" hollow))
+    (setq normal-state-color '("#35393B" . "#FFFFFF")
+          visual-state-color '("#AB7EFF" . "#000000")
+          insert-state-color '("#555555" . "#FFFFFF")
+          emacs-state-color '("#FF6159" .  "#FFFFFF")))
+   ((eq my-current-theme my-light-theme)
+    (setq evil-normal-state-cursor '("black" box)
+          evil-insert-state-cursor '("red" bar)
+          evil-operator-state-cursor '("red" hollow))
+    (setq normal-state-color '("#BCD5FA" . "#000000")
+          visual-state-color '("#AB7EFF" . "#000000")
+          insert-state-color '("#D0E1FB" . "#000000")
+          emacs-state-color '("#FF6159" .  "#FFFFFF")))))
+
+(add-hook 'after-load-theme-hook 'my-evil-theme-change)
+
 (use-package evil
   :general
   (leader-define
@@ -249,7 +296,7 @@ buffer is not visiting a file."
                                      (face-foreground 'mode-line))))
     (add-hook 'post-command-hook (lambda () (my-evil-modeline-change default-color))))
 
-  (setq evil-normal-state-cursor '("white" box) ;; Change the cursor color and shape based on the state
+  (setq evil-normal-state-cursor '("white" box)
         evil-insert-state-cursor '("red" bar)
         evil-operator-state-cursor '("red" hollow))
 
