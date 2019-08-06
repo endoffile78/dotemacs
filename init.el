@@ -17,8 +17,9 @@
 (package-initialize)
 
 (if (eq (system-name) 'gnu/linux)
-    (add-to-list 'exec-path "~/bin")
-  (add-to-list 'exec-path "/usr/local/bin"))
+    (progn
+      (add-to-list 'exec-path "~/bin")
+      (add-to-list 'exec-path "/usr/local/bin")))
 
 (unless (package-installed-p 'use-package) ;; Make sure use-package is installed
   (package-refresh-contents)
@@ -362,6 +363,10 @@ buffer is not visiting a file."
   :ensure)
 
 ;; navigation
+
+(setq recentf-max-saved-items 50)
+(setq recentf-exclude '("/elpa/"
+                        "/games/"))
 
 (setq uniquify-buffer-name-style 'forward
       uniquify-separator "/"
