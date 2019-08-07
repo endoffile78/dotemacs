@@ -839,6 +839,40 @@ buffer is not visiting a file."
   :config
   (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)))
 
+;; IRC
+
+(use-package erc
+  :ensure nil
+  :commands erc
+  :config
+  (setq erc-log-channels-directory "~/.erc/logs/"
+        erc-interpret-mirc-color t
+        erc-kill-buffer-on-part t
+        erc-kill-queries-on-quit t
+        erc-kill-server-buffer-on-quit t
+        erc-join-buffer 'bury
+        erc-rename-buffers t
+        erc-timestamp-format "[%H:%M] "
+        erc-fill-column 120
+        erc-insert-timestamp-function 'erc-insert-timestamp-left
+        erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
+                                  "324" "329" "332" "333" "353" "477"))
+  (add-to-list 'erc-modules 'log)
+  (add-to-list 'erc-modules 'spelling)
+  (use-package erc-hl-nicks
+    :ensure
+    :config
+    (erc-hl-nicks-enable))
+  (erc-track-mode)
+  (erc-truncate-mode)
+  (erc-update-modules))
+
+(defun my/erc-run ()
+  (interactive)
+  (if (get-buffer "freenode")
+      (erc-track-switch-buffer)
+    (erc :server "endoffile.org" :port 2000)))
+
 ;; fun
 
 (use-package zone-nyan)
