@@ -168,7 +168,7 @@ buffer is not visiting a file."
   (general-override-mode 1)
   ;; leader keybindings
   (general-create-definer leader-define
-    :states '(normal visual insert emacs)
+    :states '(normal operator visual insert emacs)
     :prefix ","
     :non-normal-prefix "C-,")
   (leader-define
@@ -350,7 +350,7 @@ buffer is not visiting a file."
 
 (use-package evil-easymotion
   :general
-  (:states 'normal
+  (:states '(normal visual operator)
            "f" 'evilem-motion-find-char
            "F" 'evilem-motion-find-char-backward
            "t" 'evilem-motion-find-char-to
