@@ -362,6 +362,11 @@ buffer is not visiting a file."
     "k" 'evilem-motion-previous-line)
   :ensure)
 
+(unless (display-graphic-p)
+  (use-package evil-terminal-cursor-changer
+    :config
+    (evil-terminal-cursor-changer-activate)))
+
 ;; navigation
 
 (setq recentf-max-saved-items 50)
@@ -648,10 +653,13 @@ buffer is not visiting a file."
 ;; eglot
 
 (use-package eglot
-  :general (leader-define "er" 'eglot-rename
-             "ef" 'eglot-format)
+  :general
+  (leader-define
+    :keymaps 'eglot-mode-map
+    "er" 'eglot-rename
+    "ef" 'eglot-format)
   :ensure
-  :config
+  :init
   (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'c-mode-hook 'eglot-ensure)
   (add-hook 'c++-mode-hook 'eglot-ensure))
@@ -879,7 +887,7 @@ buffer is not visiting a file."
 
 (use-package twittering-mode)
 
-;; Variables
+;; Extra configuration files
 
 (defvar private-file (concat user-emacs-directory "private.el")
   "Private file that is not tracked.")
