@@ -414,9 +414,10 @@ buffer is not visiting a file."
                 (ibuffer-do-sort-by-alphabetic)))))
 
 (use-package ace-window
-  :general (leader-define
-             "wd" 'ace-delete-window
-             "ww" 'ace-select-window))
+  :general
+  (leader-define
+    "wd" 'ace-delete-window
+    "ww" 'ace-select-window))
 
 ;; ivy
 
@@ -598,13 +599,15 @@ buffer is not visiting a file."
   (global-git-gutter+-mode))
 
 (use-package magit
-  :general (leader-define "g" '(:ignore t :which-key "Git")
-             "gs" 'magit-status
-             "gd" 'magit-diff-dwim
-             "gb" 'magit-blame
-             "gl" 'magit-log
-             "gr" 'magit-branch
-             "gm" 'magit-merge)
+  :general
+  (leader-define
+    "g" '(:ignore t :which-key "Git")
+    "gs" 'magit-status
+    "gd" 'magit-diff-dwim
+    "gb" 'magit-blame
+    "gl" 'magit-log
+    "gr" 'magit-branch
+    "gm" 'magit-merge)
   :ensure
   :config
   (setq magit-completing-read-function 'ivy-completing-read))
@@ -681,12 +684,14 @@ buffer is not visiting a file."
 ;; projectile
 
 (use-package projectile
-  :general (leader-define "p" '(:ignore t :which-key "Projectile")
-             "pf" 'projectile-find-file
-             "pb" 'projectile-switch-to-buffer
-             "po" 'projectile-find-other-file
-             "pk" 'projectile-kill-buffers
-             "pt" 'projectile-run-term)
+  :general
+  (leader-define
+    "p" '(:ignore t :which-key "Projectile")
+    "pf" 'projectile-find-file
+    "pb" 'projectile-switch-to-buffer
+    "po" 'projectile-find-other-file
+    "pk" 'projectile-kill-buffers
+    "pt" 'projectile-run-term)
   :ensure
   :config
   (setq projectile-completion-system 'ivy)
