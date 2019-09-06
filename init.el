@@ -291,6 +291,7 @@ buffer is not visiting a file."
   :ensure
   :demand t
   :init
+  (setq evil-want-integration t)
   (setq evil-want-keybinding nil) ;; disable for evil-collection
   :config
   (lexical-let ((default-color (cons (face-background 'mode-line)
@@ -563,6 +564,10 @@ buffer is not visiting a file."
     (tide-setup)
     (tide-hl-identifier-mode))
   (add-hook 'typescript-mode-hook #'my-tide-hook))
+
+(use-package clojure-mode)
+
+(use-package cider)
 
 ;; kotlin
 
@@ -885,6 +890,8 @@ buffer is not visiting a file."
   (if (get-buffer "freenode")
       (erc-track-switch-buffer)
     (erc :server "endoffile.org" :port 2000)))
+
+(general-define-key "C-c i" 'my/erc-run)
 
 ;; fun
 
