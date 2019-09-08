@@ -565,6 +565,21 @@ buffer is not visiting a file."
     (tide-hl-identifier-mode))
   (add-hook 'typescript-mode-hook #'my-tide-hook))
 
+(defun my/start-impatient-mode ()
+  (interactive)
+  (httpd-start)
+  (impatient-mode))
+
+(use-package impatient-mode
+  :general
+  (leader-define
+    :keymaps '(web-mode-map css-mode-map)
+    "mit" 'impatient-mode
+    "mis" 'my/start-impatient-mode
+    "mis" 'httpd-stop))
+
+;; clojure
+
 (use-package clojure-mode)
 
 (use-package cider)
@@ -578,6 +593,17 @@ buffer is not visiting a file."
 (use-package flycheck-kotlin
   :config
   (flycheck-kotlin-setup))
+
+;; lisp
+
+(use-package lispy
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'lispy-mode)
+  (add-hook 'clojure-mode-hook 'lspy-mode-hook))
+
+(use-package lispyville
+  :config
+  (add-hook 'lispy-mode-hook 'lispyville-mode))
 
 ;; emacs lisp
 
