@@ -576,7 +576,7 @@ buffer is not visiting a file."
     :keymaps '(web-mode-map css-mode-map)
     "mit" 'impatient-mode
     "mis" 'my/start-impatient-mode
-    "mis" 'httpd-stop))
+    "mik" 'httpd-stop))
 
 ;; clojure
 
