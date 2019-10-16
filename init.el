@@ -842,6 +842,8 @@ buffer is not visiting a file."
           ("TODO" ("WAITING") ("CANCELLED"))
           ("DONE" ("WAITING") ("CANCELLED")))))
 
+(use-package ox-reveal)
+
 ;; writing
 
 (use-package flyspell
