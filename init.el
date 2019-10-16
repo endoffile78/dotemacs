@@ -482,6 +482,12 @@ buffer is not visiting a file."
  "C-c c" 'compile
  "C-c d" 'gud-gdb)
 
+;; Go
+
+(use-package go-mode
+  :mode ("\\.go\\'" . go-mode)
+  :ensure)
+
 ;; python
 
 (defun python-f5 ()
@@ -696,7 +702,8 @@ buffer is not visiting a file."
   :init
   (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'c-mode-hook 'eglot-ensure)
-  (add-hook 'c++-mode-hook 'eglot-ensure))
+  (add-hook 'c++-mode-hook 'eglot-ensure)
+  (add-hook 'go-mode-hook 'eglot-ensure))
 
 ;; flycheck
 
