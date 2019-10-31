@@ -185,6 +185,8 @@ buffer is not visiting a file."
     "bb" 'switch-to-buffer
     "bk" 'kill-this-buffer
 
+    "d" 'dired
+
     ;; org
     "o" '(:ignore t :which-key "Org")
     "oa" 'org-agenda
@@ -438,6 +440,18 @@ buffer is not visiting a file."
   :ensure
   :general ("M-x" 'counsel-M-x))
 
+;; semantic-mode
+
+(add-hook 'c-mode-hook 'semantic-mode)
+(add-hook 'c++-mode-hook 'semantic-mode)
+(add-hook 'java-mode-hook 'semantic-mode)
+
+(use-package srefactor
+  :general
+  (leader-define
+    :keymaps 'semantic-mode-map
+    "sr" 'srefactor-refactor-at-point))
+
 ;; C/C++
 
 (defvaralias 'c-basic-offset 'tab-width)
@@ -486,7 +500,11 @@ buffer is not visiting a file."
 
 (use-package go-mode
   :mode ("\\.go\\'" . go-mode)
-  :ensure)
+  :ensure
+  :config
+  (setq gofmt-command "goimports")
+  (add-hook 'go-mode-hook 'subword-mode)
+  (add-hook 'before-save-hook 'gofmt-before-save))
 
 ;; python
 
@@ -543,7 +561,8 @@ buffer is not visiting a file."
 (use-package web-mode
   :ensure
   :mode (("\\.html?\\'" . web-mode)
-         ("\\.php?\\'" . web-mode))
+         ("\\.php?\\'" . web-mode)
+         ("\\.aspx?\\'" . web-mode))
   :config
   (defun my-web-mode-hook ()
     (setq web-mode-markup-indent-offset 2
@@ -662,8 +681,8 @@ buffer is not visiting a file."
   :ensure
   :diminish company-mode
   :general (:keymaps 'company-active-map
-                     "<tab>" 'company-select-next
-                     "TAB" 'company-select-next
+                     "<tab>" 'company-complete-common-or-cycle
+                     "TAB" 'company-complete-common-or-cycle
                      "<backtab>" 'company-select-previous)
   :config
   (setq company-idle-delay 0.1
@@ -703,7 +722,9 @@ buffer is not visiting a file."
   (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'c-mode-hook 'eglot-ensure)
   (add-hook 'c++-mode-hook 'eglot-ensure)
-  (add-hook 'go-mode-hook 'eglot-ensure))
+  (add-hook 'go-mode-hook 'eglot-ensure)
+  :config
+  (setq eglot-autoshutdown t))
 
 ;; flycheck
 
