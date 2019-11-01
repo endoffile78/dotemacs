@@ -955,6 +955,11 @@ buffer is not visiting a file."
 
 (use-package twittering-mode)
 
+(use-package emojify
+  :config
+  (add-hook 'text-mode-hook 'emojify-mode)
+  (add-hook 'org-mode-hook 'emojify-mode))
+
 ;; Extra configuration files
 
 (defvar private-file (concat user-emacs-directory "private.el")
