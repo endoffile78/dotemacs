@@ -108,9 +108,9 @@
   (setq darkokai-mode-line-padding 1)
   (load-theme 'darkokai t))
 
-(setq my-dark-theme 'darkokai)
-(setq my-light-theme 'hydandata-light)
-(setq my-current-theme my-dark-theme)
+(defvar my-dark-theme 'darkokai)
+(defvar my-light-theme 'hydandata-light)
+(defvar my-current-theme my-dark-theme)
 
 (defun my/switch-theme (theme)
   (disable-theme my-current-theme)
