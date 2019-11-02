@@ -3,7 +3,7 @@
 My Emacs configuration. Inspired by [[https://github.com/bling/dotemacs][bling/dotemacs]] and [[https://github.com/purcell/emacs.d][purcell/emacs.d]].
 
 ** Requirements
-   1. Emacs 24.4+
+   1. Emacs 26.1+
    2. Git
 
 ** Installation

@@ -317,16 +317,17 @@ buffer is not visiting a file."
   (evil-mode 1))
 
 (use-package evil-collection
-  :after evil
   :ensure
   :config
   (setq evil-collection-company-use-tng nil)
   (evil-collection-init))
 
-(use-package evil-tabs
-  :ensure
-  :config
-  (global-evil-tabs-mode t))
+(if (version< emacs-version "27")
+    (use-package evil-tabs
+      :ensure
+      :config
+      (global-evil-tabs-mode t))
+  (tab-bar-mode))
 
 (use-package evil-org
   :diminish evil-org-mode)
