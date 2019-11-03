@@ -366,6 +366,10 @@ buffer is not visiting a file."
     "k" 'evilem-motion-previous-line)
   :ensure)
 
+(use-package evil-multiedit
+  :config
+  (evil-multiedit-default-keybinds))
+
 (unless (display-graphic-p)
   (use-package evil-terminal-cursor-changer
     :config
@@ -627,11 +631,7 @@ buffer is not visiting a file."
   (add-hook 'emacs-lisp-mode-hook 'lispy-mode)
   (add-hook 'clojure-mode-hook 'lspy-mode-hook))
 
-(use-package lispyville
-  :config
-  (add-hook 'lispy-mode-hook 'lispyville-mode))
-
-;; emacs lisp
+;; Emacs lisp
 
 (leader-define
   :keymaps 'emacs-lisp-mode-map
