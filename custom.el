@@ -5,7 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (evil-multiedit emojify srefactor ox-reveal impatient-mode cider clojure-mode evil-collection lispy evil-terminal-cursor-changer chess erc-hl-nicks company-flx evil-easymotion flyspell-correct-ivy typescript-mode powershell groovy-mode flycheck-kotlin gradle-mode kotlin-mode md4rd twittering-mode omnisharp ibuffer-projectile auctex cmake-mode yasnippet web-mode rainbow-mode rainbow-delimiters ggtags evil-smartparens evil-tabs general use-package diminish))))
+    (aggressive-indent zone-nyan yasnippet yaml-mode which-key web-mode virtualenvwrapper use-package twittering-mode tide srefactor rust-mode rainbow-mode rainbow-delimiters powershell posframe pkgbuild-mode pip-requirements ox-reveal omnisharp nyan-mode nginx-mode markdown-mode lispy kotlin-mode js2-mode impatient-mode immortal-scratch ibuffer-projectile hydandata-light-theme gradle-mode go-mode gitignore-mode git-gutter-fringe+ ggtags general flyspell-correct-ivy flycheck-pos-tip flycheck-kotlin evil-visualstar evil-terminal-cursor-changer evil-tabs evil-surround evil-smartparens evil-org evil-multiedit evil-magit evil-easymotion evil-commentary evil-collection erc-hl-nicks emojify emmet-mode eglot editorconfig doom-modeline diminish darkokai-theme company-shell company-quickhelp company-flx company-cmake comment-tags cmake-mode cider berrys-theme auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -318,6 +318,7 @@ buffer is not visiting a file."
 
 (use-package evil-collection
   :ensure
+  :demand t
   :config
   (setq evil-collection-company-use-tng nil)
   (evil-collection-init))
@@ -672,6 +673,7 @@ buffer is not visiting a file."
   (setq magit-completing-read-function 'ivy-completing-read))
 
 (use-package evil-magit
+  :after magit
   :ensure
   :config
   (evil-magit-init))
@@ -700,8 +702,7 @@ buffer is not visiting a file."
   (eval-after-load 'company
     '(add-to-list
       'company-backends '(company-capf company-yasnippet
-                                       company-elisp company-files
-                                       company-shell company-cmake))))
+                                       company-files))))
 
 (use-package company-quickhelp
   :config
@@ -846,6 +847,10 @@ buffer is not visiting a file."
   :commands eldoc-mode
   :config
   (add-hook 'prog-mode-hook 'eldoc-mode))
+
+(use-package aggressive-indent
+  :config
+  (add-hook 'prog-mode-hook 'aggressive-indent-mode))
 
 (defun trailing-whitespace ()
   (setq-local show-trailing-whitespace t))
