@@ -543,7 +543,8 @@ buffer is not visiting a file."
 
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
-(setq-default shell-file-name "/bin/zsh")
+(if (eq (system-name) 'gnu/linux)
+    (setq-default she-ffile-name "/bin/zsh"))
 
 (general-define-key "C-c s" 'term)
 
@@ -647,13 +648,14 @@ buffer is not visiting a file."
 
 ;; git
 
-(use-package git-gutter-fringe+
-  :diminish git-gutter+-mode
-  :config
-  (set-face-foreground 'git-gutter-fr+-modified "yellow")
-  (set-face-foreground 'git-gutter-fr+-added    "green")
-  (set-face-foreground 'git-gutter-fr+-deleted  "red")
-  (global-git-gutter+-mode))
+(when (display-graphic-p)
+  (use-package git-gutter-fringe+
+    :diminish git-gutter+-mode
+    :config
+    (set-face-foreground 'git-gutter-fr+-modified "yellow")
+    (set-face-foreground 'git-gutter-fr+-added    "green")
+    (set-face-foreground 'git-gutter-fr+-deleted  "red")
+    (global-git-gutter+-mode)))
 
 (use-package magit
   :general
