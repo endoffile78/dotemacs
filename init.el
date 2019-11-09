@@ -901,8 +901,10 @@ buffer is not visiting a file."
 (add-hook 'text-mode-hook 'visual-line-mode)
 (add-hook 'org-mode-hook 'visual-line-mode)
 (add-hook 'latex-mode-hook 'visual-line-mode)
-(add-hook 'text-mode-hook 'visual-line-mode)
-(add-hook 'markdown-mode-hook 'visual-line-mode)
+(add-hook 'tex-mode-hook 'visual-line-mode)
+
+(add-hook 'text-mode-hook 'auto-fill-mode)
+(add-hook 'org-mode-hook 'auto-fill-mode)
 
 (use-package tex
   :ensure nil)
@@ -910,7 +912,10 @@ buffer is not visiting a file."
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 
 (use-package markdown-mode
-  :mode ("\\.\\(md\\|markdown\\)\\'" . markdown-mode))
+  :mode ("\\.\\(md\\|markdown\\)\\'" . markdown-mode)
+  :config
+  (add-hook 'markdown-mode-hook 'auto-fill-mode)
+  (add-hook 'markdown-mode-hook 'visual-line-mode))
 
 ;; config files
 
