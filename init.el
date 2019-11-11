@@ -14,7 +14,8 @@
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
-(package-initialize)
+(when (version< emacs-version "27" )
+  (package-initialize))
 
 (if (eq (system-name) 'gnu/linux)
     (progn
@@ -51,7 +52,8 @@
       dired-listing-switches "-alh"
       dired-recursive-copies 'always
       tramp-default-method "ssh"
-      default-directory (getenv "HOME"))
+      default-directory (getenv "HOME")
+      make-pointer-invisible t)
 
 (setq-default truncate-lines 1
               backward-delete-function nil
@@ -82,6 +84,7 @@
 (show-paren-mode 1)
 (delete-selection-mode)
 (winner-mode)
+(size-indication-mode)
 
 (if (fboundp 'scroll-bar-mode)
     (scroll-bar-mode -1))
@@ -318,6 +321,7 @@ buffer is not visiting a file."
 
 (use-package evil-collection
   :ensure
+  :after evil
   :demand t
   :config
   (setq evil-collection-company-use-tng nil)
@@ -485,6 +489,8 @@ buffer is not visiting a file."
   (setq-local indent-tabs-mode t))
 
 (add-hook 'makefile-mode-hook 'my-makefile-hook)
+(add-hook 'makefile-mode-hook (lambda ()
+                                (aggressive-indent-mode -1)))
 
 (use-package cmake-mode
   :ensure
@@ -616,15 +622,9 @@ buffer is not visiting a file."
 
 (use-package cider)
 
-;; kotlin
-
-(use-package kotlin-mode)
+;; gradle
 
 (use-package gradle-mode)
-
-(use-package flycheck-kotlin
-  :config
-  (flycheck-kotlin-setup))
 
 ;; lisp
 
@@ -929,10 +929,13 @@ buffer is not visiting a file."
 ;; IRC
 
 (use-package erc
+  :general
+  ("C-c C-e" 'erc-switch-to-buffer)
   :ensure nil
   :commands erc
   :config
   (setq erc-log-channels-directory "~/.erc/logs/"
+        erc-log-write-after-send t
         erc-interpret-mirc-color t
         erc-kill-buffer-on-part t
         erc-kill-queries-on-quit t
@@ -941,23 +944,32 @@ buffer is not visiting a file."
         erc-rename-buffers t
         erc-timestamp-format "[%H:%M] "
         erc-fill-column 120
+        erc-server-reconnect-attempts 5
+        erc-server-reconnect-timeout 10
         erc-insert-timestamp-function 'erc-insert-timestamp-left
         erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
                                   "324" "329" "332" "333" "353" "477"))
+
+  (add-hook 'erc-mode-hook (lambda ()
+                             (size-indication-mode -1)))
+
   (add-to-list 'erc-modules 'log)
   (add-to-list 'erc-modules 'spelling)
-  (use-package erc-hl-nicks
-    :ensure
-    :config
-    (erc-hl-nicks-enable))
+  (add-to-list 'erc-modules 'notifications)
+
   (erc-track-mode)
   (erc-truncate-mode)
   (erc-update-modules))
 
+(use-package erc-hl-nicks
+  :ensure
+  :config
+  (erc-hl-nicks-enable))
+
 (defun my/erc-run ()
   (interactive)
   (if (get-buffer "freenode")
-      (erc-track-switch-buffer)
+      (erc-track-switch-buffer 1)
     (erc :server "endoffile.org" :port 2000)))
 
 (general-define-key "C-c i" 'my/erc-run)
@@ -971,7 +983,8 @@ buffer is not visiting a file."
 (use-package emojify
   :config
   (add-hook 'text-mode-hook 'emojify-mode)
-  (add-hook 'org-mode-hook 'emojify-mode))
+  (add-hook 'org-mode-hook 'emojify-mode)
+  (add-hook 'erc-mode-hook 'emojify-mode))
 
 ;; Extra configuration files
 
