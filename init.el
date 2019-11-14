@@ -430,7 +430,7 @@ buffer is not visiting a file."
                               (name . "^\\*Help\\*$"))))))))
 
 (use-package ibuffer-projectile
-  :ensure t
+  :ensure
   :after projectile
   :config
   (add-hook 'ibuffer-hook
@@ -524,8 +524,9 @@ buffer is not visiting a file."
 ;; Go
 
 (use-package go-mode
-  :mode ("\\.go\\'" . go-mode)
   :ensure
+  :mode ("\\.go\\'" . go-mode)
+  :commands go-mode
   :config
   (setq gofmt-command "goimports")
   (add-hook 'go-mode-hook 'subword-mode)
@@ -586,6 +587,7 @@ buffer is not visiting a file."
 
 (use-package web-mode
   :ensure
+  :commands web-mode
   :mode (("\\.html?\\'" . web-mode)
          ("\\.php?\\'" . web-mode)
          ("\\.aspx?\\'" . web-mode))
@@ -605,6 +607,7 @@ buffer is not visiting a file."
 
 (use-package js2-mode
   :ensure
+  :commands js2-mode
   :mode ("\\.js$" . js2-mode))
 
 (use-package typescript-mode)
@@ -651,10 +654,10 @@ buffer is not visiting a file."
 (leader-define
   :keymaps 'emacs-lisp-mode-map
   "m" '(:ignore t :which-key "Emacs Lisp")
-  "mb" 'eval-buffer
-  "mr" 'eval-region
-  "me" 'eval-expression
-  "md" 'eval-defun)
+  "meb" 'eval-buffer
+  "mer" 'eval-region
+  "mee" 'eval-expression
+  "med" 'eval-defun)
 
 (general-define-key
  :keymaps 'emacs-lisp-mode-map
@@ -925,6 +928,7 @@ buffer is not visiting a file."
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 
 (use-package markdown-mode
+  :commands markdown-mode
   :mode ("\\.\\(md\\|markdown\\)\\'" . markdown-mode)
   :config
   (add-hook 'markdown-mode-hook 'auto-fill-mode)
@@ -933,9 +937,11 @@ buffer is not visiting a file."
 ;; config files
 
 (use-package yaml-mode
+  :commands yaml-mode
   :mode ("\\.yml$" . yaml-mode))
 
 (use-package nginx-mode
+  :commands nginx-mode
   :config
   (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)))
 
@@ -955,11 +961,15 @@ buffer is not visiting a file."
         erc-kill-server-buffer-on-quit t
         erc-join-buffer 'bury
         erc-rename-buffers t
-        erc-timestamp-format "[%H:%M] "
-        erc-fill-column 120
+        erc-timestamp-format "[%H:%M:%S] "
+        erc-fill-column 180
+        erc-fill-function 'erc-fill-static
+        erc-fill-static-center 20
         erc-server-reconnect-attempts 5
         erc-server-reconnect-timeout 10
         erc-insert-timestamp-function 'erc-insert-timestamp-left
+        erc-current-nick-highlight-type 'nick
+        erc-track-exclude-server-buffer t
         erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
                                   "324" "329" "332" "333" "353" "477"))
 
