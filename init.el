@@ -134,12 +134,25 @@
   "Run `after-load-theme-hook'."
   (run-hooks 'after-load-theme-hook))
 
-(use-package doom-modeline
-  :ensure
+(use-package telephone-line
   :config
-  (setq doom-modeline-icon t)
-  (setq doom-modeline-major-mode-icon t)
-  (add-hook 'after-init-hook 'doom-modeline-init))
+  (setq telephone-line-height 27
+        telephone-line-evil-use-short-tag t)
+  (setq telephone-line-lhs
+        '((evil   . (telephone-line-evil-tag-segment))
+          (accent . (telephone-line-filesize-segment
+                     telephone-line-projectile-buffer-segment))
+          (nil    . (telephone-line-nyan-segment))
+          (accent . (telephone-line-major-mode-segment
+                     telephone-line-erc-modified-channels-segment
+                     telephone-line-process-segment))))
+  (setq telephone-line-rhs
+        '((nil    . (telephone-line-misc-info-segment))
+          (accent . (telephone-line-vc-segment
+                     telephone-line-flycheck-segment
+                     telephone-line-atom-encoding-segment))
+          (evil   . (telephone-line-airline-position-segment))))
+  (telephone-line-mode))
 
 (use-package nyan-mode
   :config
