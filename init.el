@@ -199,7 +199,9 @@ buffer is not visiting a file."
     ;; buffer managment
     "b" '(:ignore t :which-key "Buffer Management")
     "bb" 'switch-to-buffer
+    "bB" 'ibuffer
     "bk" 'kill-this-buffer
+    "bK" 'kill-buffer
 
     "d" 'dired
 
@@ -225,7 +227,9 @@ buffer is not visiting a file."
     "wh" 'windmove-left
     "wj" 'windmove-down
     "wk" 'windmove-up
-    "wl" 'windmove-right)
+    "wl" 'windmove-right
+
+    "/" 'grep)
 
   (general-define-key
    :states '(normal insert emacs)
@@ -406,7 +410,6 @@ buffer is not visiting a file."
 
 (use-package ibuffer
   :general
-  (leader-define "bl" 'ibuffer-other-window)
   ("C-x C-b" 'ibuffer-other-window)
   :config
   (add-hook 'ibuffer-mode-hook
@@ -947,6 +950,11 @@ buffer is not visiting a file."
 
 ;; IRC
 
+(defun reset-erc-track-mode ()
+  (interactive)
+  (setq erc-modified-channels-alist nil)
+  (erc-modified-channels-update))
+
 (use-package erc
   :general
   ("C-c C-e" 'erc-switch-to-buffer)
@@ -970,6 +978,8 @@ buffer is not visiting a file."
         erc-insert-timestamp-function 'erc-insert-timestamp-left
         erc-current-nick-highlight-type 'nick
         erc-track-exclude-server-buffer t
+        erc-track-showcount t
+        erc-lurker-hide-list '("JOIN" "PART" "QUIT")
         erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
                                   "324" "329" "332" "333" "353" "477"))
 
@@ -989,6 +999,9 @@ buffer is not visiting a file."
   :config
   (erc-hl-nicks-enable))
 
+(use-package erc-bar
+  :load-path "site-lisp")
+
 (defun my/erc-run ()
   (interactive)
   (if (get-buffer "freenode")
@@ -996,6 +1009,17 @@ buffer is not visiting a file."
     (erc :server "endoffile.org" :port 2000)))
 
 (general-define-key "C-c i" 'my/erc-run)
+
+;; mail
+
+(defvar mu4e-config (concat user-emacs-directory "mu4e-config.el"))
+(if (file-exists-p mu4e-config)
+    (load mu4e-config))
+
+(use-package mu4e-alert
+  :config
+  (add-hook 'after-init-hook 'mu4e-alert-enable-mode-line-display)
+  (add-hook 'after-init-hook 'mu4e-alert-enable-notifications))
 
 ;; fun
 

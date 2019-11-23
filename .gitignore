@@ -26,6 +26,7 @@ eshell/lastdir
 
 private.el
 local.el
+mu4e-config.el
 projectile-bookmarks.eld
 projectile.cache
 recentf
