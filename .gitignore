@@ -19,6 +19,9 @@ emojis
 eshell/history
 eshell/lastdir
 
+vendor/*
+!vendor/.gitkeep
+
 *.elc
 *~
 *.swp

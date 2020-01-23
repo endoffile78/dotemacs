@@ -34,6 +34,8 @@
 
 ;; general config
 
+(setf epa-pinentry-mode 'loopback)
+
 (setq ring-bell-function 'ignore
       browse-url-browser-function 'browse-url-xdg-open
       inhibit-startup-message t
@@ -135,6 +137,7 @@
   (run-hooks 'after-load-theme-hook))
 
 (use-package telephone-line
+  :ensure
   :config
   (setq telephone-line-height 27
         telephone-line-evil-use-short-tag t)
@@ -191,6 +194,8 @@ buffer is not visiting a file."
     :states 'normal
     "" nil
 
+    "/" 'grep
+
     "c" (general-simulate-key "C-c")
     "x" (general-simulate-key "C-x")
     "h" (general-simulate-key "C-h")
@@ -227,9 +232,7 @@ buffer is not visiting a file."
     "wh" 'windmove-left
     "wj" 'windmove-down
     "wk" 'windmove-up
-    "wl" 'windmove-right
-
-    "/" 'grep)
+    "wl" 'windmove-right)
 
   (general-define-key
    :states '(normal insert emacs)
@@ -330,6 +333,7 @@ buffer is not visiting a file."
   (evil-set-initial-state 'term-mode 'insert)
   (evil-set-initial-state 'shell-mode 'insert)
   (evil-set-initial-state 'eshell-mode 'insert)
+  (evil-set-initial-state 'erc-mode 'insert)
 
   (evil-ex-define-cmd "W" 'evil-write)
   (evil-ex-define-cmd "Q" 'evil-tab-sensitive-quit)
@@ -499,6 +503,12 @@ buffer is not visiting a file."
         (c++-mode . "my-c-style")
         (java-mode . "java")
         (awk-mode . "awk"))))
+
+(use-package clang-format+
+  :ensure
+  :config
+  (add-hook 'c-mode-hook 'clang-format+-mode)
+  (add-hook 'c++-mode-hook 'clang-format+-mode))
 
 (defun my-makefile-hook ()
   "Hook for `makefile-mode'."
@@ -1015,11 +1025,6 @@ buffer is not visiting a file."
 (defvar mu4e-config (concat user-emacs-directory "mu4e-config.el"))
 (if (file-exists-p mu4e-config)
     (load mu4e-config))
-
-(use-package mu4e-alert
-  :config
-  (add-hook 'after-init-hook 'mu4e-alert-enable-mode-line-display)
-  (add-hook 'after-init-hook 'mu4e-alert-enable-notifications))
 
 ;; fun
 
