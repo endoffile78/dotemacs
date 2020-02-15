@@ -466,6 +466,12 @@ buffer is not visiting a file."
   (setq ivy-count-format "(%d/%d) ")
   (ivy-mode 1))
 
+(use-package ivy-rich
+  :ensure
+  :config
+  (ivy-rich-mode 1)
+  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
+
 (use-package counsel
   :ensure
   :general ("M-x" 'counsel-M-x))
