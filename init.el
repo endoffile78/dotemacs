@@ -188,8 +188,8 @@ buffer is not visiting a file."
   ;; leader keybindings
   (general-create-definer leader-define
     :states '(normal operator visual insert emacs)
-    :prefix ","
-    :non-normal-prefix "C-,")
+    :prefix "SPC"
+    :non-normal-prefix "C-SPC")
   (leader-define
     :states 'normal
     "" nil
