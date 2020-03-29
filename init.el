@@ -105,7 +105,7 @@
 ;; appearance
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
-(add-to-list 'default-frame-alist '(font . "Monaco-11"))
+(add-to-list 'default-frame-alist '(font . "Iosevka-12"))
 
 (use-package darkokai-theme
   :ensure
