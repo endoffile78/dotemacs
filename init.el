@@ -1,3 +1,4 @@
+;;  -*- lexical-binding: t; -*-
 ;;; init.el --- Emacs configuration
 
 ;;; Commentary:
@@ -227,6 +228,8 @@ buffer is not visiting a file."
 
     ;; window management
     "w" '(:ignore t :which-key "Window Management")
+    "w0" 'delete-window
+    "w1" 'delete-other-windows
     "wu" 'winner-undo
     "wr" 'winner-redo
     "wh" 'windmove-left
@@ -348,13 +351,6 @@ buffer is not visiting a file."
   (setq evil-collection-company-use-tng nil)
   (evil-collection-init))
 
-(if (version< emacs-version "27")
-    (use-package evil-tabs
-      :ensure
-      :config
-      (global-evil-tabs-mode t))
-  (tab-bar-mode))
-
 (use-package evil-org
   :diminish evil-org-mode)
 
@@ -368,9 +364,10 @@ buffer is not visiting a file."
 
 (use-package evil-commentary
   :diminish evil-commentary-mode
+  :commands evil-commentary-mode
   :config
   (add-hook 'prog-mode-hook 'evil-commentary-mode))
-
+;;*
 (use-package evil-smartparens
   :after smartparens
   :ensure
@@ -512,6 +509,7 @@ buffer is not visiting a file."
 
 (use-package clang-format+
   :ensure
+  :commands clang-format+-mode
   :config
   (add-hook 'c-mode-hook 'clang-format+-mode)
   (add-hook 'c++-mode-hook 'clang-format+-mode))
@@ -729,24 +727,20 @@ buffer is not visiting a file."
         company-minimum-prefix-length 2
         company-tooltip-limit 20)
 
+  (setq company-backends
+        '((company-files
+           company-keywords
+           company-capf
+           company-yasnippet)))
+
   (use-package company-shell)
   (use-package company-cmake)
 
-  (add-hook 'prog-mode-hook 'company-mode)
-
-  (eval-after-load 'company
-    '(add-to-list
-      'company-backends '(company-capf company-yasnippet
-                                       company-files))))
+  (add-hook 'prog-mode-hook 'company-mode))
 
 (use-package company-quickhelp
   :config
   (company-quickhelp-mode 1))
-
-(use-package company-flx
-  :ensure
-  :config
-  (company-flx-mode))
 
 ;; eglot
 
@@ -757,11 +751,13 @@ buffer is not visiting a file."
     "er" 'eglot-rename
     "ef" 'eglot-format)
   :ensure
+  :commands eglot-ensure
   :init
   (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'c-mode-hook 'eglot-ensure)
   (add-hook 'c++-mode-hook 'eglot-ensure)
   (add-hook 'go-mode-hook 'eglot-ensure)
+  (add-hook 'rust-mode-hook 'eglot-ensure)
   :config
   (setq eglot-autoshutdown t))
 
@@ -769,6 +765,7 @@ buffer is not visiting a file."
 
 (use-package flycheck
   :ensure
+  :commands flycheck-mode
   :config
   (add-hook 'prog-mode-hook 'flycheck-mode)
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
@@ -884,6 +881,7 @@ buffer is not visiting a file."
   (add-hook 'prog-mode-hook 'eldoc-mode))
 
 (use-package aggressive-indent
+  :commands aggressive-indent-mode
   :config
   (add-hook 'prog-mode-hook 'aggressive-indent-mode))
 
@@ -951,7 +949,10 @@ buffer is not visiting a file."
   :mode ("\\.\\(md\\|markdown\\)\\'" . markdown-mode)
   :config
   (add-hook 'markdown-mode-hook 'auto-fill-mode)
-  (add-hook 'markdown-mode-hook 'visual-line-mode))
+  (add-hook 'markdown-mode-hook 'visual-line-mode)
+  (add-hook 'markdown-mode-hook
+            (lambda ()
+              (set (make-local-variable 'company-backends) '(company-ispell company-files)))))
 
 ;; config files
 
@@ -963,6 +964,24 @@ buffer is not visiting a file."
   :commands nginx-mode
   :config
   (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)))
+
+;; Rust
+
+(use-package rust-mode
+  :general
+  (leader-define
+    :keymaps 'rust-mode-map
+    "m" '(:ignore t :which-key "Rust"))
+  :config
+  (add-hook 'rust-mode-hook 'rust-enable-format-on-save))
+
+(use-package cargo
+  :general
+  (leader-define
+    :keymaps 'rust-mode-map
+    "mc" 'cargo-process-build
+    "mr" 'cargo-process-run
+    "mt" 'cargo-process-test))
 
 ;; IRC
 
