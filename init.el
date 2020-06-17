@@ -253,64 +253,6 @@ buffer is not visiting a file."
 
 ;; evil
 
-(defvar normal-state-color '("#35393B" . "#FFFFFF")
-  "Default color for the modeline when in normal mode")
-(defvar visual-state-color '("#AB7EFF" . "#000000")
-  "Default color for the modeline when in visual mode")
-(defvar insert-state-color '("#555555" . "#FFFFFF")
-  "Default color for the modeline when in insert mode")
-(defvar emacs-state-color '("#FF6159" . "#FFFFFF")
-  "Default color for the modeline when in emacs mode")
-
-(defgroup dotemacs-evil nil
-  "Configuration options for evil-mode."
-  :group 'dotemacs
-  :prefix 'dotemacs-evil)
-
-(defcustom dotemacs-evil/emacs-state-minor-modes
-  '(git-commit-mode magit-blame-mode)
-  "List of minor modes that when active should switch to Emacs state."
-  :type '(repeat (symbol))
-  :group 'dotemacs-evil)
-
-(cl-loop for mode in dotemacs-evil/emacs-state-minor-modes
-         do (let ((hook (concat (symbol-name mode) "-hook")))
-              (add-hook (intern hook) `(lambda ()
-                                         (if ,mode
-                                             (evil-emacs-state)
-                                           (evil-normal-state))))))
-
-(defun my-evil-modeline-change (default-color)
-  "Change the modeline color when the mode changes."
-  (let ((color (cond
-                ((evil-insert-state-p) insert-state-color)
-                ((evil-visual-state-p) visual-state-color)
-                ((evil-normal-state-p) normal-state-color)
-                ((evil-emacs-state-p) emacs-state-color))))
-    (set-face-background 'mode-line (car color))
-    (set-face-foreground 'mode-line (cdr color))))
-
-(defun my-evil-theme-change ()
-  (cond
-   ((eq my-current-theme my-dark-theme)
-    (setq evil-normal-state-cursor '("white" box)
-          evil-insert-state-cursor '("red" bar)
-          evil-operator-state-cursor '("red" hollow))
-    (setq normal-state-color '("#35393B" . "#FFFFFF")
-          visual-state-color '("#AB7EFF" . "#000000")
-          insert-state-color '("#555555" . "#FFFFFF")
-          emacs-state-color '("#FF6159" .  "#FFFFFF")))
-   ((eq my-current-theme my-light-theme)
-    (setq evil-normal-state-cursor '("black" box)
-          evil-insert-state-cursor '("red" bar)
-          evil-operator-state-cursor '("red" hollow))
-    (setq normal-state-color '("#BCD5FA" . "#000000")
-          visual-state-color '("#AB7EFF" . "#000000")
-          insert-state-color '("#D0E1FB" . "#000000")
-          emacs-state-color '("#FF6159" .  "#FFFFFF")))))
-
-(add-hook 'after-load-theme-hook 'my-evil-theme-change)
-
 (use-package evil
   :general
   (leader-define
@@ -322,10 +264,6 @@ buffer is not visiting a file."
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil) ;; disable for evil-collection
   :config
-  (lexical-let ((default-color (cons (face-background 'mode-line)
-                                     (face-foreground 'mode-line))))
-    (add-hook 'post-command-hook (lambda () (my-evil-modeline-change default-color))))
-
   (setq evil-normal-state-cursor '("white" box)
         evil-insert-state-cursor '("red" bar)
         evil-operator-state-cursor '("red" hollow))
