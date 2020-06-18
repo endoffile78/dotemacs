@@ -56,7 +56,9 @@
       dired-recursive-copies 'always
       tramp-default-method "ssh"
       default-directory (getenv "HOME")
-      make-pointer-invisible t)
+      make-pointer-invisible t
+      whitespace-style (quote (face spaces tabs newline space-mark tab-mark newline-mark))
+      display-line-numbers-type 'relative)
 
 (setq-default truncate-lines 1
               backward-delete-function nil
@@ -71,14 +73,14 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
-(define-global-minor-mode my-global-linum-mode linum-mode
+(define-global-minor-mode my-global-display-line-numbers-mode global-display-line-numbers-mode
   (lambda ()
     (when (not (memq major-mode
                      (list 'eshell-mode 'calendar-mode 'term-mode
-                           'doc-view-mode 'erc-mode)))
-      (linum-mode))))
+                           'doc-view-mode 'erc-mode 'shell-mode)))
+      (display-line-numbers-mode))))
 
-(my-global-linum-mode)
+(my-global-display-line-numbers-mode)
 (global-hl-line-mode 1)
 (column-number-mode t)
 (recentf-mode)
@@ -195,7 +197,7 @@ buffer is not visiting a file."
     :states 'normal
     "" nil
 
-    "/" 'grep
+    "s" 'term
 
     "c" (general-simulate-key "C-c")
     "x" (general-simulate-key "C-x")
@@ -205,7 +207,7 @@ buffer is not visiting a file."
     ;; buffer managment
     "b" '(:ignore t :which-key "Buffer Management")
     "bb" 'switch-to-buffer
-    "bB" 'ibuffer
+    "bB" 'ibuffer-other-window
     "bk" 'kill-this-buffer
     "bK" 'kill-buffer
 
@@ -409,7 +411,10 @@ buffer is not visiting a file."
 
 (use-package counsel
   :ensure
-  :general ("M-x" 'counsel-M-x))
+  :general
+  (leader-define
+    "SPC" 'counsel-M-x)
+  ("M-x" 'counsel-M-x))
 
 ;; semantic-mode
 
@@ -521,8 +526,6 @@ buffer is not visiting a file."
 
 (if (eq (system-name) 'gnu/linux)
     (setq-default she-ffile-name "/bin/zsh"))
-
-(general-define-key "C-c s" 'term)
 
 ;; web
 
@@ -818,16 +821,18 @@ buffer is not visiting a file."
   :config
   (add-hook 'prog-mode-hook 'eldoc-mode))
 
-(use-package aggressive-indent
-  :commands aggressive-indent-mode
-  :config
-  (add-hook 'prog-mode-hook 'aggressive-indent-mode))
-
 (defun trailing-whitespace ()
   (setq-local show-trailing-whitespace t))
 
 (add-hook 'prog-mode-hook 'trailing-whitespace)
 (add-hook 'prog-mode-hook 'hs-minor-mode)
+
+(use-package rg
+  :general
+  (leader-define
+    "/" 'rg)
+  :config
+  (rg-enable-default-bindings))
 
 ;; org
 
