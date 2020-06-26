@@ -66,7 +66,6 @@
               tab-width 4
               require-final-newline t)
 
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
@@ -826,6 +825,11 @@ buffer is not visiting a file."
 
 (add-hook 'prog-mode-hook 'trailing-whitespace)
 (add-hook 'prog-mode-hook 'hs-minor-mode)
+
+(use-package ws-butler
+  :diminish ws-butler-mode
+  :config
+  (add-hook 'prog-mode-hook 'ws-butler-mode))
 
 (use-package rg
   :general
