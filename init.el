@@ -29,8 +29,7 @@
   (package-install 'use-package))
 
 (eval-when-compile
-  (require 'use-package)
-  (require 'cl))
+  (require 'use-package))
 (require 'diminish)
 
 ;; general config
@@ -76,7 +75,8 @@
   (lambda ()
     (when (not (memq major-mode
                      (list 'eshell-mode 'calendar-mode 'term-mode
-                           'doc-view-mode 'erc-mode 'shell-mode)))
+                           'doc-view-mode 'erc-mode 'shell-mode
+                           'compilation-mode 'cargo-process-mode)))
       (display-line-numbers-mode))))
 
 (my-global-display-line-numbers-mode)
@@ -196,8 +196,6 @@ buffer is not visiting a file."
     :states 'normal
     "" nil
 
-    "s" 'term
-
     "c" (general-simulate-key "C-c")
     "x" (general-simulate-key "C-x")
     "h" (general-simulate-key "C-h")
@@ -227,19 +225,22 @@ buffer is not visiting a file."
     "t" '(:ignore t :which-key "Themes")
     "tc" 'my/cycle-theme
 
+    "s" 'term
+
     ;; window management
     "w" '(:ignore t :which-key "Window Management")
     "w0" 'delete-window
     "w1" 'delete-other-windows
     "wu" 'winner-undo
     "wr" 'winner-redo
+    "wo" 'other-window
     "wh" 'windmove-left
     "wj" 'windmove-down
     "wk" 'windmove-up
     "wl" 'windmove-right)
 
   (general-define-key
-   :states '(normal insert emacs)
+   :states '(insert emacs)
    "C-a" 'beginning-of-line
    "C-e" 'end-of-line)
 
@@ -280,6 +281,8 @@ buffer is not visiting a file."
   (evil-ex-define-cmd "W" 'evil-write)
   (evil-ex-define-cmd "Q" 'evil-tab-sensitive-quit)
 
+  (modify-syntax-entry ?_ "w")
+
   (evil-mode 1))
 
 (use-package evil-collection
@@ -303,7 +306,6 @@ buffer is not visiting a file."
 
 (use-package evil-commentary
   :diminish evil-commentary-mode
-  :commands evil-commentary-mode
   :config
   (add-hook 'prog-mode-hook 'evil-commentary-mode))
 ;;*
@@ -415,18 +417,6 @@ buffer is not visiting a file."
     "SPC" 'counsel-M-x)
   ("M-x" 'counsel-M-x))
 
-;; semantic-mode
-
-(add-hook 'c-mode-hook 'semantic-mode)
-(add-hook 'c++-mode-hook 'semantic-mode)
-(add-hook 'java-mode-hook 'semantic-mode)
-
-(use-package srefactor
-  :general
-  (leader-define
-    :keymaps 'semantic-mode-map
-    "sr" 'srefactor-refactor-at-point))
-
 ;; C/C++
 
 (defvaralias 'c-basic-offset 'tab-width)
@@ -461,8 +451,6 @@ buffer is not visiting a file."
   (setq-local indent-tabs-mode t))
 
 (add-hook 'makefile-mode-hook 'my-makefile-hook)
-(add-hook 'makefile-mode-hook (lambda ()
-                                (aggressive-indent-mode -1)))
 
 (use-package cmake-mode
   :ensure
@@ -524,7 +512,7 @@ buffer is not visiting a file."
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 (if (eq (system-name) 'gnu/linux)
-    (setq-default she-ffile-name "/bin/zsh"))
+    (setq-default shell-file-name "/bin/zsh"))
 
 ;; web
 
@@ -585,7 +573,6 @@ buffer is not visiting a file."
   :general
   (leader-define
     :keymaps '(web-mode-map css-mode-map)
-    "mit" 'impatient-mode
     "mis" 'my/start-impatient-mode
     "mik" 'httpd-stop))
 
@@ -595,16 +582,12 @@ buffer is not visiting a file."
 
 (use-package cider)
 
-;; gradle
-
-(use-package gradle-mode)
-
 ;; lisp
 
 (use-package lispy
   :config
   (add-hook 'emacs-lisp-mode-hook 'lispy-mode)
-  (add-hook 'clojure-mode-hook 'lspy-mode-hook))
+  (add-hook 'clojure-mode-hook 'lspy-mode))
 
 ;; Emacs lisp
 
@@ -753,7 +736,7 @@ buffer is not visiting a file."
                      (" " c-context-line-break c-indent-new-comment-line)))
     (sp-local-pair "<" ">"))
   (sp-with-modes
-      '(c++-mode objc-mode c-mode css-mode js2-mode web-mode java-mode)
+      '(c++-mode objc-mode c-mode css-mode js2-mode web-mode java-mode rust-mode)
     (sp-local-pair "{" nil :post-handlers
                    '(:add
                      ("||\n[i]" "RET")
@@ -796,7 +779,6 @@ buffer is not visiting a file."
                             ("^.*php.*$" . "template.php"))))
 
 (use-package comment-tags
-  :commands comment-tags-mode
   :init
   (setq comment-tags-keymap-prefix (kbd "C-c t"))
   :config
@@ -804,7 +786,7 @@ buffer is not visiting a file."
         `(("TODO"  . ,(list :weight 'bold :foreground "#28ABE3"))
           ("FIXME" . ,(list :weight 'bold :foreground "#DB3340"))
           ("BUG"   . ,(list :weight 'bold :foreground "#DB3340"))
-          ("HACK"  . ,(list :weight 'bold :foreground "#E8B71A"))
+          ("HACK"  . ,(list :weight 'bold :foreground "#DB3340"))
           ("INFO"  . ,(list :weight 'bold :foreground "#F7EAC8"))
           ("DONE"  . ,(list :weight 'bold :foreground "#1FDA9A"))))
   (setq comment-tags-comment-start-only t
@@ -838,28 +820,6 @@ buffer is not visiting a file."
   :config
   (rg-enable-default-bindings))
 
-;; org
-
-(use-package org
-  :config
-  (setq org-directory "~/docs/org/")
-  (setq org-default-notes-file "~/docs/org/notes.org")
-  (setq org-agenda-files `(,org-directory))
-  (setq org-log-done t)
-  (setq org-startup-indented t)
-  (setq org-capture-templates
-        '(("t" "Todo" entry (file+headline (expand-file-name org-default-notes-file) "TODOS")
-           "* TODO %?\n%U\n%a\n")
-          ("n" "Note" entry (file+headline (expand-file-name org-default-notes-file) "NOTES")
-           "* %? :NOTE:\n%U\n%a\n")))
-  (setq org-todo-state-tags-triggers
-        '(("CANCELLED" ("CANCELLED" . t))
-          ("WAITING" ("WAITING" . t))
-          ("TODO" ("WAITING") ("CANCELLED"))
-          ("DONE" ("WAITING") ("CANCELLED")))))
-
-(use-package ox-reveal)
-
 ;; writing
 
 (use-package flyspell
@@ -886,6 +846,11 @@ buffer is not visiting a file."
 (add-hook 'text-mode-hook 'auto-fill-mode)
 (add-hook 'org-mode-hook 'auto-fill-mode)
 
+(defun my/set-fill-column ()
+  (setq-local fill-column 72))
+
+(add-hook 'text-mode-hook 'my/set-fill-column)
+
 (use-package tex
   :ensure nil)
 
@@ -897,20 +862,27 @@ buffer is not visiting a file."
   :config
   (add-hook 'markdown-mode-hook 'auto-fill-mode)
   (add-hook 'markdown-mode-hook 'visual-line-mode)
+  (add-hook 'markdown-mode-hook 'my/set-fill-column)
   (add-hook 'markdown-mode-hook
             (lambda ()
               (set (make-local-variable 'company-backends) '(company-ispell company-files)))))
+
+(use-package org
+  :config
+  (add-hook 'org-mode-hook 'my/set-fill-column)
+  (setq org-directory "~/docs/org/"
+        org-default-notes-file "~/docs/org/notes.org"
+        org-agenda-files `(,org-directory)
+        org-log-done t
+        org-startup-indented t))
+
+(use-package ox-reveal)
 
 ;; config files
 
 (use-package yaml-mode
   :commands yaml-mode
   :mode ("\\.yml$" . yaml-mode))
-
-(use-package nginx-mode
-  :commands nginx-mode
-  :config
-  (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)))
 
 ;; Rust
 
@@ -930,83 +902,14 @@ buffer is not visiting a file."
     "mr" 'cargo-process-run
     "mt" 'cargo-process-test))
 
-;; IRC
-
-(defun reset-erc-track-mode ()
-  (interactive)
-  (setq erc-modified-channels-alist nil)
-  (erc-modified-channels-update))
-
-(use-package erc
-  :general
-  ("C-c C-e" 'erc-switch-to-buffer)
-  :ensure nil
-  :commands erc
-  :config
-  (setq erc-log-channels-directory "~/.erc/logs/"
-        erc-log-write-after-send t
-        erc-interpret-mirc-color t
-        erc-kill-buffer-on-part t
-        erc-kill-queries-on-quit t
-        erc-kill-server-buffer-on-quit t
-        erc-join-buffer 'bury
-        erc-rename-buffers t
-        erc-timestamp-format "[%H:%M:%S] "
-        erc-fill-column 180
-        erc-fill-function 'erc-fill-static
-        erc-fill-static-center 20
-        erc-server-reconnect-attempts 5
-        erc-server-reconnect-timeout 10
-        erc-insert-timestamp-function 'erc-insert-timestamp-left
-        erc-current-nick-highlight-type 'nick
-        erc-track-exclude-server-buffer t
-        erc-track-showcount t
-        erc-lurker-hide-list '("JOIN" "PART" "QUIT")
-        erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
-                                  "324" "329" "332" "333" "353" "477"))
-
-  (add-hook 'erc-mode-hook (lambda ()
-                             (size-indication-mode -1)))
-
-  (add-to-list 'erc-modules 'log)
-  (add-to-list 'erc-modules 'spelling)
-  (add-to-list 'erc-modules 'notifications)
-
-  (erc-track-mode)
-  (erc-truncate-mode)
-  (erc-update-modules))
-
-(use-package erc-hl-nicks
-  :ensure
-  :config
-  (erc-hl-nicks-enable))
-
-(use-package erc-bar
-  :load-path "site-lisp")
-
-(defun my/erc-run ()
-  (interactive)
-  (if (get-buffer "freenode")
-      (erc-track-switch-buffer 1)
-    (erc :server "endoffile.org" :port 2000)))
-
-(general-define-key "C-c i" 'my/erc-run)
-
-;; mail
-
-(defvar mu4e-config (concat user-emacs-directory "mu4e-config.el"))
-(if (file-exists-p mu4e-config)
-    (load mu4e-config))
-
 ;; fun
 
 (use-package zone-nyan)
 
-(use-package twittering-mode)
-
 (use-package emojify
   :config
   (add-hook 'text-mode-hook 'emojify-mode)
+  (add-hook 'markdown-mode-hook 'emojify-mode)
   (add-hook 'org-mode-hook 'emojify-mode)
   (add-hook 'erc-mode-hook 'emojify-mode))
 
