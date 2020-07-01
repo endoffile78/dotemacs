@@ -171,81 +171,6 @@
 
 ;; keybindings
 
-(defun sudo-edit (&optional arg)
-  "Edit currently visited file as root.
-
-With a prefix ARG prompt for a file to visit.
-Will also prompt for a file to visit if current
-buffer is not visiting a file."
-  (interactive "P")
-  (if (or arg (not buffer-file-name))
-      (find-file (concat "/sudo:root@localhost:"
-                         (ido-read-file-name "Find file (as root): ")))
-    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
-
-(use-package general
-  :ensure
-  :config
-  (general-override-mode 1)
-  ;; leader keybindings
-  (general-create-definer leader-define
-    :states '(normal operator visual insert emacs)
-    :prefix "SPC"
-    :non-normal-prefix "C-SPC")
-  (leader-define
-    :states 'normal
-    "" nil
-
-    "c" (general-simulate-key "C-c")
-    "x" (general-simulate-key "C-x")
-    "h" (general-simulate-key "C-h")
-    "u" (general-simulate-key "C-u")
-
-    ;; buffer managment
-    "b" '(:ignore t :which-key "Buffer Management")
-    "bb" 'switch-to-buffer
-    "bB" 'ibuffer-other-window
-    "bk" 'kill-this-buffer
-    "bK" 'kill-buffer
-
-    "d" 'dired
-
-    ;; org
-    "o" '(:ignore t :which-key "Org")
-    "oa" 'org-agenda
-    "oc" 'org-capture
-
-    ;; files
-    "f" '(:ignore t :which-key "Files")
-    "ff" 'find-file
-    "fi" '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
-    "fp" '(lambda () (interactive) (find-file "~/.emacs.d/private.el"))
-    "fl" '(lambda () (interactive) (find-file "~/.emacs.d/local.el"))
-
-    "t" '(:ignore t :which-key "Themes")
-    "tc" 'my/cycle-theme
-
-    "s" 'term
-
-    ;; window management
-    "w" '(:ignore t :which-key "Window Management")
-    "w0" 'delete-window
-    "w1" 'delete-other-windows
-    "wu" 'winner-undo
-    "wr" 'winner-redo
-    "wo" 'other-window
-    "wh" 'windmove-left
-    "wj" 'windmove-down
-    "wk" 'windmove-up
-    "wl" 'windmove-right)
-
-  (general-define-key
-   :states '(insert emacs)
-   "C-a" 'beginning-of-line
-   "C-e" 'end-of-line)
-
-  (general-define-key "C-x C-r" 'sudo-edit))
-
 (use-package which-key
   :diminish which-key-mode
   :config
@@ -256,19 +181,61 @@ buffer is not visiting a file."
 ;; evil
 
 (use-package evil
-  :general
-  (leader-define
-    "ws" 'evil-window-split
-    "wv" 'evil-window-vsplit)
   :ensure
   :demand t
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil) ;; disable for evil-collection
   :config
-  (setq evil-normal-state-cursor '("white" box)
-        evil-insert-state-cursor '("red" bar)
-        evil-operator-state-cursor '("red" hollow))
+  (setq evil-normal-state-cursor '("white" box))
+  (setq evil-insert-state-cursor '("red" bar))
+  (setq evil-operator-state-cursor '("red" hollow))
+  (setq evil-visual-state-cursor '("purple" box))
+  (setq evil-replace-state-cursor '("red" hbar))
+  (setq evil-motion-state-cursor '("orange" box))
+
+  (evil-set-leader '(normal visual replace motion operator) (kbd "SPC"))
+  (evil-set-leader '(normal visual replace motion operator) (kbd ",") t)
+  (evil-set-leader '(emacs insert) (kbd "C-SPC"))
+  (evil-set-leader '(emacs insert) (kbd "C-,") t)
+
+  (evil-define-key 'normal 'global (kbd "<leader>bb") 'switch-to-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader>bB") 'ibuffer-other-window)
+  (evil-define-key 'normal 'global (kbd "<leader>bk") 'kill-this-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader>bK") 'kill-buffer)
+
+  (evil-define-key 'normal 'global (kbd "<leader>d") 'dired)
+
+  (evil-define-key 'normal 'global (kbd "<leader>oa") 'org-agenda)
+  (evil-define-key 'normal 'global (kbd "<leader>oc") 'org-capture)
+
+  (evil-define-key 'normal 'global (kbd "<leader>ff") 'find-file)
+  (evil-define-key 'normal 'global (kbd "<leader>fi") '(lambda () (interactive) (find-file "~/.emacs.d/init.el")))
+  (evil-define-key 'normal 'global (kbd "<leader>fp") '(lambda () (interactive) (find-file "~/.emacs.d/private.el")))
+  (evil-define-key 'normal 'global (kbd "<leader>fl") '(lambda () (interactive) (find-file "~/.emacs.d/local.el")))
+
+  (evil-define-key 'normal 'global (kbd "<leader>tc") 'my/cycle-theme)
+
+  (evil-define-key 'normal 'global (kbd "<leader>s") 'term)
+
+  (evil-define-key 'normal 'global (kbd "<leader>w0") 'delete-window)
+  (evil-define-key 'normal 'global (kbd "<leader>w1") 'delete-other-windows)
+  (evil-define-key 'normal 'global (kbd "<leader>wu") 'winner-undo)
+  (evil-define-key 'normal 'global (kbd "<leader>wr") 'winner-redo)
+  (evil-define-key 'normal 'global (kbd "<leader>wo") 'other-window)
+  (evil-define-key 'normal 'global (kbd "<leader>wh") 'windmove-left)
+  (evil-define-key 'normal 'global (kbd "<leader>wj") 'windmove-down)
+  (evil-define-key 'normal 'global (kbd "<leader>wk") 'windmove-up)
+  (evil-define-key 'normal 'global (kbd "<leader>wl") 'windmove-right)
+  (evil-define-key 'normal 'global (kbd "<leader>wx") 'window-swap-states)
+  (evil-define-key 'normal 'global (kbd "<leader>ws") 'evil-window-split)
+  (evil-define-key 'normal 'global (kbd "<leader>wv") 'evil-window-vsplit)
+
+  (evil-define-key 'normal 'global (kbd "C-a") 'beginning-of-line)
+  (evil-define-key 'normal 'global (kbd "C-e") 'end-of-line)
+
+  (evil-define-key 'normal 'global (kbd "<localleader>c") 'compile)
+  (evil-define-key 'normal 'global (kbd "<localleader>d") 'gud-gdb)
 
   (evil-set-initial-state 'snake-mode 'emacs)
   (evil-set-initial-state 'stacktrace-mode 'emacs)
@@ -279,7 +246,7 @@ buffer is not visiting a file."
   (evil-set-initial-state 'erc-mode 'insert)
 
   (evil-ex-define-cmd "W" 'evil-write)
-  (evil-ex-define-cmd "Q" 'evil-tab-sensitive-quit)
+  (evil-ex-define-cmd "Q" 'evil-quit)
 
   (modify-syntax-entry ?_ "w")
 
@@ -308,7 +275,7 @@ buffer is not visiting a file."
   :diminish evil-commentary-mode
   :config
   (add-hook 'prog-mode-hook 'evil-commentary-mode))
-;;*
+
 (use-package evil-smartparens
   :after smartparens
   :ensure
@@ -317,22 +284,16 @@ buffer is not visiting a file."
   (add-hook 'smartparens-mode-hook 'evil-smartparens-mode))
 
 (use-package evil-easymotion
-  :general
-  (:states '(normal visual operator)
-           "f" 'evilem-motion-find-char
-           "F" 'evilem-motion-find-char-backward
-           "t" 'evilem-motion-find-char-to
-           "T" 'evilem-motion-find-char-to-backward
-           "(" 'evilem-motion-backward-sentence-begin
-           ")" 'evilem-motion-forward-sentence-begin)
-  (leader-define
-    "j" 'evilem-motion-next-line
-    "k" 'evilem-motion-previous-line)
-  :ensure)
-
-(use-package evil-multiedit
+  :ensure
   :config
-  (evil-multiedit-default-keybinds))
+  (evil-define-key '(normal visual motion operator) 'global (kbd "f") 'evilem-motion-find-char)
+  (evil-define-key '(normal visual motion operator) 'global (kbd "F") 'evilem-motion-find-char-backward)
+  (evil-define-key '(normal visual motion operator) 'global (kbd "t") 'evilem-motion-find-char-to)
+  (evil-define-key '(normal visual motion operator) 'global (kbd "T") 'evilem-motion-find-char-to-backward)
+  (evil-define-key '(normal visual motion operator) 'global (kbd "(") 'evilem-motion-backward-sentence-begin)
+  (evil-define-key '(normal visual motion operator) 'global (kbd ")") 'evilem-motion-forward-sentence-begin)
+  (evil-define-key '(normal visual motion operator) 'global (kbd "<leader>j") 'evilem-motion-next-line)
+  (evil-define-key '(normal visual motion operator) 'global (kbd "<leader>k") 'evilem-motion-previous-line))
 
 (unless (display-graphic-p)
   (use-package evil-terminal-cursor-changer
@@ -351,8 +312,8 @@ buffer is not visiting a file."
       uniquify-after-kill-buffer-p t)
 
 (use-package ibuffer
-  :general
-  ("C-x C-b" 'ibuffer-other-window)
+  :bind
+  ("C-x C-b" . ibuffer-other-window)
   :config
   (add-hook 'ibuffer-mode-hook
             (lambda ()
@@ -384,21 +345,9 @@ buffer is not visiting a file."
               (unless (eq ibuffer-sorting-mode 'alphabetic)
                 (ibuffer-do-sort-by-alphabetic)))))
 
-(use-package ace-window
-  :general
-  (leader-define
-    "wd" 'ace-delete-window
-    "ww" 'ace-select-window))
-
-;; ivy
-
-(use-package swiper
-  :ensure
-  :general ("C-s" 'swiper))
-
 (use-package ivy
   :ensure
-  :general ("C-c C-r" 'ivy-resume)
+  :bind ("C-c C-r" . ivy-resume)
   :config
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
@@ -412,10 +361,9 @@ buffer is not visiting a file."
 
 (use-package counsel
   :ensure
-  :general
-  (leader-define
-    "SPC" 'counsel-M-x)
-  ("M-x" 'counsel-M-x))
+  :bind ("M-x" . counsel-M-x)
+  :config
+  (evil-define-key 'normal 'global (kbd "<leader>SPC") 'counsel-M-x))
 
 ;; C/C++
 
@@ -457,16 +405,6 @@ buffer is not visiting a file."
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
          ("\\.cmake\\'" . cmake-mode)))
 
-(leader-define
-  :keymaps '(c-mode-map c++-mode-map)
-  "m"  '(:ignore t :which-key "C/C++")
-  "mc" 'compile
-  "md" 'gud-gdb)
-
-(general-define-key
- :keymaps '(c-mode-map c++-mode-map)
- "C-c c" 'compile
- "C-c d" 'gud-gdb)
 
 ;; Go
 
@@ -489,17 +427,14 @@ buffer is not visiting a file."
 
 (use-package python
   :config
-  :general
-  (leader-define
-    :keymaps 'python-mode-map
-    "m" '(:ignore t :which-key "Python")
-    "ma" 'venv-workon
-    "md" 'venv-deactivate)
-  (:keymaps 'python-mode-map
-            "<f5>" 'python-f5))
+  :bind
+  (:map python-mode-map
+        ("<f5>" . python-f5)))
 
 (use-package virtualenvwrapper
   :config
+  (evil-define-key 'normal 'python-mode-map (kbd "<localleader>ma") 'venv-workon)
+  (evil-define-key 'normal 'python-mode-map (kbd "<localleader>md") 'venv-deactivate)
   (venv-initialize-interactive-shells)
   (venv-initialize-eshell))
 
@@ -570,38 +505,24 @@ buffer is not visiting a file."
   (impatient-mode))
 
 (use-package impatient-mode
-  :general
-  (leader-define
-    :keymaps '(web-mode-map css-mode-map)
-    "mis" 'my/start-impatient-mode
-    "mik" 'httpd-stop))
-
-;; clojure
-
-(use-package clojure-mode)
-
-(use-package cider)
+ :config
+ (evil-define-key 'normal 'global (kbd "<localleader>is") 'my/start-impatient-mode)
+ (evil-define-key 'normal 'global (kbd "<localleader>ik") 'httpd-stop))
 
 ;; lisp
 
 (use-package lispy
   :config
-  (add-hook 'emacs-lisp-mode-hook 'lispy-mode)
-  (add-hook 'clojure-mode-hook 'lspy-mode))
+  (add-hook 'emacs-lisp-mode-hook 'lispy-mode))
 
 ;; Emacs lisp
 
-(leader-define
-  :keymaps 'emacs-lisp-mode-map
-  "m" '(:ignore t :which-key "Emacs Lisp")
-  "meb" 'eval-buffer
-  "mer" 'eval-region
-  "mee" 'eval-expression
-  "med" 'eval-defun)
+(evil-define-key 'normal 'global (kbd "<localleader>eb") 'eval-buffer)
+(evil-define-key 'normal 'global (kbd "<localleader>er") 'eval-region)
+(evil-define-key 'normal 'global (kbd "<localleader>ee") 'eval-expression)
+(evil-define-key 'normal 'global (kbd "<localleader>ed") 'eval-defun)
 
-(general-define-key
- :keymaps 'emacs-lisp-mode-map
- "C-j" 'eval-region)
+(define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
 
 ;; git
 
@@ -615,17 +536,14 @@ buffer is not visiting a file."
     (global-git-gutter+-mode)))
 
 (use-package magit
-  :general
-  (leader-define
-    "g" '(:ignore t :which-key "Git")
-    "gs" 'magit-status
-    "gd" 'magit-diff-dwim
-    "gb" 'magit-blame
-    "gl" 'magit-log
-    "gr" 'magit-branch
-    "gm" 'magit-merge)
   :ensure
   :config
+  (evil-define-key 'normal 'global (kbd "<leader>gs") 'magit-status)
+  (evil-define-key 'normal 'global (kbd "<leader>gd") 'magit-diff-dwim)
+  (evil-define-key 'normal 'global (kbd "<leader>gb") 'magit-blame)
+  (evil-define-key 'normal 'global (kbd "<leader>gl") 'magit-log)
+  (evil-define-key 'normal 'global (kbd "<leader>gr") 'magit-branch)
+  (evil-define-key 'normal 'global (kbd "<leader>gm") 'magit-merge)
   (setq magit-completing-read-function 'ivy-completing-read))
 
 (use-package evil-magit
@@ -641,10 +559,10 @@ buffer is not visiting a file."
 (use-package company
   :ensure
   :diminish company-mode
-  :general (:keymaps 'company-active-map
-                     "<tab>" 'company-complete-common-or-cycle
-                     "TAB" 'company-complete-common-or-cycle
-                     "<backtab>" 'company-select-previous)
+  :bind (:map company-active-map
+              ("<tab>" . company-complete-common-or-cycle)
+              ("TAB" . company-complete-common-or-cycle)
+              ("<backtab>" . company-select-previous))
   :config
   (setq company-idle-delay 0.1
         company-minimum-prefix-length 2
@@ -668,11 +586,6 @@ buffer is not visiting a file."
 ;; eglot
 
 (use-package eglot
-  :general
-  (leader-define
-    :keymaps 'eglot-mode-map
-    "er" 'eglot-rename
-    "ef" 'eglot-format)
   :ensure
   :commands eglot-ensure
   :init
@@ -702,16 +615,13 @@ buffer is not visiting a file."
 ;; projectile
 
 (use-package projectile
-  :general
-  (leader-define
-    "p" '(:ignore t :which-key "Projectile")
-    "pf" 'projectile-find-file
-    "pb" 'projectile-switch-to-buffer
-    "po" 'projectile-find-other-file
-    "pk" 'projectile-kill-buffers
-    "pt" 'projectile-run-term)
   :ensure
   :config
+  (evil-define-key 'normal 'global (kbd "<leader>pf") 'projectile-find-file)
+  (evil-define-key 'normal 'global (kbd "<leader>pb") 'projectile-switch-to-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader>po") 'projectile-find-other-file)
+  (evil-define-key 'normal 'global (kbd "<leader>pk") 'projectile-kill-buffers)
+  (evil-define-key 'normal 'global (kbd "<leader>pt") 'projectile-run-term)
   (setq projectile-completion-system 'ivy)
   (projectile-mode))
 
@@ -814,29 +724,20 @@ buffer is not visiting a file."
   (add-hook 'prog-mode-hook 'ws-butler-mode))
 
 (use-package rg
-  :general
-  (leader-define
-    "/" 'rg)
   :config
+  (evil-define-key 'normal 'global (kbd "<leader>/") 'rg)
   (rg-enable-default-bindings))
 
 ;; writing
 
 (use-package flyspell
   :config
+  (evil-define-key '(normal visual) 'flyspell-mode-map (kbd "z=") 'flyspell-correct-at-point)
   (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'markdown-mode-hook 'flyspell-mode)
   (add-hook 'text-mode-hook 'flyspell-mode)
   (add-hook 'latex-mode-hook 'flyspell-mode)
   (add-hook 'tex-mode-hook 'flyspell-mode))
-
-(use-package flyspell-correct-ivy
-  :general
-  (:keymaps 'flyspell-mode-map
-            :states '(normal visual)
-            "z=" 'flyspell-correct-word-generic)
-  (:keymaps 'flyspell-mode-map
-            "C-;" 'flyspell-correct-word-generic))
 
 (add-hook 'text-mode-hook 'visual-line-mode)
 (add-hook 'org-mode-hook 'visual-line-mode)
@@ -887,20 +788,14 @@ buffer is not visiting a file."
 ;; Rust
 
 (use-package rust-mode
-  :general
-  (leader-define
-    :keymaps 'rust-mode-map
-    "m" '(:ignore t :which-key "Rust"))
   :config
   (add-hook 'rust-mode-hook 'rust-enable-format-on-save))
 
 (use-package cargo
-  :general
-  (leader-define
-    :keymaps 'rust-mode-map
-    "mc" 'cargo-process-build
-    "mr" 'cargo-process-run
-    "mt" 'cargo-process-test))
+  :config
+  (evil-define-key 'normal 'rust-mode-map (kbd "<localleader>mc") 'cargo-process-build)
+  (evil-define-key 'normal 'rust-mode-map (kbd "<localleader>mr") 'cargo-process-run)
+  (evil-define-key 'normal 'rust-mode-map (kbd "<localleader>mt") 'cargo-process-test))
 
 ;; fun
 
