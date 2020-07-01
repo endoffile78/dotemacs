@@ -28,6 +28,19 @@
   (package-install 'diminish)
   (package-install 'use-package))
 
+;; functions
+
+(defadvice term-handle-exit
+    (after term-kill-buffer-on-exit activate)
+  (delete-window (selected-window)))
+
+(defun my/open-term ()
+  (interactive)
+  (let ((w (split-window-below)))
+    (select-window w)
+    (term shell-file-name))
+  (switch-to-buffer "*terminal*"))
+
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)
@@ -216,7 +229,7 @@
 
   (evil-define-key 'normal 'global (kbd "<leader>tc") 'my/cycle-theme)
 
-  (evil-define-key 'normal 'global (kbd "<leader>s") 'term)
+  (evil-define-key 'normal 'global (kbd "<leader>s") 'my/open-term)
 
   (evil-define-key 'normal 'global (kbd "<leader>w0") 'delete-window)
   (evil-define-key 'normal 'global (kbd "<leader>w1") 'delete-other-windows)
@@ -234,8 +247,11 @@
   (evil-define-key 'normal 'global (kbd "C-a") 'beginning-of-line)
   (evil-define-key 'normal 'global (kbd "C-e") 'end-of-line)
 
-  (evil-define-key 'normal 'global (kbd "<localleader>c") 'compile)
-  (evil-define-key 'normal 'global (kbd "<localleader>d") 'gud-gdb)
+  ;; C/C++
+  (evil-define-key 'normal c-mode-map (kbd "<localleader>c") 'compile)
+  (evil-define-key 'normal c-mode-map (kbd "<localleader>d") 'gud-gdb)
+  (evil-define-key 'normal c++-mode-map (kbd "<localleader>c") 'compile)
+  (evil-define-key 'normal c++-mode-map (kbd "<localleader>d") 'gud-gdb)
 
   (evil-set-initial-state 'snake-mode 'emacs)
   (evil-set-initial-state 'stacktrace-mode 'emacs)
@@ -345,6 +361,9 @@
               (unless (eq ibuffer-sorting-mode 'alphabetic)
                 (ibuffer-do-sort-by-alphabetic)))))
 
+(use-package swiper
+  :bind ("C-s" . swiper))
+
 (use-package ivy
   :ensure
   :bind ("C-c C-r" . ivy-resume)
@@ -433,8 +452,8 @@
 
 (use-package virtualenvwrapper
   :config
-  (evil-define-key 'normal 'python-mode-map (kbd "<localleader>ma") 'venv-workon)
-  (evil-define-key 'normal 'python-mode-map (kbd "<localleader>md") 'venv-deactivate)
+  (evil-define-key 'normal python-mode-map (kbd "<localleader>a") 'venv-workon)
+  (evil-define-key 'normal python-mode-map (kbd "<localleader>d") 'venv-deactivate)
   (venv-initialize-interactive-shells)
   (venv-initialize-eshell))
 
@@ -506,8 +525,8 @@
 
 (use-package impatient-mode
  :config
- (evil-define-key 'normal 'global (kbd "<localleader>is") 'my/start-impatient-mode)
- (evil-define-key 'normal 'global (kbd "<localleader>ik") 'httpd-stop))
+ (evil-define-key 'normal css-mode-map (kbd "<localleader>is") 'my/start-impatient-mode)
+ (evil-define-key 'normal css-mode-map (kbd "<localleader>ik") 'httpd-stop))
 
 ;; lisp
 
@@ -517,10 +536,10 @@
 
 ;; Emacs lisp
 
-(evil-define-key 'normal 'global (kbd "<localleader>eb") 'eval-buffer)
-(evil-define-key 'normal 'global (kbd "<localleader>er") 'eval-region)
-(evil-define-key 'normal 'global (kbd "<localleader>ee") 'eval-expression)
-(evil-define-key 'normal 'global (kbd "<localleader>ed") 'eval-defun)
+(evil-define-key 'normal emacs-lisp-mode-map (kbd "<localleader>eb") 'eval-buffer)
+(evil-define-key 'normal emacs-lisp-mode-map (kbd "<localleader>er") 'eval-region)
+(evil-define-key 'normal emacs-lisp-mode-map (kbd "<localleader>ee") 'eval-expression)
+(evil-define-key 'normal emacs-lisp-mode-map (kbd "<localleader>ed") 'eval-defun)
 
 (define-key emacs-lisp-mode-map (kbd "C-j") 'eval-region)
 
@@ -751,6 +770,7 @@
   (setq-local fill-column 72))
 
 (add-hook 'text-mode-hook 'my/set-fill-column)
+(add-hook 'prog-mode-hook 'my/set-fill-column)
 
 (use-package tex
   :ensure nil)
@@ -793,9 +813,9 @@
 
 (use-package cargo
   :config
-  (evil-define-key 'normal 'rust-mode-map (kbd "<localleader>mc") 'cargo-process-build)
-  (evil-define-key 'normal 'rust-mode-map (kbd "<localleader>mr") 'cargo-process-run)
-  (evil-define-key 'normal 'rust-mode-map (kbd "<localleader>mt") 'cargo-process-test))
+  (evil-define-key 'normal rust-mode-map (kbd "<localleader>c") 'cargo-process-build)
+  (evil-define-key 'normal rust-mode-map (kbd "<localleader>r") 'cargo-process-run)
+  (evil-define-key 'normal rust-mode-map (kbd "<localleader>t") 'cargo-process-test))
 
 ;; fun
 
