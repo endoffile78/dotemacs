@@ -1,19 +1,13 @@
 #folders
 elpa
-backups
-irony
 auto-save-list
 tramp
 .python-environments
-url
-semanticdb
 abbrev_defs
-games
-ensime
-.cache
 transient
-request
-emojis
+
+etc/cache
+etc/private
 
 #files
 eshell/history
@@ -27,13 +21,6 @@ vendor/*
 *.swp
 *.dat
 
-private.el
-local.el
 mu4e-config.el
 projectile-bookmarks.eld
-projectile.cache
-recentf
-places
 network-security.data
-bookmarks
-srecode-map.el

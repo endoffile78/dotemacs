@@ -1,6 +1,6 @@
 [submodule "ujelly-theme"]
-	path = themes/nujelly
+	path = etc/themes/nujelly
 	url = https://github.com/endoffile78/color-theme-nujelly
-[submodule "themes/darkokai"]
-	path = themes/darkokai
+[submodule "darkokai"]
+	path = etc/themes/darkokai
 	url = https://github.com/endoffile78/darkokai

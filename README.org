@@ -34,4 +34,4 @@ My Emacs configuration. Inspired by [[https://github.com/bling/dotemacs][bling/d
 
 ** Picture
 
-[[./emacs.png]]
+[[./docs/emacs.png]]
