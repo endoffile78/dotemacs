@@ -69,9 +69,13 @@
       gamegrid-user-score-file-directory (concat core/cache-dir "games/")
       recentf-save-file                  (concat core/cache-dir "recentf")
       auto-insert-directory              (concat core/etc-dir "auto-insert")
-      ;;backup-directory-alist             (quote ((".*" . (concat core/cache-dir "backups"))))
+      ;;backup-directory-alist             '((".*" . (concat core/cache-dir "backups")))
+      backup-directory-alist             '((".*" . "~/.emacs.d/etc/cache/backups/"))
       request-storage-directory          (concat core/etc-dir "request")
-      save-place-file                    (concat core/cache-dir "places"))
+      save-place-file                    (concat core/cache-dir "places")
+      auto-save-list-file-prefix         (concat core/cache-dir "auto-save-list/.saves-"))
+
+(setq revert-without-query '(".*"))
 
 (fset 'yes-or-no-p 'y-or-n-p)
 

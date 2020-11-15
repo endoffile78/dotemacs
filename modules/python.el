@@ -19,7 +19,7 @@
   :general
   (local-leader-def
     :states 'normal
-    :keymaps 'python-mode
+    :keymaps 'python-mode-map
 	"v" '(:ignore t :which-key "virtualenv")
     "va" 'venv-workon
     "vd" 'venv-deactivate)

@@ -52,9 +52,9 @@
    "f" '(:ignore t :which-key "File")
    "ff" 'find-file
    "fi" '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
-   "fp" '(lambda () (interactive) (find-file "~/.emacs.d/private.el"))
-   "fl" '(lambda () (interactive) (find-file "~/.emacs.d/local.el"))
-   "fc" '(lambda () (interactive) (find-file "~/.emacs.d/custom.el"))
+   "fp" '(lambda () (interactive) (find-file core/private-file))
+   "fl" '(lambda () (interactive) (find-file core/local-file))
+   "fc" '(lambda () (interactive) (find-file custom-file))
 
    "t" '(:ignore t :which-key "Themes")
    "tc" 'my/cycle-theme

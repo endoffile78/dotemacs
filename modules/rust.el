@@ -12,7 +12,7 @@
   :general
   (local-leader-def
     :states 'normal
-    :keymaps 'rust-mode
+    :keymaps 'rust-mode-map
     "cb" 'cargo-process-build
     "cr" 'cargo-process-run
     "ct" 'cargo-process-test))

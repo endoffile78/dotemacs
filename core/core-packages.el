@@ -134,7 +134,7 @@
   :ensure
   :diminish yas-minor-mode
   :config
-  (setq yas-snippet-dirs (concat core/etc-dir "snippets"))
+  (setq yas-snippet-dirs (list (concat core/etc-dir "snippets")))
   (yas-global-mode 1))
 
 (use-package eldoc

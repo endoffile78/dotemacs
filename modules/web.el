@@ -47,7 +47,7 @@
   :general
   (local-leader-def
     :states 'normal
-    :keymaps '(web-mode css-mode html-mode)
+    :keymaps '(web-mode-map css-mode-map html-mode-map)
     "i" '(:ignore t :which-key "impatient-mode")
     "is" 'my/start-impatient-mode
     "ik" 'httpd-stop))
