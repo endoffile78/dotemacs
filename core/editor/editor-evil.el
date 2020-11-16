@@ -25,6 +25,7 @@
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil) ;; disable for evil-collection
+  (setq evil-undo-system 'undo-tree)
   :config
   (setq evil-normal-state-cursor '("white" box))
   (setq evil-insert-state-cursor '("red" bar))
@@ -32,8 +33,6 @@
   (setq evil-visual-state-cursor '("purple" box))
   (setq evil-replace-state-cursor '("red" hbar))
   (setq evil-motion-state-cursor '("orange" box))
-
-  (setq evil-undo-system 'undo-tree)
 
   ;; C/C++
   ;;(evil-define-key 'normal c-mode-map (kbd "<localleader>c") 'compile)

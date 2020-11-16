@@ -234,5 +234,13 @@
 (use-package ox-reveal
   :ensure)
 
+(use-package perspective
+  :ensure
+  :config
+  (persp-mode))
+
+(use-package persp-projectile
+  :ensure)
+
 (provide 'core-packages)
 ;;; core-packages.el ends here

@@ -13,8 +13,5 @@
     (term shell-file-name))
   (switch-to-buffer "*terminal*"))
 
-(leader-def
-  "os" 'my/open-term)
-
 (provide 'terminal)
 ;;; terminal.el ends here

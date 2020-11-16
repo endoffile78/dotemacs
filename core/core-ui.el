@@ -77,5 +77,17 @@
   :config
   (nyan-mode 1))
 
+(setq display-buffer-alist
+      '(("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
+         (display-buffer-in-side-window)
+         (window-height . 0.25)
+         (side . bottom)
+         (slot . 0))
+        ("\\*terminal\\*"
+         (display-buffer-in-side-window)
+         (window-height . 0.20)
+         (side . bottom)
+         (slot . 0))))
+
 (provide 'core-ui)
 ;;; core-ui.el ends here
