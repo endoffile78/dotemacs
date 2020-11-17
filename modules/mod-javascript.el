@@ -1,4 +1,4 @@
-;;; javascript.el --- description -*- lexical-binding: t; -*-
+;;; mod-javascript.el --- description -*- lexical-binding: t; -*-
 ;;
 ;;  description
 ;;
@@ -20,5 +20,5 @@
     (tide-hl-identifier-mode))
   (add-hook 'typescript-mode-hook #'my-tide-hook))
 
-(provide 'javascript)
-;;; javascript.el ends here
+(provide 'mod-javascript)
+;;; mod-javascript.el ends here

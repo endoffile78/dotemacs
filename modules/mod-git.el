@@ -1,21 +1,8 @@
-;;; git.el --- description -*- lexical-binding: t; -*-
-;;
-;; Copyright (C) 2020
-;;
-;; Author:  <http://github/endoffile>
-;; Maintainer:  <endoffile@localhost>
-;; Created: October 24, 2020
-;; Modified: October 24, 2020
-;; Version: 0.0.1
-;; Keywords:
-;; Homepage: https://github.com/endoffile/git
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5"))
-;;
-;; This file is not part of GNU Emacs.
+;;; mod-git.el --- Git configuration -*- lexical-binding: t; -*-
 ;;
 ;;; Commentary:
 ;;
-;;  description
+;;  Git configuration
 ;;
 ;;; Code:
 
@@ -54,5 +41,5 @@
 (use-package gitignore-mode
   :ensure)
 
-(provide 'git)
-;;; git.el ends here
+(provide 'mod-git)
+;;; mod-git.el ends here

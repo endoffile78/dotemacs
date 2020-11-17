@@ -1,4 +1,4 @@
-;;; go.el -*- lexical-binding: t; -*-
+;;; mod-go.el -*- lexical-binding: t; -*-
 ;;;
 ;;; Code:
 
@@ -11,5 +11,5 @@
   (add-hook 'go-mode-hook 'subword-mode)
   (add-hook 'before-save-hook 'gofmt-before-save))
 
-(provide 'go)
-;;; go.el ends here
+(provide 'mod-go)
+;;; mod-go.el ends here

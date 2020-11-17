@@ -3,14 +3,6 @@
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
 
 (add-to-list 'load-path (concat user-emacs-directory "core/os/"))
-(add-to-list 'load-path (concat user-emacs-directory "core/editor/"))
-
-(defconst core/etc-dir (concat user-emacs-directory "etc/"))
-(defconst core/cache-dir (concat core/etc-dir "cache/"))
-(defconst core/private-dir (concat core/etc-dir "private/"))
-
-(defconst core/local-file (concat core/private-dir "local.el"))
-(defconst core/private-file (concat core/private-dir "private.el"))
 
 (cond
  (IS-WINDOWS
@@ -19,6 +11,15 @@
   (require 'osx))
  (IS-LINUX
   (require 'linux)))
+
+(add-to-list 'load-path (concat user-emacs-directory "core/editor/"))
+
+(defconst core/etc-dir (concat user-emacs-directory "etc/"))
+(defconst core/cache-dir (concat core/etc-dir "cache/"))
+(defconst core/private-dir (concat core/etc-dir "private/"))
+
+(defconst core/local-file (concat core/private-dir "local.el"))
+(defconst core/private-file (concat core/private-dir "private.el"))
 
 (setq ring-bell-function 'ignore
       inhibit-startup-message t

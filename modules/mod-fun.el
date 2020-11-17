@@ -1,5 +1,5 @@
 ;;  -*- lexical-binding: t; -*-
-;;; fun.el --- Fun packages
+;;; mod-fun.el --- Fun packages
 
 ;;; Commentary:
 ;;; Fun packages
@@ -18,5 +18,5 @@
   (add-hook 'org-mode-hook 'emojify-mode)
   (add-hook 'erc-mode-hook 'emojify-mode))
 
-(provide 'fun)
-;;; fun.el ends here
+(provide 'mod-fun)
+;;; mod-fun.el ends here

@@ -1,4 +1,4 @@
-;;; python.el --- description -*- lexical-binding: t; -*-
+;;; mod-python.el --- description -*- lexical-binding: t; -*-
 ;;
 ;;; Code:
 
@@ -30,5 +30,5 @@
 (use-package pip-requirements
   :ensure)
 
-(provide 'python)
-;;; python.el ends here
+(provide 'mod-python)
+;;; mod-python.el ends here

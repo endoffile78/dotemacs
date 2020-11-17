@@ -1,4 +1,4 @@
-;;; rust.el --- description -*- lexical-binding: t; -*-
+;;; mod-rust.el --- description -*- lexical-binding: t; -*-
 ;;
 ;;; Code:
 
@@ -17,5 +17,5 @@
     "cr" 'cargo-process-run
     "ct" 'cargo-process-test))
 
-(provide 'rust)
-;;; rust.el ends here
+(provide 'mod-rust)
+;;; mod-rust.el ends here

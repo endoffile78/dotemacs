@@ -1,4 +1,4 @@
-;;; markdown.el --- description -*- lexical-binding: t; -*-
+;;; mod-markdown.el --- description -*- lexical-binding: t; -*-
 ;;
 ;;; Code:
 
@@ -15,5 +15,5 @@
               (set (make-local-variable 'company-backends) '(company-ispell company-files)))))
 
 
-(provide 'markdown)
-;;; markdown.el ends here
+(provide 'mod-markdown)
+;;; mod-markdown.el ends here

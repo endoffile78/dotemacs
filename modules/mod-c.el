@@ -1,5 +1,5 @@
 ;;  -*- lexical-binding: t; -*-
-;;; c.el --- Configuration for c/c++
+;;; mod-c.el --- Configuration for c/c++
 
 ;;; Commentary:
 ;;; Configuration for C/C++
@@ -44,5 +44,5 @@
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
          ("\\.cmake\\'" . cmake-mode)))
 
-(provide 'c)
-;;; c.el ends here
+(provide 'mod-c)
+;;; mod-c.el ends here

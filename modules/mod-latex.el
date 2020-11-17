@@ -1,9 +1,9 @@
-;;; latex.el --- description -*- lexical-binding: t; -*-
+;;; mod-latex.el --- description -*- lexical-binding: t; -*-
 ;;
 ;;; Code:
 
 (use-package tex
-  :ensure nil)
+  :ensure auctex)
 
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 
@@ -15,5 +15,5 @@
 
 (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
-(provide 'latex)
-;;; latex.el ends here
+(provide 'mod-latex)
+;;; mod-latex.el ends here

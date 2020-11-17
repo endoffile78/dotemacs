@@ -1,4 +1,4 @@
-;;; term.el --- description -*- lexical-binding: t; -*-
+;;; mod-terminal.el --- description -*- lexical-binding: t; -*-
 ;;
 ;;; Code:
 
@@ -13,5 +13,5 @@
     (term shell-file-name))
   (switch-to-buffer "*terminal*"))
 
-(provide 'terminal)
-;;; terminal.el ends here
+(provide 'mod-terminal)
+;;; mod-terminal.el ends here

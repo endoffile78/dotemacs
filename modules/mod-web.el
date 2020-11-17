@@ -1,4 +1,4 @@
-;;; web.el --- description -*- lexical-binding: t; -*-
+;;; mod-web.el --- description -*- lexical-binding: t; -*-
 ;;
 ;;; Code:
 
@@ -52,5 +52,5 @@
     "is" 'my/start-impatient-mode
     "ik" 'httpd-stop))
 
-(provide 'web)
-;;; web.el ends here
+(provide 'mod-web)
+;;; mod-web.el ends here

@@ -32,5 +32,5 @@
   :config
   (setq eglot-autoshutdown t))
 
-(provide 'programming)
-;;; programming.el end here
+(provide 'mod-programming)
+;;; mod-programming.el end here

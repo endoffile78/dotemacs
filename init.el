@@ -36,24 +36,25 @@
 
 ;; programming
 
-(use-package programming)
-(use-package c)
-(use-package go)
-(use-package javascript)
-(use-package emacs-lisp)
-(use-package web)
-(use-package git)
+(use-package mod-programming)
+(use-package mod-c)
+(use-package mod-go)
+(use-package mod-javascript)
+(use-package mod-emacs-lisp)
+(use-package mod-web)
+(use-package mod-git)
+(use-package mod-rust)
 
 ;; writing
 
-(use-package latex)
-(use-package markdown)
+(use-package mod-latex)
+(use-package mod-markdown)
 
 ;; other
 
-(use-package yaml)
-(use-package terminal)
-(use-package fun)
+(use-package mod-yaml)
+(use-package mod-terminal)
+(use-package mod-fun)
 
 (provide 'init)
 ;;; init.el ends here

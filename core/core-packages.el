@@ -1,7 +1,7 @@
 ;;; core-packages.el --- description -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2020
-;;
+;gemini://drewdevault.com/2020/11/12/Copying-aint-stealing.gmi;
 ;; Author:  <http://github/endoffile>
 ;; Maintainer:  <endoffile@localhost>
 ;; Created: November 05, 2020
@@ -62,8 +62,10 @@
     "p" '(:ignore t :which-key "projects")
     "pf" 'projectile-find-file
     "pb" 'projectile-switch-to-buffer
+    "pd" 'projectile-dired
     "pk" 'projectile-kill-buffers
     "pt" 'projectile-run-term
+    "ps" 'projectile-switch-project
     "pi" 'projectile-invalidate-cache)
   :config
   (setq projectile-completion-system 'ivy)
@@ -236,6 +238,16 @@
 
 (use-package perspective
   :ensure
+  :general
+  (leader-def
+    :states 'normal
+    :keymaps 'persp-mode-map
+    "TAB" '(:ignore t :which-key "workspaces")
+    "TAB TAB" 'persp-switch
+    "TAB h" 'persp-prev
+    "TAB l" 'persp-next
+    "TAB k" 'persp-kill
+    "TAB r" 'persp-rename)
   :config
   (persp-mode))
 
