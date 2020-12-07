@@ -33,11 +33,6 @@
   :config
   (setq magit-completing-read-function 'ivy-completing-read))
 
-(use-package evil-magit
-  :ensure
-  :config
-  (evil-magit-init))
-
 (use-package gitignore-mode
   :ensure)
 

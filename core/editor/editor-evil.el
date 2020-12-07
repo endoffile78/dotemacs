@@ -99,6 +99,15 @@
   (evil-snipe-mode +1)
   (evil-snipe-override-mode +1))
 
+(use-package evil-goggles
+  :ensure
+  :config
+  (setq evil-goggles-pulse nil
+  		evil-goggles-async-duration 0.1
+        evil-goggles-blocking-duration 0.05)
+  (evil-goggles-mode)
+  (evil-goggles-use-magit-faces))
+
 (use-package undo-tree
   :ensure
   :diminish undo-tree-mode
