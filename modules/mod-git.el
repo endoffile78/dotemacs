@@ -25,7 +25,7 @@
   (leader-def
     "g" '(:ignore t :which-key "Git")
     "gg" 'magit-status
-    "gd" 'magit-diff--dwim
+    "gd" 'magit-diff-dwim
     "gb" 'magit-blame
     "gl" 'magit-log
     "gr" 'magit-branch
