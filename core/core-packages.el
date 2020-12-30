@@ -235,24 +235,6 @@
 
 (use-package ox-reveal
   :ensure)
-
-(use-package perspective
-  :ensure
-  :general
-  (leader-def
-    :states 'normal
-    :keymaps 'persp-mode-map
-    "TAB" '(:ignore t :which-key "workspaces")
-    "TAB TAB" 'persp-switch
-    "TAB h" 'persp-prev
-    "TAB l" 'persp-next
-    "TAB k" 'persp-kill
-    "TAB r" 'persp-rename)
-  :config
-  (persp-mode))
-
-(use-package persp-projectile
-  :ensure)
-
+;;
 (provide 'core-packages)
 ;;; core-packages.el ends here
