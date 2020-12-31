@@ -88,7 +88,7 @@
   (general-define-key
    :states '(insert emacs)
    "C-a" 'beginning-of-line
-   "C-e" 'beginning-of-end))
+   "C-e" 'end-of-line))
 
 (provide 'core-keybindings)
 ;;; core-keybindings.el ends here
